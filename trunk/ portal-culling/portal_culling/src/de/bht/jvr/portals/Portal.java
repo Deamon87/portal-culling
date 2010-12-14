@@ -7,6 +7,7 @@ public class Portal {
 
 	private float height;
 	private float width;
+	private Vector3 position;
 	private Vector3 direction;
 	private CameraNode camera;
 	
@@ -35,6 +36,14 @@ public class Portal {
 	
 	public float getWidth() {
 		return this.width;
+	}
+	
+	public void setPostion(Vector3 position) {
+		this.position = position;
+	}
+	
+	public Vector3 getPosition() {
+		return this.position;
 	}
 	
 	public void setDirection(Vector3 direction) {
