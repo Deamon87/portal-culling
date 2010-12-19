@@ -1,0 +1,225 @@
+\documentclass[11pt]{scrreprt}
+\parindent 0pt
+\parskip 11pt
+
+\usepackage[latin1]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[colorlinks=false,pdfborder={0 0 0}]{hyperref}
+\usepackage{cite}
+
+\begin{document}
+
+\tableofcontents
+\pagenumbering{Roman}
+
+\chapter{Einleitung}
+\pagenumbering{arabic}
+
+In der heutigen Zeit haben sich viele elektronische Unterhaltungsmedien
+entwickelt und sind im Alltag nicht mehr wegzudenken. Filme, Musik und vor
+allem Spiele werden in größerem Ausmaß konsumiert als je zuvor.
+
+Besonders die Computerspielindustrie hat in den letzten Jahren eine Entwicklung
+durchgemacht, wie in keinem Industriezweig vor ihr. Der Sprung von wenigen Pixeln zu 
+aufwendigen 3D-Grafiken wurde in weniger als einem Jahrzehnt vollzogen und die Zukunft 
+bietet immer interessantere Möglichkeiten.
+
+3D-Echtzeit ist das bestimmende Thema in der aktuellen Spieleentwicklung.
+Umwerfende Bilder und Effekte werden mit Hilfe von aktueller Hardware generiert
+und in flüssigen Bildfolgen zur Verfügung gestellt. Der Spieler taucht geradezu
+ein in diese virtuelle Realität, da sich die echte und die virtuelle Welt kaum 
+mehr voneinander unterscheiden.
+
+Um diese Tiefe in einem Spiel zu erreichen werden aufwendige Engines entwickelt,
+die aus mehreren Bereichen zusammengesetzt sind. Zum einen der visuelle Anteil,
+aber auch wichtige Funktionen wie Physik und Sounduntermalung. Wie der Name schon 
+suggeriert, sind Spieleengines komplexe Programme, die oft aus tausenden Zeilen von 
+Code bestehen und meist in größeren Teams entwickelt werden.
+
+Im Laufe der Zeit wurden die implementierten Algorithmen immer komplexer und mit
+ihnen die Möglichkeiten, die eine aktuelle Engine zur Verfügung stellt. Licht,
+sowie Schattenwurf und auch verschiedene optische Effekte, wie Bewegungs- bzw.
+Tiefenunschärfe sind nur Bruchteile dessen was mit heutiger 3D-Technologie
+simuliert werden kann.
+
+Im Wandel befindet sich vor allem die Hardware, die mit der Menge an zu
+verarbeitenden Daten fertig werden muss. Grafikkarten sind eigene Rechenwerke,
+die Milliarden von Transistoren besitzen und selbst Computer von vor wenigen
+Jahren in Bezug auf Rechenleistung ohne Probleme schlagen können.
+
+Diese Leistung ist in den heutigen Grafikanwendungen auch nötig, da in einer
+Szene schon gut und gerne mehrere Millionen Polygone gleichzeitig dargestellt
+werden müssen. Hinzu kommen noch die eingesetzten Post-Processing Effekte, die
+das Bild nachhaltig aufwerten. Selbst die komplexe Physikberechnung wird auf
+Grafikkarten ausgelagert, wobei vor kurzem noch die CPU für diese Art von
+Berechnung zuständig war.
+
+\section{Motivation}
+
+Die Arbeit beleuchtet einen besonderen Aspekt in der 3D-Echtzeitberechnung, das
+Portal Rendering bzw. Portal Culling. Innerhalb der Arbeit werden die
+verschiedenen Anwendungsmöglichkeiten dieser Technik dargelegt und mit
+Beispielen fundiert.
+
+Als Basis dieser Arbeit dient das jVR-Framework, welches um die Funktionen des
+Portal Cullings erweitert wird. Dies ermöglicht den Aufbau von komplexeren
+Szenen mit einem geringeren Rechenaufwand, da im Verlauf der Erweiterung
+Techniken eingesetzt werden um unnötige Objekte vom Rendern auszuschließen.
+
+\section{Aufbau der Arbeit}
+
+\section{Klassendiagramm}
+
+\chapter{Aufgabenstellung}
+
+\chapter{Stand der Technik}
+
+\section{jVR-Framework}
+
+Wie schon in vorangehend erwähnt, spielt der Einsatz des jVR-Frameworks eine
+zentrale Rolle dieser Arbeit. Dies lässt sich zum einen dadurch begründen, dass
+das Framework schon ein grundlegendes Maß an wichtigen Funktionen bietet, die
+nötig sind um 3D-Echtzeit-Anwendungen zu erstellen und zum anderen, da es um
+weitere nützliche Funktionen erweitert werden kann um Performance bzw.
+Produktivität zu steigern.
+
+Das jVR-Framework ist im Rahmen einer Masterarbeit entstanden und hat sich zum
+Ziel gemacht den Studenten eine Plattform zu liefern mit denen sie komplexe
+3D-Programme erzeugen können auf Basis der Programmiersprache Java. Diese bietet
+den Vorteil sich nicht mit Sachen, wie Speichermanagement beschäftigen zu
+müssen, sondern sich ganz auf die Funktionalität der zu erstellenden Anwendung
+zu konzentrieren.
+
+Für die 3D-Beschleunigung wird die Grafikbibliothek JOGL verwendet, die eine
+Javaimplementierung der Grafikschnittstelle OpenGL darstellt. OpenGL ist ein
+offener Grafikstandard der von nahezu jeder Grafikkarte unterstützt wird, die
+richtigen Treiber vorausgesetzt.
+
+Um die Produktivität zu steigern wurden viele Grundfunktionen, die häufig
+benutzt von vornherein ins jVR-Framework implementiert. Wodurch der Entwickler
+so gut wie nie in Kontakt mit reinen  OpenGL-Befehlen kommt. Es können ohne
+Umschweife Kameras erzeugt oder mit wenigen Zeilen Code COLLADA-Dateien
+importiert und genutzt werden.
+
+Eine weitere Besonderheit des jVR-Frameworks bietet die Unterstützung von
+Shadern, die in der OpenGL Shader Language, kurz GLSL geschrieben werden.
+Dadurch lassen sich Oberflächeneffekte oder auch Effekte, wie Motion Blur und
+Depth of Field erzeugen.
+
+Zudem bietet das jVR-Framework noch die Möglichkeit stereoskopische Bilder zu
+erzeugen, die durch eine entsprechende Brille einen räumlichen Effekt
+simulieren. Hinzu kommt die Funktion des Headtrackings, wodurch die Bewegung des
+Kopfes vom Betrachter aufgezeichnet wird und vom Programm verarbeitet wird. Je
+nach Neigung bzw. Drehung des Kopfes wird die betrachtete Szene angepasst, was
+dem Betrachter die Illusion vermittelt sich tatsächlich in der Szene zu bewegen.
+
+\section{Portal Culling}
+
+Das Verfahren zum Portal Culling lässt sich erklären, indem man sich einen
+Bereich vorstellt, der aus mehreren Zellen besteht. Diese Zellen verbinden
+einander durch Türen bzw. Fenster, so genannte Portale. Portale sind in der
+Regel durchsichtig und können in den meisten Fällen auch betreten werden.
+
+Der Sinn des Portal Cullings besteht nun darin, Objekte innerhalb der
+verschiedenen Zellen zu rendern bzw. nicht zu rendern je nach Sichtbarkeit des
+jeweiligen Objektes. Wird z.B. ein Objekt durch eine Wand verdeckt, besteht
+keine Notwendigkeit das Objekt überhaupt zu rendern und es wird zudem Rechenzeit
+gespart. Durch den Einsatz dieses Verfahrens können bis zu 50 Prozent der
+benötigten Ressourcen zum Rendern eingespart werden.
+
+Der erste Portal Culling Algorithmus wurde 1990 von Airey vorgestellt. Im
+späteren Verlauf wurden von Teller und Séquin bzw. Teller und Hanrahan
+verbesserte komplexere und vor allem effizientere Algorithmen zum Thema Portal
+Culling entwickelt.
+
+All diese Algorithmen gleichen sich in der Annahme, dass die Wände als
+verdeckendes Element für Szenen dienen, die innerhalb eines Raumes stattfinden.
+Des Weiteren wird durch jedes Portal ein View Frustum Culling (siehe Frustum
+Culling) durchgeführt. Das eigentliche Frustum wird durch das Portal auf dessen
+Größe reduziert, somit werden alle Objekte und auch Portale außerhalb des
+Sichtbereichs vom Rendern ausgeschlossen. Diese Vorgehensweise kann rekursiv
+fortgesetzt werden, falls sich innerhalb des betrachteten Raumes ein weiteres
+Portal befindet.
+
+Ein weiterer Verwendungszweck von Portal Culling ist die Erzeugung von Spiegeln.
+Spiegel sind nichts weiter als Portale, die den Sichtkegel des Betrachters
+reflektiert und der Bereich in das Portal gerendert. Mit Hilfe von Shadern kann
+hinzukommend noch eine glasähnliche Oberfläche simuliert werden, was den
+Eindruck eines Spiegels nochmals verstärkt.
+
+Zudem lassen sich Portale dazu nutzen sich innerhalb der Umgebung zu
+teleportieren. Dazu werden 2 oder auch nur ein Portal erzeugt und der Ausgang
+des einen Portals stellt den Frustum des anderen Portals dar. Dabei wird eine
+Kamera benutzt die genau den entgegengesetzten Sichtbereich des ersten Portals
+rendert, wobei aber der Sichtbereich auf das zweite Portal gerendert wird. Bei
+Durchtreten der beiden Portale wird die Position des Betrachters dementsprechend
+verändert.
+
+Möglich ist es zudem ein Portal als Einbahnstraße zu benutzen, wodurch der
+Betrachter nicht mehr in der Lage ist an die Stelle des durchtretenden Portals
+ohne Probleme zurückzukehren. Dies bedeutet, dass der Betrachter zwar von
+Stelle 1 nach Stelle 2 teleportiert wird, wenn er das Portal durchtritt, aber
+nicht mehr von Stelle 2 an die Stelle 1 gelangen kann, da sich dort kein Portal
+befindet. Diese Herangehensweise lässt sich oft in Spielen wiederfinden, um
+z.B. ein Labyrinth zu erzeugen oder den Spieler kurz zu desorientieren.
+
+\subsection{Frustum Culling}
+
+\subsection{Occlusion Culling}
+
+\section{Portal Rendering}
+
+\chapter{Umsetzung}
+
+\section{Zu verwendende Algorithmen}
+
+\section{Strukturierung}
+
+\section{Implementierung}
+
+\subsection{Verwendete Pattern}
+
+\subsection{Codebeispiele / Erläuterungen}
+
+\section{Mögliche Problemfälle und Optimierungen}
+
+Natürlich treten auch Probleme innerhalb der Implementierung auf, die
+berücksichtigt werden müssen. Mögliche auftretende Problem werden genauer
+beleuchtet und mit entsprechenden Gegenmaßnahmen gelöst.
+
+\subsection{Schatten}
+
+Dadurch, dass Objekte im Portal Culling nicht gerendert werden kann es auch zu
+Problemen bei der Darstellung der Szene kommen. Wenn z.B. ein Objekt innerhalb
+des Raumes, der durch ein Portal betrachtet wird einen Schatten wirft, aber in
+diesem Moment das Objekt nicht sichtbar ist und daher nicht gerendert wird, kann
+somit auch der Schatten nicht erzeugt und nicht in der Szene angezeigt werden.
+Dies fährt zu einem plötzlichen aufblitzen von Schatten, was dem natürlichem
+Verständnis vom Schattenwurf widerspricht.
+
+\subsection{Reflexionen}
+
+Ein weiteres Problem, welches Auftreten kann sind mögliche Reflexionen innerhalb
+des Raumes. Falls in dem betrachteten Raum ein Spiegel steht und die Objekte
+zwar nicht direkt durch die Tür bzw. das Fenster sichtbar sind, aber indirekt
+durch einen Spiegel betrachtet werden können. Es werden alle Objekte, die nicht
+direkt sichtbar wären ebenso wenig im Spiegel zu sehen. Ebenso verhält es sich
+mit möglichen anderen Portalen, die ebenfalls nur durch einen Blick um die Ecke
+sichtbar würden.
+
+\subsection{Lösungsansätze}
+
+\chapter{Ergebnisse und Bewertung}
+
+\chapter{Zusammenfassung und Ausblick}
+
+Test \cite{real_time}
+
+Test2 \cite{OGL}
+
+\bibliography{lit}
+\bibliographystyle{apalike}
+\addcontentsline{toc}{chapter}{Literaturverzeichnis}
+
+\end{document}
+
