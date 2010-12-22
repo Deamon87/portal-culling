@@ -1,11 +1,9 @@
-package de.bht.jvr.portals.tests;
+package de.bht.jvr.util;
 
-import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.bht.jvr.core.GroupNode;
 import de.bht.jvr.core.ShaderMaterial;
 import de.bht.jvr.core.ShaderProgram;
 import de.bht.jvr.core.Texture2D;
@@ -13,60 +11,32 @@ import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.core.uniforms.UniformInt;
 import de.bht.jvr.core.uniforms.UniformVector2;
 import de.bht.jvr.math.Vector2;
-import de.bht.jvr.portals.Cell;
-import de.bht.jvr.renderer.AwtRenderWindow;
-import de.bht.jvr.renderer.RenderWindow;
-import de.bht.jvr.renderer.Viewer;
-import de.bht.jvr.tests.TestBase;
 
-public class MyTest extends TestBase{
+public class OGLPrinter {
 
-	public static void main(String[] args) {
+	private Pipeline pipeline;
+	private ShaderMaterial mat;
+	
+	public OGLPrinter(Pipeline pipeline) {
+		this.pipeline = pipeline;
+		pipeline.drawQuad(mat, "OVERLAY");
 		try {
-			new MyTest();
+			ShaderProgram prog = new ShaderProgram(new File("pipeline_shader/quad.vs"), new File("pipeline_shader/text_overlay.fs"));
+			mat = new ShaderMaterial("OVERLAY", prog);
+	        mat.setTexture("OVERLAY", "jvr_Texture0", new Texture2D(new File("textures/fonts.png")));
+	        
+	        this.pipeline.drawQuad(mat, "OVERLAY");
+	        
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public MyTest() throws Exception {
-		GroupNode root = new GroupNode();
-		
-		Cell cell = new Cell();
-		root.addChildNode(cell);
-		
-		ShaderProgram prog = new ShaderProgram(new File("pipeline_shader/quad.vs"), new File("pipeline_shader/text_overlay.fs"));
-		ShaderMaterial mat = new ShaderMaterial("OVERLAY", prog);
-        mat.setTexture("OVERLAY", "jvr_Texture0", new Texture2D(new File("textures/fonts.png")));
-		
-		Pipeline p = new Pipeline(root);
-		//OGLPrinter printer = new OGLPrinter(p);
+	public void print(String text) {
+        this.setScreenText(mat, 0.1f, 0.8f, 0.02f, 0.02f, text);
 
-		p.clearBuffers(true, true, new Color(121, 188, 255));
-
-		p.drawQuad(mat, "OVERLAY");
-		
-		//printer.drawQuad();
-		
-		RenderWindow w = new AwtRenderWindow(p, 1024, 768);
-		
-		Viewer viewer = new Viewer(w);
-		
-		try {
-			while(viewer.isRunning())
-			{
-				long start = System.currentTimeMillis();
-				//Long x = new Long(System.currentTimeMillis());
-		        this.setScreenText(mat, 0.1f, 0.8f, 0.02f, 0.02f, "test");
-				viewer.display();
-				this.move(System.currentTimeMillis() - start, 0.1);
-				
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
+                
 	}
 	
 	private void setScreenText(ShaderMaterial mat, float posX, float posY, float xSize, float ySize, String text)
@@ -112,15 +82,6 @@ public class MyTest extends TestBase{
             case '9':
                 letterV = new Vector2(9,3);
                 break;
-            case 't':
-            	letterV = new Vector2(4,7);
-            	break;
-            case 'e':
-            	letterV = new Vector2(5,6);
-            	break;
-            case 's':
-            	letterV = new Vector2(3,7);
-            	break;
             }
 
             if(letterV!=null)
