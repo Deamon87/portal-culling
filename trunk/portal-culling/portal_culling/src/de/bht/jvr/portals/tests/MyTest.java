@@ -5,10 +5,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.bht.jvr.collada14.loader.ColladaLoader;
+import de.bht.jvr.core.CameraNode;
 import de.bht.jvr.core.GroupNode;
+import de.bht.jvr.core.PointLightNode;
+import de.bht.jvr.core.SceneNode;
 import de.bht.jvr.core.ShaderMaterial;
 import de.bht.jvr.core.ShaderProgram;
 import de.bht.jvr.core.Texture2D;
+import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.core.uniforms.UniformInt;
 import de.bht.jvr.core.uniforms.UniformVector2;
@@ -35,24 +40,42 @@ public class MyTest extends TestBase{
 		
 		Cell cell = new Cell();
 		root.addChildNode(cell);
+		SceneNode plane = ColladaLoader.load(new File("meshes/plane.dae"));
+		plane.setTransform(Transform.scale(1.0f, 1.0f, 1.0f));
+		//plane.setTransform(Transform.rotateXDeg(-90).mul(Transform.scale(500)));
+		root.addChildNode(plane);
 		
 		ShaderProgram prog = new ShaderProgram(new File("pipeline_shader/quad.vs"), new File("pipeline_shader/text_overlay.fs"));
 		ShaderMaterial mat = new ShaderMaterial("OVERLAY", prog);
         mat.setTexture("OVERLAY", "jvr_Texture0", new Texture2D(new File("textures/fonts.png")));
 		
+        PointLightNode pLight = new PointLightNode();
+        pLight.setColor(new Color(1.0f, 1.0f, 1.0f));
+        pLight.setTransform(Transform.translate(0, 400, 200));
+        root.addChildNode(pLight);
+        
+        CameraNode cam = new CameraNode("cam", 4/3, 60f);
+        cam.setTransform(Transform.translate(0, 0, 1));
+        this.cams.add(cam);
+        root.addChildNode(cam);
+        
 		Pipeline p = new Pipeline(root);
+		p.switchCamera(cam);
 		//OGLPrinter printer = new OGLPrinter(p);
 
 		p.clearBuffers(true, true, new Color(121, 188, 255));
+		p.drawGeometry("AMBIENT", null);
+		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 
 		p.drawQuad(mat, "OVERLAY");
-		
 		//printer.drawQuad();
 		
 		RenderWindow w = new AwtRenderWindow(p, 1024, 768);
 		
+		w.addKeyListener(this);
+		w.addMouseListener(this);
+		w.setVSync(true);
 		Viewer viewer = new Viewer(w);
-		
 		try {
 			while(viewer.isRunning())
 			{
@@ -60,9 +83,10 @@ public class MyTest extends TestBase{
 				//Long x = new Long(System.currentTimeMillis());
 		        this.setScreenText(mat, 0.1f, 0.8f, 0.02f, 0.02f, "test");
 				viewer.display();
-				this.move(System.currentTimeMillis() - start, 0.1);
+				move(System.currentTimeMillis() - start, 0.001);
 				
 			}
+			viewer.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
