@@ -26,4 +26,12 @@ public class PortalConnection {
 		return this.portal2;
 	}
 	
+	public static void connect(Portal portal1, Portal portal2) {
+		portal1.getCamera();
+		portal2.getCamera();
+		portal1.getPosition();
+		portal2.getPosition();
+		portal1.getDirection();
+		portal2.getDirection();
+	}
 }
