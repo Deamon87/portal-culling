@@ -5,7 +5,6 @@ import java.io.File;
 
 import de.bht.jvr.collada14.loader.ColladaLoader;
 import de.bht.jvr.core.CameraNode;
-import de.bht.jvr.core.ClipPlaneNode;
 import de.bht.jvr.core.Finder;
 import de.bht.jvr.core.GroupNode;
 import de.bht.jvr.core.PointLightNode;
@@ -47,8 +46,8 @@ public class MyTest extends TestBase{
 		portal2.setTransform(Transform.scale(50.0f, 100.0f, 1.0f)
 						.mul(Transform.translate(0, 0.05f, -400)
 						.mul(Transform.scale(0.1f)
-					//	.mul(Transform.rotateYDeg(180)))));
-								)));
+						.mul(Transform.rotateYDeg(180)
+								))));
 		root.addChildNode(portal2);
 		
 		SceneNode scene = ColladaLoader.load(new File("meshes/testwelt01.dae"));
@@ -68,19 +67,19 @@ public class MyTest extends TestBase{
         root.addChildNode(pLight);
         
         CameraNode cam = new CameraNode("cam", 4/3, 60f);
-        cam.setTransform(Transform.translate(0, 0, 10));
+        cam.setTransform(Transform.translate(0, 0.5f, 10));
         this.cams.add(cam);
         root.addChildNode(cam);
         
         // Portal1 camera
         CameraNode portal1Cam = new CameraNode("portal1Cam", 4/3, 60f);
-        portal1Cam.setTransform(Transform.translate(0, 0.5f, -400));
-        		//.mul(Transform.rotateY(180)));
+        portal1Cam.setTransform(Transform.translate(0, 0.5f, -400)
+        		.mul(Transform.rotateY(180)));
         root.addChildNode(portal1Cam);
         
         // Portal2 camera
         CameraNode portal2Cam = new CameraNode("portal2Cam", 4/3, 60f);
-        portal2Cam.setTransform(portal1.getTransform());
+        portal2Cam.setTransform(Transform.translate(0, 0.5f, 0));
         root.addChildNode(portal2Cam);
         
         // Portal1 material
@@ -120,7 +119,6 @@ public class MyTest extends TestBase{
 		
 		w.addKeyListener(this);
 		w.addMouseListener(this);
-		//w.setVSync(true);
 		Viewer viewer = new Viewer(w);
 		try {
 			while(viewer.isRunning())
@@ -128,9 +126,7 @@ public class MyTest extends TestBase{
 				long start = System.currentTimeMillis();
 				
 				Transform camTrans = cam.getTransform();
-				camTrans = portal1.getTransform().invert().extractRotation()
-						.mul(portal1.getTransform().invert().extractTranslation())
-						.mul(camTrans);
+				camTrans = portal1.getTransform().extractTranslation().mul(camTrans);
 				portal1Cam.setTransform(camTrans);
 				
 				viewer.display();
