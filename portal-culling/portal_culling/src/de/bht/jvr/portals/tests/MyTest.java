@@ -5,9 +5,14 @@ import java.io.File;
 
 import de.bht.jvr.collada14.loader.ColladaLoader;
 import de.bht.jvr.core.CameraNode;
+import de.bht.jvr.core.ClipPlaneNode;
+import de.bht.jvr.core.Finder;
 import de.bht.jvr.core.GroupNode;
 import de.bht.jvr.core.PointLightNode;
 import de.bht.jvr.core.SceneNode;
+import de.bht.jvr.core.ShaderMaterial;
+import de.bht.jvr.core.ShaderProgram;
+import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.portals.Cell;
@@ -42,7 +47,8 @@ public class MyTest extends TestBase{
 		portal2.setTransform(Transform.scale(50.0f, 100.0f, 1.0f)
 						.mul(Transform.translate(0, 0.05f, -400)
 						.mul(Transform.scale(0.1f)
-						.mul(Transform.rotateYDeg(-180)))));
+					//	.mul(Transform.rotateYDeg(180)))));
+								)));
 		root.addChildNode(portal2);
 		
 		SceneNode scene = ColladaLoader.load(new File("meshes/testwelt01.dae"));
@@ -66,14 +72,49 @@ public class MyTest extends TestBase{
         this.cams.add(cam);
         root.addChildNode(cam);
         
+        // Portal1 camera
+        CameraNode portal1Cam = new CameraNode("portal1Cam", 4/3, 60f);
+        portal1Cam.setTransform(Transform.translate(0, 0.5f, -400));
+        		//.mul(Transform.rotateY(180)));
+        root.addChildNode(portal1Cam);
+        
+        // Portal2 camera
+        CameraNode portal2Cam = new CameraNode("portal2Cam", 4/3, 60f);
+        portal2Cam.setTransform(portal1.getTransform());
+        root.addChildNode(portal2Cam);
+        
+        // Portal1 material
+        ShaderProgram prog = new ShaderProgram(new File("shader/portal.vs"), new File("shader/portal.fs"));
+        ShaderMaterial portal1Mat = new ShaderMaterial("AMBIENT", prog);
+        portal1Mat.setMaterialClass("portal1Mat");
+        
+        ShapeNode portal1Shape = Finder.find(portal1, ShapeNode.class, null);
+        portal1Shape.setMaterial(portal1Mat);
+        
+        // Portal2 material
+        ShaderMaterial portal2Mat = new ShaderMaterial("AMBIENT", prog);
+        portal2Mat.setMaterialClass("portal2Mat");
+        
+        ShapeNode portal2Shape = Finder.find(portal2, ShapeNode.class, null);
+        portal2Shape.setMaterial(portal2Mat);
+        
 		Pipeline p = new Pipeline(root);
-		p.switchCamera(cam);
-		//OGLPrinter printer = new OGLPrinter(p);
-
+		p.createFrameBufferObject("FBO", false, 1, 1.0f, 0);
+		
+		p.switchFrameBufferObject("FBO");
+		p.switchCamera(portal1Cam);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
-		p.drawGeometry("AMBIENT", null);
-		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
-		//printer.drawQuad();
+		p.drawGeometry("AMBIENT", "(?!portal1Mat).*");
+		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal1Mat).*");
+		
+		p.switchFrameBufferObject(null);
+		p.switchCamera(cam);
+		p.clearBuffers(true, true, new Color(121, 188, 255));
+		p.drawGeometry("AMBIENT", "(?!portal1Mat).*");
+		Pipeline lp = p.doLightLoop(true, true);
+			lp.drawGeometry("LIGHTING", "(?!portal1Mat).*");
+		p.bindColorBuffer("jvr_PortalTexture", "FBO", 0);
+		p.drawGeometry("AMBIENT", "portal1Mat");
 		
 		RenderWindow w = new AwtRenderWindow(p, 1024, 768);
 		
@@ -85,7 +126,13 @@ public class MyTest extends TestBase{
 			while(viewer.isRunning())
 			{
 				long start = System.currentTimeMillis();
-				//Long x = new Long(System.currentTimeMillis());
+				
+				Transform camTrans = cam.getTransform();
+				camTrans = portal1.getTransform().invert().extractRotation()
+						.mul(portal1.getTransform().invert().extractTranslation())
+						.mul(camTrans);
+				portal1Cam.setTransform(camTrans);
+				
 				viewer.display();
 				move(System.currentTimeMillis() - start, 0.1);
 				
