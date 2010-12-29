@@ -21,7 +21,7 @@ void main (void)
 	vec4 vertexNDC = DCtoTC * jvr_ProjectionMatrix * vertex;	
 	vec2 texCoord = vertexNDC.xy / vertexNDC.w;
 
-	texCoord.x = 1.0-texCoord.x;
+	//texCoord.x = 1.0-texCoord.x;
 	
 	// Make a cyanish tint.
 	gl_FragColor = texture2D(jvr_PortalTexture, texCoord);
