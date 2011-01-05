@@ -41,31 +41,28 @@ public class MyTest extends TestBase{
 		SceneNode portal1 = ColladaLoader.load(new File("meshes/plane.dae"));
 		portal1.setTransform(Transform.scale(50, 100, 1)
 						.mul(Transform.translate(0, 0.05f, 0)
-						.mul(Transform.scale(0.1f))));
+						.mul(Transform.scale(0.1f)
+								)));
 		root.addChildNode(portal1);
 		
 		ClipPlaneNode clipPlane1 = new ClipPlaneNode();
-		clipPlane1.setTransform(Transform.scale(50.0f, 100, 1)
-						.mul(Transform.translate(0, 0.05f, 0)
-						.mul(Transform.scale(0.1f))	
+		clipPlane1.setTransform(Transform.translate(0, 0.05f, 0)
 						.mul(Transform.rotateYDeg(180))
-						));
+								);
 		root.addChildNode(clipPlane1);
 			
 		SceneNode portal2 = ColladaLoader.load(new File("meshes/plane.dae"));
-		portal2.setTransform(Transform.scale(50.0f, 100.0f, 1.0f)
+		portal2.setTransform(Transform.scale(50, 100, 1)
 						.mul(Transform.translate(0, 0.05f, -400)
 						.mul(Transform.scale(0.1f)
 								)));
 		root.addChildNode(portal2);
 		
-		ClipPlaneNode clipPlane2 = new ClipPlaneNode();
-		clipPlane2.setTransform(Transform.scale(50.0f, 100, 1)
-						.mul(Transform.translate(0, 0.05f, -400)
-						.mul(Transform.scale(0.1f))	
-						.mul(Transform.rotateYDeg(180))
-								));
-		root.addChildNode(clipPlane2);
+//		ClipPlaneNode clipPlane2 = new ClipPlaneNode();
+//		clipPlane2.setTransform(Transform.translate(0, 0.05f, -400)
+//						.mul(Transform.rotateYDeg(180))
+//								);
+//		root.addChildNode(clipPlane2);
 		
 		SceneNode scene = ColladaLoader.load(new File("meshes/testwelt01.dae"));
 		scene.setTransform(Transform.rotateXDeg(-90).mul(Transform.scale(0.1f)));
@@ -75,7 +72,7 @@ public class MyTest extends TestBase{
 		
 		GroupNode sceneGroup2 = new GroupNode();
 		sceneGroup2.addChildNode(scene);
-		sceneGroup2.setTransform(Transform.translate(0, 0, -400f));
+		sceneGroup2.setTransform(Transform.translate(0, 0, -400));
 		root.addChildNode(sceneGroup2);
 		
         PointLightNode pLight = new PointLightNode();
@@ -90,16 +87,10 @@ public class MyTest extends TestBase{
         
         // Portal1 camera
         CameraNode portal1Cam = new CameraNode("portal1Cam", 4/3, 60f);
-        portal1Cam.setTransform(Transform.translate(0, 0.5f, -400)
-        		.mul(Transform.rotateYDeg(180))
-        		);
         root.addChildNode(portal1Cam);
         
         // Portal2 camera
         CameraNode portal2Cam = new CameraNode("portal2Cam", 4/3, 60f);
-        portal2Cam.setTransform(Transform.translate(0, 0.5f, 0)
-        		.mul(Transform.rotateYDeg(180))
-        		);
         root.addChildNode(portal2Cam);
         
         // Portal1 material
@@ -118,40 +109,38 @@ public class MyTest extends TestBase{
         portal2Shape.setMaterial(portal2Mat);
         
 		Pipeline p = new Pipeline(root);
-		p.createFrameBufferObject("FBO", false, 1, 1.0f, 0);
 		
+		p.createFrameBufferObject("FBO", false, 2, 1.0f, 0);
+		
+		p.createFrameBufferObject("FBO2", false, 1, 1.0f, 0);
+		
+		// FBO for portal1
 		p.switchFrameBufferObject("FBO");
 		p.switchCamera(portal1Cam);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
-		p.drawGeometry("AMBIENT", "(?!portal1Mat).*");
-		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal1Mat).*");
+		//p.setUniform("jvr_UseClipPlane0", new UniformBool(true));			
+		p.drawGeometry("AMBIENT", "(?!portal).*");
+		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal).*");
+				
+		// FBO for portal2
+		p.switchFrameBufferObject("FBO2");
+		p.switchCamera(portal2Cam);
+		p.clearBuffers(true, true, new Color(121, 188, 255));		
+		//p.setUniform("jvr_UseClipPlane0", new UniformBool(false));
+		p.drawGeometry("AMBIENT", "(?!portal).*");
+		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal).*");	
 		
 		p.switchFrameBufferObject(null);
 		p.switchCamera(cam);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
 		p.setUniform("jvr_UseClipPlane0", new UniformBool(false));
-		p.drawGeometry("AMBIENT", "(?!portal1Mat).*");
+		p.drawGeometry("AMBIENT", "(?!portal).*");
 		Pipeline lp = p.doLightLoop(true, true);
-			lp.drawGeometry("LIGHTING", "(?!portal1Mat).*");
+			lp.drawGeometry("LIGHTING", "(?!portal).*");
+			
 		p.bindColorBuffer("jvr_PortalTexture", "FBO", 0);
 		p.drawGeometry("AMBIENT", "portal1Mat");
 
-		p.createFrameBufferObject("FBO2", false, 1, 1.0f, 0);
-		
-		p.switchFrameBufferObject("FBO2");
-		p.switchCamera(portal2Cam);
-		p.clearBuffers(true, true, new Color(121, 188, 255));
-		p.drawGeometry("AMBIENT", "(?!portal2Mat).*");
-		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal2Mat).*");
-		
-		p.switchFrameBufferObject(null);
-		p.switchCamera(cam);
-		p.clearBuffers(true, true, new Color(121, 188, 255));
-		p.setUniform("jvr_UseClipPlane0", new UniformBool(false));
-		p.drawGeometry("AMBIENT", "(?!portal2Mat).*");
-		Pipeline lp2 = p.doLightLoop(true, true);
-			lp2.drawGeometry("LIGHTING", "(?!portal2Mat).*");
-		
 		p.bindColorBuffer("jvr_PortalTexture", "FBO2", 0);
 		p.drawGeometry("AMBIENT", "portal2Mat");
 		
@@ -166,22 +155,14 @@ public class MyTest extends TestBase{
 				long start = System.currentTimeMillis();
 				
 				Transform camTrans = cam.getTransform();
-				camTrans = portal1.getTransform().invert()
-								.mul(Transform.rotateYDeg(180))
-								.mul(camTrans);
-				camTrans = portal2.getTransform().mul(camTrans);
+				camTrans = portal1.getTransform().invert().mul(camTrans);
+				camTrans = portal2.getTransform().mul(Transform.rotateYDeg(180)).mul(camTrans);
 				portal1Cam.setTransform(camTrans);
 				
 				Transform camTrans2 = cam.getTransform();
-				camTrans2 = portal2.getTransform().invert()
-		//						.mul(Transform.rotateYDeg(180))
-								.mul(camTrans2);
-				camTrans2 = portal1.getTransform().mul(camTrans2);
+				camTrans2 = portal2.getTransform().invert().mul(camTrans2);
+				camTrans2 = portal1.getTransform().mul(Transform.rotateYDeg(180).mul(camTrans2));
 				portal2Cam.setTransform(camTrans2);
-				
-				//System.out.println(cam.getBBox());
-				//System.out.println(portal1.getBBox());
-
 				
 				viewer.display();
 				move(System.currentTimeMillis() - start, 0.1);
