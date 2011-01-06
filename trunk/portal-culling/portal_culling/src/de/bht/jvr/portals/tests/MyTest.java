@@ -16,8 +16,7 @@ import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.core.uniforms.UniformBool;
-import de.bht.jvr.portals.Cell;
-import de.bht.jvr.renderer.AwtRenderWindow;
+import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
 import de.bht.jvr.tests.TestBase;
@@ -36,8 +35,9 @@ public class MyTest extends TestBase{
 	public MyTest() throws Exception {
 		GroupNode root = new GroupNode();
 		
-		Cell cell = new Cell();
-		root.addChildNode(cell);
+//		Cell cell = new Cell();
+//		root.addChildNode(cell);
+		
 		SceneNode portal1 = ColladaLoader.load(new File("meshes/plane.dae"));
 		portal1.setTransform(Transform.scale(50, 100, 1)
 						.mul(Transform.translate(0, 0.05f, 0)
@@ -45,11 +45,11 @@ public class MyTest extends TestBase{
 								)));
 		root.addChildNode(portal1);
 		
-		ClipPlaneNode clipPlane1 = new ClipPlaneNode();
-		clipPlane1.setTransform(Transform.translate(0, 0.05f, 0)
+		ClipPlaneNode clipPlane = new ClipPlaneNode();
+		clipPlane.setTransform(Transform.translate(0, 0.05f, 0)
 						.mul(Transform.rotateYDeg(180))
 								);
-		root.addChildNode(clipPlane1);
+		root.addChildNode(clipPlane);
 			
 		SceneNode portal2 = ColladaLoader.load(new File("meshes/plane.dae"));
 		portal2.setTransform(Transform.scale(50, 100, 1)
@@ -144,7 +144,7 @@ public class MyTest extends TestBase{
 		p.bindColorBuffer("jvr_PortalTexture", "FBO2", 0);
 		p.drawGeometry("AMBIENT", "portal2Mat");
 		
-		RenderWindow w = new AwtRenderWindow(p, 1024, 768);
+		RenderWindow w = new NewtRenderWindow(p, 1024, 768);
 		
 		w.addKeyListener(this);
 		w.addMouseListener(this);
@@ -171,7 +171,6 @@ public class MyTest extends TestBase{
 			viewer.close();
 		} catch(Exception e) {
 			e.printStackTrace();
-		}
-		
+		}		
 	}
 }
