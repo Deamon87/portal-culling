@@ -58,11 +58,11 @@ public class MyTest extends TestBase{
 								)));
 		root.addChildNode(portal2);
 		
-//		ClipPlaneNode clipPlane2 = new ClipPlaneNode();
-//		clipPlane2.setTransform(Transform.translate(0, 0.05f, -400)
-//						.mul(Transform.rotateYDeg(180))
-//								);
-//		root.addChildNode(clipPlane2);
+		ClipPlaneNode clipPlane2 = new ClipPlaneNode();
+		clipPlane2.setTransform(Transform.translate(0, 0.05f, -400)
+						.mul(Transform.rotateYDeg(180))
+								);
+		root.addChildNode(clipPlane2);
 		
 		SceneNode scene = ColladaLoader.load(new File("meshes/testwelt01.dae"));
 		scene.setTransform(Transform.rotateXDeg(-90).mul(Transform.scale(0.1f)));
@@ -118,25 +118,28 @@ public class MyTest extends TestBase{
 		p.switchFrameBufferObject("FBO");
 		p.switchCamera(portal1Cam);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
-		//p.setUniform("jvr_UseClipPlane0", new UniformBool(true));			
-		p.drawGeometry("AMBIENT", "(?!portal).*");
-		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal).*");
-				
+		p.setUniform("jvr_UseClipPlane0", new UniformBool(false));
+		p.setUniform("jvr_UseClipPlane1", new UniformBool(true));
+		p.drawGeometry("AMBIENT", null);
+		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
+		
 		// FBO for portal2
 		p.switchFrameBufferObject("FBO2");
 		p.switchCamera(portal2Cam);
 		p.clearBuffers(true, true, new Color(121, 188, 255));		
-		//p.setUniform("jvr_UseClipPlane0", new UniformBool(false));
-		p.drawGeometry("AMBIENT", "(?!portal).*");
-		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal).*");	
+		p.setUniform("jvr_UseClipPlane0", new UniformBool(true));
+		p.setUniform("jvr_UseClipPlane1", new UniformBool(false));
+		p.drawGeometry("AMBIENT", null);
+		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		
+		// actual scene
 		p.switchFrameBufferObject(null);
 		p.switchCamera(cam);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
 		p.setUniform("jvr_UseClipPlane0", new UniformBool(false));
+		p.setUniform("jvr_UseClipPlane1", new UniformBool(false));
 		p.drawGeometry("AMBIENT", "(?!portal).*");
-		Pipeline lp = p.doLightLoop(true, true);
-			lp.drawGeometry("LIGHTING", "(?!portal).*");
+		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal).*");
 			
 		p.bindColorBuffer("jvr_PortalTexture", "FBO", 0);
 		p.drawGeometry("AMBIENT", "portal1Mat");
@@ -163,7 +166,7 @@ public class MyTest extends TestBase{
 				camTrans2 = portal2.getTransform().invert().mul(camTrans2);
 				camTrans2 = portal1.getTransform().mul(Transform.rotateYDeg(180).mul(camTrans2));
 				portal2Cam.setTransform(camTrans2);
-				
+								
 				viewer.display();
 				move(System.currentTimeMillis() - start, 0.1);
 				

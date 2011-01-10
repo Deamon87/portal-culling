@@ -4,31 +4,40 @@ import java.io.File;
 
 import de.bht.jvr.collada14.loader.ColladaLoader;
 import de.bht.jvr.core.CameraNode;
+import de.bht.jvr.core.ClipPlaneNode;
 import de.bht.jvr.core.GroupNode;
 import de.bht.jvr.core.SceneNode;
+import de.bht.jvr.core.ShaderMaterial;
 import de.bht.jvr.core.Transform;
+import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.math.Vector3;
 
-public class Portal extends GroupNode {
+public abstract class Portal extends GroupNode {
 
+	private String portalName;
 	private float height;
 	private float width;
-	private Vector3 position;
-	private Vector3 direction;
 	private CameraNode camera;
+	private ClipPlaneNode clipPlane;
 	private Portal portalExit;
 	private SceneNode portal;
+	private Pipeline pipeline;
+	private ShaderMaterial material;
 	
-	public Portal() throws Exception {
+	
+	public Portal(Pipeline pipeline, String name) throws Exception {
+		this.portalName = name;
+		this.pipeline = pipeline;
 		this.portal = ColladaLoader.load(new File("meshes/plane.dae"));
 		this.camera = new CameraNode("portalCam", 4/3, 60);
-		this.addChildNodes(this.portal, this.camera);
+		this.clipPlane = new ClipPlaneNode();
+		this.clipPlane.setTransform(this.getTransform().mul(Transform.rotateYDeg(180)));
+		this.addChildNodes(this.portal, this.camera, this.clipPlane);
 	}
 	
 	public Portal(float height, float width, Vector3 direction, CameraNode cam) throws Exception {
 		this.height = height;
 		this.width = width;
-		this.direction = direction;
 		this.camera = cam;
 		this.portalExit = null;
 		
@@ -55,28 +64,20 @@ public class Portal extends GroupNode {
 		return this.width;
 	}
 	
-	public void setPostion(Vector3 position) {
-		this.position = position;
-	}
-	
-	public Vector3 getPosition() {
-		return this.position;
-	}
-	
-	public void setDirection(Vector3 direction) {
-		this.direction = direction;
-	}
-	
-	public Vector3 getDirection() {
-		return this.direction;
-	}
-	
 	public void setCamera(CameraNode cam) {
 		this.camera = cam;
 	}
 	
 	public CameraNode getCamera() {
 		return this.camera;
+	}
+	
+	public ClipPlaneNode getClipPlane() {
+		return clipPlane;
+	}
+	
+	public void setClipPlane(ClipPlaneNode clipPlane) {
+		this.clipPlane = clipPlane;
 	}
 	
 	public void setPortalExit(Portal portalExit) {
@@ -95,10 +96,38 @@ public class Portal extends GroupNode {
 		this.portal = portal;
 	}
 	
+	public Pipeline getPipeline() {
+		return pipeline;
+	}
+	
+	public void setPipeline(Pipeline pipeline) {
+		this.pipeline = pipeline;
+	}
+	
+	public String getPortalName() {
+		return portalName;
+	}
+	
+	public void setPortalName(String portalName) {
+		this.portalName = portalName;
+	}
+	
+	public ShaderMaterial getMaterial() {
+		return material;
+	}
+	
+	public void setMaterial(ShaderMaterial material) {
+		this.material = material;
+	}
+
 	public void update(CameraNode camera) {
 		Transform camTrans = camera.getTransform();
 		camTrans = this.getTransform().invert().mul(camTrans);
 		camTrans = portalExit.getTransform().mul(Transform.rotateYDeg(180)).mul(camTrans);
 		this.camera.setTransform(camTrans);
 	}
+	
+	public abstract void render();
+	
+	public abstract void init();
 }
