@@ -6,6 +6,8 @@
 \usepackage[ngerman]{babel}
 \usepackage[colorlinks=false,pdfborder={0 0 0}]{hyperref}
 \usepackage{cite}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.png}
 
 \begin{document}
 
@@ -83,23 +85,26 @@ nötig sind um 3D-Echtzeit-Anwendungen zu erstellen und zum anderen, da es um
 weitere nützliche Funktionen erweitert werden kann um Performance bzw.
 Produktivität zu steigern.
 
-Das jVR-Framework ist im Rahmen einer Masterarbeit entstanden und hat sich zum
-Ziel gemacht den Studenten eine Plattform zu liefern mit denen sie komplexe
-3D-Programme erzeugen können auf Basis der Programmiersprache Java. Diese bietet
-den Vorteil sich nicht mit Sachen, wie Speichermanagement beschäftigen zu
-müssen, sondern sich ganz auf die Funktionalität der zu erstellenden Anwendung
-zu konzentrieren.
+Das jVR-Framework ist im Rahmen einer Masterarbeit entstanden.Das Ziel des
+Frameworks ist es den Studenten eine Plattform zu liefern mit denen sie komplexe
+3D-Programme erzeugen können. Außerdem soll es den Studenten ein besseres
+Verständnis über die Funktionen von 3D-Engines vermitteln.
 
-Für die 3D-Beschleunigung wird die Grafikbibliothek JOGL verwendet, die eine
-Javaimplementierung der Grafikschnittstelle OpenGL darstellt. OpenGL ist ein
+Das Framework entstand auf Basis der Programmiersprache Java. Diese bietet den
+Vorteil sich nicht mit Sachen, wie Speichermanagement beschäftigen zu müssen,
+sondern sich ganz auf die Funktionalität der zu erstellenden Anwendung zu
+konzentrieren.
+
+Für die 3D-Beschleunigung wird die Grafikbibliothek JOGL verwendet. Sie stellt 
+eine Javaimplementierung der Grafikschnittstelle OpenGL dar. OpenGL ist ein
 offener Grafikstandard der von nahezu jeder Grafikkarte unterstützt wird, die
 richtigen Treiber vorausgesetzt.
 
-Um die Produktivität zu steigern wurden viele Grundfunktionen, die häufig
-benutzt von vornherein ins jVR-Framework implementiert. Wodurch der Entwickler
-so gut wie nie in Kontakt mit reinen  OpenGL-Befehlen kommt. Es können ohne
-Umschweife Kameras erzeugt oder mit wenigen Zeilen Code COLLADA-Dateien
-importiert und genutzt werden.
+Ins jVR-Framework wurden viele häufig benutzten Grundfunktionen implementiert.
+Dies dient dazu um die Produktivität zu steigern. Dadurch kommt der Entwickler
+so gut wie nie in Kontakt mit reinen  OpenGL-Befehlen. Es können ohne Umschweife
+Kameras erzeugt oder mit wenigen Zeilen Code COLLADA-Dateien importiert und
+genutzt werden.
 
 Eine weitere Besonderheit des jVR-Frameworks bietet die Unterstützung von
 Shadern, die in der OpenGL Shader Language, kurz GLSL geschrieben werden.
@@ -113,19 +118,42 @@ Kopfes vom Betrachter aufgezeichnet wird und vom Programm verarbeitet wird. Je
 nach Neigung bzw. Drehung des Kopfes wird die betrachtete Szene angepasst, was
 dem Betrachter die Illusion vermittelt sich tatsächlich in der Szene zu bewegen.
 
+\subsection{Pipeline}
+
+\subsection{Aufbau}
+
+\subsection{Struktur}
+
 \section{Portal Culling}
 
-Das Verfahren zum Portal Culling lässt sich erklären, indem man sich einen
-Bereich vorstellt, der aus mehreren Zellen besteht. Diese Zellen verbinden
-einander durch Türen bzw. Fenster, so genannte Portale. Portale sind in der
-Regel durchsichtig und können in den meisten Fällen auch betreten werden.
+Beim Portal Culling stellt man sich einen Bereich vor, der aus mehreren Zellen
+besteht. Eine Zelle setzt sich aus mehreren Wänden zusammen und kann an weitere
+Zellen angrenzen. Diese Zellen verbinden einander durch Türen bzw. Fenster, so
+genannte Portale. Portale sind in der Regel durchsichtig und können in den
+meisten Fällen auch betreten werden.
 
-Der Sinn des Portal Cullings besteht nun darin, Objekte innerhalb der
+Dadurch lassen sich große Szenen erstellen, die innerhalb eines Gebäudes oder
+eines Tunnelsystems spielen. Die Komplexität lässt sich beliebig steigern, da
+sich beliebig viele Zellen miteinander verbinden lassen.
+
+Der Sinn des Portal Cullings besteht darin, Objekte innerhalb der
 verschiedenen Zellen zu rendern bzw. nicht zu rendern je nach Sichtbarkeit des
 jeweiligen Objektes. Wird z.B. ein Objekt durch eine Wand verdeckt, besteht
 keine Notwendigkeit das Objekt überhaupt zu rendern und es wird zudem Rechenzeit
 gespart. Durch den Einsatz dieses Verfahrens können bis zu 50 Prozent der
 benötigten Ressourcen zum Rendern eingespart werden.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=50mm]{img/portalsplate1}
+\end{center}
+\caption{Test 1234}
+\end{figure}
+
+Zellen können auch ganz vom Renderprozess ausgeschlossen werden. Dies geschieht,
+wenn das Portal, das zur nächsten Zelle führt außerhalb des Sichtbereiches
+liegt. Dadurch wird die komplette Zelle und alle enthaltenen Objekte nicht
+gerendert.
 
 Der erste Portal Culling Algorithmus wurde 1990 von Airey vorgestellt. Im
 späteren Verlauf wurden von Teller und Séquin bzw. Teller und Hanrahan
@@ -142,16 +170,24 @@ fortgesetzt werden, falls sich innerhalb des betrachteten Raumes ein weiteres
 Portal befindet.
 
 Ein weiterer Verwendungszweck von Portal Culling ist die Erzeugung von Spiegeln.
-Spiegel sind nichts weiter als Portale, die den Sichtkegel des Betrachters
-reflektiert und der Bereich in das Portal gerendert. Mit Hilfe von Shadern kann
-hinzukommend noch eine glasähnliche Oberfläche simuliert werden, was den
-Eindruck eines Spiegels nochmals verstärkt.
+Spiegel reflektieren den Sichtbereich des Betrachters. Wenn man aus Sicht des
+Spiegels in die Szene schaut und diese nochmals spiegelt, erhält man das Bild
+welches der Betrachter bei Blick in den Spiegel erhält. Man nimmt den Spiegel in
+diesem Fall als Spiegelebene und erstellt an der gespiegelten Position des
+Betrachters eine Kamera. Diese rendert dann die Szene durch den Spiegel. Danach
+wird die gerenderte Szene aus Sicht der Spiegelkamera auf den Spiegel
+projeziert.
+
+Mit Hilfe von Shadern kann hinzukommend noch eine glasähnliche Oberfläche
+simuliert werden, was den Eindruck eines Spiegels nochmals verstärkt.
 
 Zudem lassen sich Portale dazu nutzen sich innerhalb der Umgebung zu
-teleportieren. Dazu werden 2 oder auch nur ein Portal erzeugt und der Ausgang
-des einen Portals stellt den Frustum des anderen Portals dar. Dabei wird eine
-Kamera benutzt die genau den entgegengesetzten Sichtbereich des ersten Portals
-rendert, wobei aber der Sichtbereich auf das zweite Portal gerendert wird. Bei
+teleportieren. Das bedeutet, dass man sich von einem Ort zu einem anderen
+Ort in kürzester Zeit bewegt, obwohl diese sehr weit von einander entfernt
+liegen. Dazu werden 2 oder auch nur ein Portal erzeugt und der Ausgang des einen
+Portals stellt den Frustum des anderen Portals dar. Dabei wird eine Kamera
+benutzt die genau den entgegengesetzten Sichtbereich des ersten Portals rendert,
+wobei aber der Sichtbereich auf das zweite Portal gerendert wird. Bei
 Durchtreten der beiden Portale wird die Position des Betrachters dementsprechend
 verändert.
 
@@ -160,10 +196,29 @@ Betrachter nicht mehr in der Lage ist an die Stelle des durchtretenden Portals
 ohne Probleme zurückzukehren. Dies bedeutet, dass der Betrachter zwar von
 Stelle 1 nach Stelle 2 teleportiert wird, wenn er das Portal durchtritt, aber
 nicht mehr von Stelle 2 an die Stelle 1 gelangen kann, da sich dort kein Portal
-befindet. Diese Herangehensweise lässt sich oft in Spielen wiederfinden, um
-z.B. ein Labyrinth zu erzeugen oder den Spieler kurz zu desorientieren.
+befindet. Man erreicht dies, indem man die Szene an der Stelle durch das
+Portal rendert, an der der Spieler austreten soll. Daher wird an diese
+Stelle mit dem Verhältnis zur Betrachterkamera die Szene gerendert und auf
+der Portaloberfläche gerendert. Diese Herangehensweise lässt sich oft in Spielen
+wiederfinden, um z.B. ein Labyrinth zu erzeugen oder den Spieler kurz zu
+desorientieren.
 
 \subsection{Frustum Culling}
+
+Frustum Culling ist ein Verfahren in der Computergrafik um die Performanz beim
+Rendern von Szenen zu steigern. Bei diesem Verfahren werden unnötige Objekte vom
+Renderprozess ausgeschlossen.
+
+Beim Frustum Culling wird ein Sichtbereich aufgespannt, das so genannte Frustum.
+Es wird überprüft welche Objekte sich innerhalb des Frustums befinden und welche
+nicht. Befindet sich ein Objekt innerhalb, wird es gerendert. Ist dies nicht der
+Fall wird es verworfen.
+
+Es werden geometrische Primitive um ein Objekt gezeichnet, um festzustellen, ob
+es sich innerhalb des Frustums befindet. Diese Primitive nennt man Bounding
+Boxes (BB). Da die BB größer ist als das eigentliche Objekt, kann es dazu
+führen, dass ein Objekt zwar nicht mehr zu sehen ist aber noch mit seiner BB den
+Frustum berührt und daher noch gerendert wird.
 
 \subsection{Occlusion Culling}
 
