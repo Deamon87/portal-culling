@@ -11,8 +11,9 @@
 
 \begin{document}
 
-\tableofcontents
 \pagenumbering{Roman}
+\tableofcontents
+
 
 \chapter{Einleitung}
 \pagenumbering{arabic}
@@ -85,20 +86,61 @@ nötig sind um 3D-Echtzeit-Anwendungen zu erstellen und zum anderen, da es um
 weitere nützliche Funktionen erweitert werden kann um Performance bzw.
 Produktivität zu steigern.
 
-Das jVR-Framework ist im Rahmen einer Masterarbeit entstanden.Das Ziel des
-Frameworks ist es den Studenten eine Plattform zu liefern mit denen sie komplexe
+Das jVR-Framework ist im Rahmen einer Masterarbeit entstanden.Das Frameworks
+soll den Studenten eine Plattform zu liefern mit denen sie komplexe
 3D-Programme erzeugen können. Außerdem soll es den Studenten ein besseres
 Verständnis über die Funktionen von 3D-Engines vermitteln.
 
-Das Framework entstand auf Basis der Programmiersprache Java. Diese bietet den
-Vorteil sich nicht mit Sachen, wie Speichermanagement beschäftigen zu müssen,
-sondern sich ganz auf die Funktionalität der zu erstellenden Anwendung zu
-konzentrieren.
+\subsection{Java}
 
-Für die 3D-Beschleunigung wird die Grafikbibliothek JOGL verwendet. Sie stellt 
-eine Javaimplementierung der Grafikschnittstelle OpenGL dar. OpenGL ist ein
-offener Grafikstandard der von nahezu jeder Grafikkarte unterstützt wird, die
-richtigen Treiber vorausgesetzt.
+Das Framework entstand auf Basis der Programmiersprache Java. Java wurde
+von Sun Microsystems entwickelt. Der Vorteil von Java ist die nahezu
+Plattformunabhangigkeit. Um Java-Programme ausführen zu können muss eine so
+genannte Java Virtual Machine kurz JVM auf dem jeweiligen Betriebssystem
+installiert sein. Für alle relevanten Betriebssysteme wie z.B. Windows, Mac
+OS X und diverse Linuxdistributionen steht eine solche JVM zur Verfügung
+und kann bei Bedarf installiert werden. 
+
+Java findet sich auch auf mobilen Endgeräten wieder. Durch einige
+Einschränkungen lassen sich bestehende Java-Anwendung ohne große Probleme auf
+Handys oder Organizer portieren.
+
+Java bietet alle Funktionen die man von einer vollwertigen Programmiersprache
+erwartet. Sie bietet einen Umgang mit Interfaces, Schleifen, Kontrollstrukturen
+usw. an.
+
+Ein weiterer Vorteil von Java bietet das Speichermanagement. Dieses wird von dem
+Garbage Collector übernommen. Wird ein Objekt zur Laufzeit nicht mehr verwendet,
+wird es mit Hilfe des Garbage Collectors vom Stack genommen.
+
+\subsection{OpenGL}
+
+Für die 3D-Beschleunigung wird die Grafikbibliothek OpenGL verwendet. Open
+Graphics Library, kurz OpenGL ist ein offener Grafikstandard der von nahezu
+jeder Grafikkarte unterstützt wird, die richtigen Treiber vorausgesetzt. Die
+Besonderheit von OpenGL ist im Gegenzug zu Direct X seine
+Plattformunabhängigkeit. Genauso wie Java lässt sich OpenGL auf jedem gängigen
+Betriebssystem finden und verwenden.
+
+OpenGL Embedded Systems ist eine spezielle Zusammenstellung der OpenGL API für
+mobile Geräte. Dadurch lassen sich Anwendungen auf mobilen Geräten realisieren.
+Durch Begrenzung der mobilen Hardware, ist diese Version der OpenGL API um
+einige Funktionen erleichtert worden.
+
+\subsection{GLSL}
+
+Eine weitere Besonderheit des jVR-Frameworks bietet die Unterstützung von
+Shadern, die in der OpenGL Shader Language, kurz GLSL geschrieben werden.
+Dadurch lassen sich Oberflächeneffekte oder auch Effekte, wie Motion Blur und
+Depth of Field erzeugen.
+
+\subsection{JOGL}
+
+Im jVR-Framework wird die Java Bindings for OpenGL (JOGL) verwendet, um OpenGL
+mit Java nutzen zu können. JOGL stellt eine Wrapperbibliothek dar, die die
+OpenGL-Befehle über Javafunktionen ansteuern lässt.
+
+\subsection{COLLADA}
 
 Ins jVR-Framework wurden viele häufig benutzten Grundfunktionen implementiert.
 Dies dient dazu um die Produktivität zu steigern. Dadurch kommt der Entwickler
@@ -106,10 +148,7 @@ so gut wie nie in Kontakt mit reinen  OpenGL-Befehlen. Es können ohne Umschweife
 Kameras erzeugt oder mit wenigen Zeilen Code COLLADA-Dateien importiert und
 genutzt werden.
 
-Eine weitere Besonderheit des jVR-Frameworks bietet die Unterstützung von
-Shadern, die in der OpenGL Shader Language, kurz GLSL geschrieben werden.
-Dadurch lassen sich Oberflächeneffekte oder auch Effekte, wie Motion Blur und
-Depth of Field erzeugen.
+\subsection{Virtual Reality}
 
 Zudem bietet das jVR-Framework noch die Möglichkeit stereoskopische Bilder zu
 erzeugen, die durch eine entsprechende Brille einen räumlichen Effekt
@@ -143,12 +182,12 @@ keine Notwendigkeit das Objekt überhaupt zu rendern und es wird zudem Rechenzeit
 gespart. Durch den Einsatz dieses Verfahrens können bis zu 50 Prozent der
 benötigten Ressourcen zum Rendern eingespart werden.
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[height=50mm]{img/portalsplate1}
-\end{center}
-\caption{Test 1234}
-\end{figure}
+% \begin{figure}[h]
+% \begin{center}
+% \includegraphics[height=50mm]{img/portalsplate1}
+% \end{center}
+% \caption{Test 1234}
+% \end{figure}
 
 Zellen können auch ganz vom Renderprozess ausgeschlossen werden. Dies geschieht,
 wenn das Portal, das zur nächsten Zelle führt außerhalb des Sichtbereiches
@@ -168,6 +207,8 @@ Größe reduziert, somit werden alle Objekte und auch Portale außerhalb des
 Sichtbereichs vom Rendern ausgeschlossen. Diese Vorgehensweise kann rekursiv
 fortgesetzt werden, falls sich innerhalb des betrachteten Raumes ein weiteres
 Portal befindet.
+
+\subsection{Portale als Spiegel}
 
 Ein weiterer Verwendungszweck von Portal Culling ist die Erzeugung von Spiegeln.
 Spiegel reflektieren den Sichtbereich des Betrachters. Wenn man aus Sicht des
@@ -222,7 +263,14 @@ Frustum berührt und daher noch gerendert wird.
 
 \subsection{Occlusion Culling}
 
-\section{Portal Rendering}
+Ein weiteres Verfahren um die Performanz zu optimieren ist das Occlusin Culling.
+Ähnlich dem Frustum Culling werden Objekte bestimmt, die nicht in den
+Renderprozess gehören, da nicht sichtbar.
+
+Anders als beim Frustum Culling werden Objekte nicht außerhalb des Frustums
+verworfen. Beim Occlusion Culling wird bestimmt, ob ein Objekt von einem anderen
+Objekt verdeckt und damit für den Betrachter nicht sichtbar ist. Diese
+verdeckenden Objekte werden als Occludor bezeichnet.
 
 \chapter{Theoretischer Ansatz}
 
