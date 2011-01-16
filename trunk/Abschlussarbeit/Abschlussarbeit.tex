@@ -71,6 +71,8 @@ Techniken eingesetzt werden um unnötige Objekte vom Rendern auszuschließen.
 
 \section{Aufbau der Arbeit}
 
+
+
 \section{Klassendiagramm}
 
 \chapter{Aufgabenstellung}
@@ -79,7 +81,7 @@ Techniken eingesetzt werden um unnötige Objekte vom Rendern auszuschließen.
 
 \section{jVR-Framework}
 
-Wie schon in vorangehend erwähnt, spielt der Einsatz des jVR-Frameworks eine
+Wie schon vorangehend erwähnt, spielt der Einsatz des jVR-Frameworks eine
 zentrale Rolle dieser Arbeit. Dies lässt sich zum einen dadurch begründen, dass
 das Framework schon ein grundlegendes Maß an wichtigen Funktionen bietet, die
 nötig sind um 3D-Echtzeit-Anwendungen zu erstellen und zum anderen, da es um
@@ -193,12 +195,26 @@ werden.
 
 \subsection{Virtual Reality}
 
-Zudem bietet das jVR-Framework noch die Möglichkeit stereoskopische Bilder zu
-erzeugen, die durch eine entsprechende Brille einen räumlichen Effekt
-simulieren. Hinzu kommt die Funktion des Headtrackings, wodurch die Bewegung des
-Kopfes vom Betrachter aufgezeichnet wird und vom Programm verarbeitet wird. Je
-nach Neigung bzw. Drehung des Kopfes wird die betrachtete Szene angepasst, was
-dem Betrachter die Illusion vermittelt sich tatsächlich in der Szene zu bewegen.
+Zusätzlich bietet das jVR-Framework noch die Möglichkeit eine Art virtueller
+Realität zu erzeugen. Dabei werden stereoskopische Bilder erzeugt, die durch
+eine entsprechende Brille einen räumlichen Effekt simulieren. Dies wird
+durch die Funktion des Multithreading geschafft.
+
+Multithreading bedeutet mehrere Prozesse bzw. Aufgaben von der Engine
+gleichzeitig durchführen zu lassen. Im Falle vom jVR-Framework lassen sich
+mehrere Szenen gleichzeitig rendern.
+
+Um stereoskopische Bilder zu erzeugen werden 2 voneinander versetzte Kameras
+aufgestellt und die Szene simultan aus Sicht der beiden Kameras gerendert. Bei
+der Darstellung werden die 2 erzeugten Bilder übereinandergelegt. Mit der schon
+erwähnten Brille werden die Bilder aus Sicht des Betrachters zusammengefügt. Es
+entsteht ein 3dimensionaler Effekt.
+
+Ein weiterer Teil der virtuellen Realität ist die Funktion des Headtrackings.
+Dabei werden die Bewegung des Kopfes vom Betrachter aufgezeichnet und vom
+Programm verarbeitet. Je nach Neigung bzw. Drehung des Kopfes wird die
+betrachtete Szene angepasst, was dem Betrachter die Illusion vermittelt sich
+tatsächlich in der Szene zu bewegen.
 
 \subsection{Pipeline}
 
@@ -208,6 +224,10 @@ dem Betrachter die Illusion vermittelt sich tatsächlich in der Szene zu bewegen.
 
 \section{Portal Culling}
 
+Portal Culling ist ein Verfahren, um die Leistung in 3D-Echtzeitberechnungen zu
+steigern. In diesem Verfahren werden bestimmte Objekte ausgewählt, die
+letztendlich gerendert werden und damit für den Betrachter sichtbar werden.
+
 Beim Portal Culling stellt man sich einen Bereich vor, der aus mehreren Zellen
 besteht. Eine Zelle setzt sich aus mehreren Wänden zusammen und kann an weitere
 Zellen angrenzen. Diese Zellen verbinden einander durch Türen bzw. Fenster, so
@@ -215,13 +235,13 @@ genannte Portale. Portale sind in der Regel durchsichtig und können in den
 meisten Fällen auch betreten werden.
 
 Dadurch lassen sich große Szenen erstellen, die innerhalb eines Gebäudes oder
-eines Tunnelsystems spielen. Die Komplexität lässt sich beliebig steigern, da
+eines Tunnelsystems spielen. Die Komplexität lässt sich beliebig skalieren, da
 sich beliebig viele Zellen miteinander verbinden lassen.
 
 Der Sinn des Portal Cullings besteht darin, Objekte innerhalb der
 verschiedenen Zellen zu rendern bzw. nicht zu rendern je nach Sichtbarkeit des
 jeweiligen Objektes. Wird z.B. ein Objekt durch eine Wand verdeckt, besteht
-keine Notwendigkeit das Objekt überhaupt zu rendern und es wird zudem Rechenzeit
+keine Notwendigkeit das Objekt zu rendern und es wird zudem Rechenzeit
 gespart. Durch den Einsatz dieses Verfahrens können bis zu 50 Prozent der
 benötigten Ressourcen zum Rendern eingespart werden.
 
@@ -262,8 +282,21 @@ Betrachters eine Kamera. Diese rendert dann die Szene durch den Spiegel. Danach
 wird die gerenderte Szene aus Sicht der Spiegelkamera auf den Spiegel
 projeziert.
 
+Spiegel werden häufig in Szenen eingesetzt, die eingerichtete Wohnungen oder
+Räumlich-keiten repräsentieren sollen. Dadurch bekommt der Betrachter einen
+Eindruck davon, wie der Spiegel innerhalb des Raumes wirkt.
+
+In Computerspielen dienen Spiegel oft als Stilmittel, um z.B. die eigene
+Spielfigur betrachten zu können (z.b. First-Person Shooter). Oder um
+atmosphärische Spannung zu erzeugen, wenn z.B. eine geistähnliche Gestalt im
+Spiegel erscheint.
+
 Mit Hilfe von Shadern kann hinzukommend noch eine glasähnliche Oberfläche
-simuliert werden, was den Eindruck eines Spiegels nochmals verstärkt.
+simuliert werden, was den Eindruck eines Spiegels nochmals verstärkt. Außerdem
+lassen sich zudem noch Materialschäden oder Abnutzungserscheinungen hinzufügen
+um den Eindruck von Verschleiß zu erwecken.
+
+\subsection{Portale als Teleporter}
 
 Zudem lassen sich Portale dazu nutzen sich innerhalb der Umgebung zu
 teleportieren. Das bedeutet, dass man sich von einem Ort zu einem anderen
@@ -283,9 +316,9 @@ nicht mehr von Stelle 2 an die Stelle 1 gelangen kann, da sich dort kein Portal
 befindet. Man erreicht dies, indem man die Szene an der Stelle durch das
 Portal rendert, an der der Spieler austreten soll. Daher wird an diese
 Stelle mit dem Verhältnis zur Betrachterkamera die Szene gerendert und auf
-der Portaloberfläche gerendert. Diese Herangehensweise lässt sich oft in Spielen
-wiederfinden, um z.B. ein Labyrinth zu erzeugen oder den Spieler kurz zu
-desorientieren.
+der Portaloberfläche gerendert. Diese Herangehensweise lässt sich oft in
+Computerspielen wiederfinden, um z.B. ein Labyrinth zu erzeugen oder den Spieler
+kurz zu desorientieren.
 
 \subsection{Frustum Culling}
 
@@ -313,9 +346,51 @@ Renderprozess gehören, da nicht sichtbar.
 Anders als beim Frustum Culling werden Objekte nicht außerhalb des Frustums
 verworfen. Beim Occlusion Culling wird bestimmt, ob ein Objekt von einem anderen
 Objekt verdeckt und damit für den Betrachter nicht sichtbar ist. Diese
-verdeckenden Objekte werden als Occludor bezeichnet.
+verdeckenden Objekte werden als Occluder bezeichnet.
 
-\chapter{Theoretischer Ansatz}
+Es gibt 2 Ansätze Occlusion Culling durchzuführen. Einmal gibt es den
+punktbasierten Ansatz. In diesem wird die Szene aus Sicht des Betrachters bzw.
+eines festen Punktes betrachtet. Dabei werden alle Objekte betrachtet und je
+nach Sichtbarkeit zum Renderprozess hinzugefügt oder ausgeschlossen. Diese
+Vorgehensweise muss bei Bewegung des Punktes wiederholt werden.
+
+Der zweite Methode stellt der zellenbasierte Ansatz dar. Bei dieser
+Vorgehensweise wird eine Zelle von einer bestimmten Größe definiert. Danach
+werden alle Objekte bestimmt die innerhalb dieser Zelle für den Betrachter nicht
+sichtbar sind, da verdeckt. Diese Methode bietet den Vorteil den Vorgang nur
+dann zu wiederholen, falls man den Bereich der Zelle verlässt.
+
+\chapter{Systementwurf}
+
+Alle zuvor diskutierten Themen stellen die Schwerpunkte der Arbeit dar. Die
+Integration einer Portalfunktion in das jVR-Framework ist dabei als
+Hauptschwerpunkt zu sehen.
+
+Der Entwurf soll noch einmal die wichtigsten Konzepte wiedergeben. Zum einen
+werden die verschiedenen Arten von Portalen beschrieben und erläutert. Hinzu
+kommen die Verwendungen von virtuellen Kameras und deren Rolle beim erstellen
+von Portalen.
+
+\section{Portaltypen}
+
+In Szenen gibt es mehrere Möglichkeiten in andere Räume zu schauen. Zum einen
+kann der Betrachter direkt aus einem Fenster gucken oder sieht direkt durch die
+offene Tür in den nächsten Raum. Zudem lässt sich durch den Blick in den Spiegel
+der hintere Bereich des Raumes betrachten. All diese Bestandteile eines normalen
+Raumes haben die Gemeinsamkeit, sich als Portal wiedergeben zu lassen.
+
+Jeder dieser Portaltypen erhält seine eigene virtuelle Kamera, die die Szene aus
+verschiedenen Blickwinkeln rendert und auf das jeweilige Portal projeziert wird.
+
+\subsection{Türen}
+
+
+
+\subsection{Fenster}
+
+\subsection{Spiegel}
+
+\section{Virtuelle Kameras}
 
 \chapter{Praktische Umsetzung}
 
