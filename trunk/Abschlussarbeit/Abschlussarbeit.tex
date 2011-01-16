@@ -381,16 +381,75 @@ Raumes haben die Gemeinsamkeit, sich als Portal wiedergeben zu lassen.
 
 Jeder dieser Portaltypen erhält seine eigene virtuelle Kamera, die die Szene aus
 verschiedenen Blickwinkeln rendert und auf das jeweilige Portal projeziert wird.
+Damit ist jeder von diesen Typen von der Klasse Portal abgeleitet.
 
 \subsection{Türen}
 
+Türen bieten die Besonderheit durchtreten werden zu können. Somit bieten sich
+Türen als einziger Portaltyp an mehrere Räume miteinander zu verbinden. Türen
+werden entweder direkt in einer Szene platziert und werden mit einem sich von
+der Umgebung abhebenden Umriss versehen. Wenn eine Tür in die Szene platziert
+wird, wird zudem ein virtuelle Kamera mitinstanziert um die Szene durch diese
+gerendert werden kann.
 
+Türen eignen sich auch um Culling durchzuführen. Wenn der Betrachter durch die
+sieht, wird das Frustum auf den sichtbaren Umriss der Tür reduziert. Alle
+Gegenstände, dessen Bounding Box innerhalb des View Frustums liegen werden
+mitgerendert.
+
+Da die Tür als Trenner der Räume (auch als Zellen bezeichnet) dient, kann
+festgelegt werden welche 2 Räume miteinander verbunden sind. Dabei kann
+ermittelt werden, welche Räume überhaupt nötig zum Rendern sind.
 
 \subsection{Fenster}
 
+Fenster verhalten sich ähnlich wie Türen, können aber nicht durchtreten werden.
+Sie bieten nur die Möglichkeit in andere Räume bzw. außerhalb des Gebäudes zu
+blicken. Ein Fenster kann trotzdem als verbindendes Glied für Räume genutzt
+werden. Der Betrachter sieht einen anderen Raum, aber kann diesen nicht
+erreichen.
+
+Fenster bieten ebenfalls wie Türen ein Culling an. Beim Betrachten werden wieder
+nur jeweils die Objekte dessen BB innerhalb des View Frustums liegen gerendert.
+Ähnlich den Türen kann über ein Fenster ermittelt werden, welcher Raum mit einem
+anderen verbunden ist.
+
 \subsection{Spiegel}
 
+Ein besonderer Portaltyp ist der Spiegel. Er kann genau wie das Fenster nicht
+durchtreten werden. Außerdem dient er nicht dazu Räum miteinander zu verbinden.
+Der Spiegel bietet die Funktion den Sichtbereich des jeweiligen Betrachters aus
+Sicht des Spiegel zu reflektieren und zu projezieren. 
+
+Dabei dient die Spiegeloberfläche als Reflexionsebene an der der Standpunkt des
+Betrachters gespiegelt wird und in Form einer virtuellen Kamera wiedergegeben
+wird. Diese virtuelle Kamera rendert mit negiertem Seitenverhältnis die Szene
+aus Sicht der Spiegelfläche und negativer Skalierung.
+
+\subsection{Teleporter}
+
+Der Teleporter ist eine Abwandlung der Tür. Im Gegensatz zur Tür, verbindet der
+Teleporter keine Räume miteinander. Der Teleporter dient als eine Art
+Schnellreisesystem. Er verbindet 2 Türen miteinander, die im Raum sehr weit weg
+voneinander entfernt liegen. Sie werden über die Klasse \texttt{PortalConnector}
+verbunden.
+
+Wie die Tür erhält jeder Teleporter eine virtuelle Kamera. Diese Kamera werden
+relativ zur Position der Kamera des Betrachters zum Teleporter auf der
+Gegenseite ausgerichtet. Je nach Bewegung des Betrachters bewegt sich auch die
+virtuelle Kamera.
+
 \section{Virtuelle Kameras}
+
+Die virtuellen Kameras sind ein wichtiger Bestandteil der Portale. Sie stellen
+die Szene aus sicht des Portals dar. Für jede virtuelle Kamera wird ein
+\texttt{FrameBufferObjekt} angelegt, welches erst im zum Schluss auf das
+jeweilige Portal projeziert wird.
+
+Die Szene wird im Falle eines Portals aus Sicht der virtuellen Kamera gerendert.
+Jedes Portal besitzt eine eigene virtuelle Kamera. Diese kann direkt
+über das jeweilige Portal angesprochen werden. Somit lassen sich Eigenschaften,
+wie Sichtbereich oder die Transformation bestimmen.
 
 \chapter{Praktische Umsetzung}
 
