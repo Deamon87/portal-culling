@@ -17,8 +17,8 @@ public class PortalList extends DrawList{
 	
 	public static void render(Pipeline p) {
 		for (Portal portal : portals) {
-			p.bindColorBuffer("jvr_PortalTexture", "FBO", 0);
-			p.drawGeometry("AMBIENT", portal.getMaterial().getMaterialClass());
+			p.bindColorBuffer("jvr_PortalTexture", portal.getName() + "FBO", 0);
+			p.drawGeometry("AMBIENT", portal.getName() + "Mat");
 		}		
 	}
 	

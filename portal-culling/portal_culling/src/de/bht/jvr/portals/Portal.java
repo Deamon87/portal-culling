@@ -14,7 +14,6 @@ import de.bht.jvr.math.Vector3;
 
 public abstract class Portal extends GroupNode {
 
-	private String portalName;
 	private float height;
 	private float width;
 	private CameraNode camera;
@@ -26,13 +25,13 @@ public abstract class Portal extends GroupNode {
 	
 	
 	public Portal(Pipeline pipeline, String name) throws Exception {
-		this.portalName = name;
+		this.setName(name);
 		this.pipeline = pipeline;
 		this.portal = ColladaLoader.load(new File("meshes/plane.dae"));
 		this.camera = new CameraNode("portalCam", 4/3, 60);
 		this.clipPlane = new ClipPlaneNode();
 		this.clipPlane.setTransform(this.getTransform().mul(Transform.rotateYDeg(180)));
-		this.addChildNodes(this.portal, this.camera, this.clipPlane);
+		this.addChildNodes(this.portal, this.clipPlane);
 	}
 	
 	public Portal(float height, float width, Vector3 direction, CameraNode cam) throws Exception {
@@ -102,14 +101,6 @@ public abstract class Portal extends GroupNode {
 	
 	public void setPipeline(Pipeline pipeline) {
 		this.pipeline = pipeline;
-	}
-	
-	public String getPortalName() {
-		return portalName;
-	}
-	
-	public void setPortalName(String portalName) {
-		this.portalName = portalName;
 	}
 	
 	public ShaderMaterial getMaterial() {

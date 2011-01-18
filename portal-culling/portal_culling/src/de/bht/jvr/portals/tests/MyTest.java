@@ -87,11 +87,9 @@ public class MyTest extends TestBase{
         
         // Portal1 camera
         CameraNode portal1Cam = new CameraNode("portal1Cam", 4/3, 60f);
-        root.addChildNode(portal1Cam);
         
         // Portal2 camera
         CameraNode portal2Cam = new CameraNode("portal2Cam", 4/3, 60f);
-        root.addChildNode(portal2Cam);
         
         // Portal1 material
         ShaderProgram prog = new ShaderProgram(new File("shader/portal.vs"), new File("shader/portal.fs"));
@@ -110,7 +108,7 @@ public class MyTest extends TestBase{
         
 		Pipeline p = new Pipeline(root);
 		
-		p.createFrameBufferObject("FBO", false, 2, 1.0f, 0);
+		p.createFrameBufferObject("FBO", false, 1, 1.0f, 0);
 		
 		p.createFrameBufferObject("FBO2", false, 1, 1.0f, 0);
 		
@@ -140,12 +138,14 @@ public class MyTest extends TestBase{
 		p.setUniform("jvr_UseClipPlane1", new UniformBool(false));
 		p.drawGeometry("AMBIENT", "(?!portal).*");
 		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal).*");
-			
+		
+		p.bindColorBuffer("jvr_PortalTexture", "FBO2", 0);
+		p.drawGeometry("AMBIENT", "portal2Mat");	
+		
 		p.bindColorBuffer("jvr_PortalTexture", "FBO", 0);
 		p.drawGeometry("AMBIENT", "portal1Mat");
 
-		p.bindColorBuffer("jvr_PortalTexture", "FBO2", 0);
-		p.drawGeometry("AMBIENT", "portal2Mat");
+		
 		
 		RenderWindow w = new NewtRenderWindow(p, 1024, 768);
 		
