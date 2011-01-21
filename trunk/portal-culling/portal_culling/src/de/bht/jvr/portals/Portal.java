@@ -7,7 +7,7 @@ import de.bht.jvr.core.CameraNode;
 import de.bht.jvr.core.ClipPlaneNode;
 import de.bht.jvr.core.GroupNode;
 import de.bht.jvr.core.SceneNode;
-import de.bht.jvr.core.ShaderMaterial;
+import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.math.Vector3;
@@ -21,7 +21,7 @@ public abstract class Portal extends GroupNode {
 	private Portal portalExit;
 	private SceneNode portal;
 	private Pipeline pipeline;
-	private ShaderMaterial material;
+	private ShapeNode portalShape;
 	
 	
 	public Portal(Pipeline pipeline, String name) throws Exception {
@@ -103,12 +103,12 @@ public abstract class Portal extends GroupNode {
 		this.pipeline = pipeline;
 	}
 	
-	public ShaderMaterial getMaterial() {
-		return material;
+	public ShapeNode getPortalShape() {
+		return portalShape;
 	}
 	
-	public void setMaterial(ShaderMaterial material) {
-		this.material = material;
+	public void setPortalShape(ShapeNode portalShape) {
+		this.portalShape = portalShape;
 	}
 
 	public void update(CameraNode camera) {
@@ -116,6 +116,11 @@ public abstract class Portal extends GroupNode {
 		camTrans = this.getTransform().invert().mul(camTrans);
 		camTrans = portalExit.getTransform().mul(Transform.rotateYDeg(180)).mul(camTrans);
 		this.camera.setTransform(camTrans);
+		
+		if(camera.getTransform().invert() == new Transform())
+		{
+			
+		}
 	}
 	
 	public abstract void render();

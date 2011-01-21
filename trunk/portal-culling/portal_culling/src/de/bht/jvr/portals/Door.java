@@ -14,6 +14,7 @@ public class Door extends Portal {
 
 	private static ShaderProgram shaderProg;
 	
+	
 	static {
 		try {
 			shaderProg = new ShaderProgram(new File("shader/portal.fs"), new File("shader/portal.vs"));			
@@ -27,14 +28,14 @@ public class Door extends Portal {
 		ShaderMaterial shaderMat = new ShaderMaterial("AMBIENT", shaderProg);
 		shaderMat.setMaterialClass(this.getName() + "Mat");
 		
-		ShapeNode portalShape = Finder.find(this, ShapeNode.class, null);
-		portalShape.setMaterial(shaderMat);
+		this.setPortalShape(Finder.find(this, ShapeNode.class, null));
+		this.getPortalShape().setMaterial(shaderMat);
 		
 		PortalList.add(this);
 		
 		this.render();
 	}
-
+	
 	@Override
 	public void render() {
 		getPipeline().setUniform("jvr_UseClipPlane0", new UniformBool(false));

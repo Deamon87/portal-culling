@@ -48,7 +48,19 @@ public class MyCapsuleTest extends TestBase {
 //		portal2.getCamera().setTransform(Transform.translate(0, 0, -20));
 		root.addChildNode(portal2);
 		
+		Portal portal3 = new Door(p, "portal3");
+		portal3.setTransform(Transform.translate(-10, 2, 0).mul(Transform.rotateYDeg(180)));
+		root.addChildNode(portal3);
+		
+		Portal portal4 = new Door(p, "portal4");
+		portal4.setTransform(Transform.translate(0, 10, 0).mul(Transform.rotateXDeg(90)));
+		root.addChildNode(portal4);
+		
+		System.out.println(portal1.getPortalShape().getTransform());
+		
 		PortalConnection.connect(portal1, portal2);
+		
+		PortalConnection.connect(portal3, portal4);
 		
 		SceneNode scene = ColladaLoader.load(new File("meshes/testwelt01.dae"));
 		scene.setTransform(Transform.rotateXDeg(-90).mul(Transform.scale(0.1f)));
@@ -76,10 +88,20 @@ public class MyCapsuleTest extends TestBase {
 		
 		Viewer v = new Viewer(false, win);
 		
+		float i = 0;
+		
 		while(v.isRunning()) {
 			long start = System.currentTimeMillis();
 			
 			PortalList.update(camera);
+			
+			Transform portalTrans = portal3.getTransform().mul(Transform.rotateYDeg(i));
+			portal3.setTransform(portalTrans);
+			
+			System.out.println(camera.getTransform().invert().mul(portal1.getTransform()).getMatrix().translation());
+			
+			i++;
+			i = i * 0.1f;
 			
 			v.display();
 			move(System.currentTimeMillis() - start, 0.01f);
