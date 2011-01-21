@@ -4,9 +4,8 @@ import java.util.ArrayList;
 
 import de.bht.jvr.core.CameraNode;
 import de.bht.jvr.core.pipeline.Pipeline;
-import de.bht.jvr.core.rendering.DrawList;
 
-public class PortalList extends DrawList{
+public class PortalList {
 	private static ArrayList<Portal> portals = new ArrayList<Portal>();
 	
 	public static void update(CameraNode camera) {
