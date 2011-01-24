@@ -56,5 +56,4 @@ public class Door extends Portal {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
