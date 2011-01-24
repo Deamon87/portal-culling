@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import de.bht.jvr.core.CameraNode;
 import de.bht.jvr.core.pipeline.Pipeline;
+import de.bht.jvr.math.Vector3;
 
 public class PortalList {
 	private static ArrayList<Portal> portals = new ArrayList<Portal>();
@@ -12,6 +13,18 @@ public class PortalList {
 		for (Portal portal : portals) {
 			portal.update(camera);
 		}
+	}
+	
+	public static Vector3 getPickPoint(CameraNode camera) {
+		Vector3 pickPoint = null;
+		
+		for (Portal portal : portals) {
+			if(portal.getPickPoint(camera) != null) {
+				pickPoint = portal.getPickPoint(camera);
+			}
+		}
+		
+		return pickPoint;
 	}
 	
 	public static void render(Pipeline p) {

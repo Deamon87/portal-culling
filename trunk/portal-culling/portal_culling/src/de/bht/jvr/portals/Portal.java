@@ -1,16 +1,17 @@
 package de.bht.jvr.portals;
 
 import java.io.File;
-
 import de.bht.jvr.collada14.loader.ColladaLoader;
 import de.bht.jvr.core.CameraNode;
 import de.bht.jvr.core.ClipPlaneNode;
 import de.bht.jvr.core.GroupNode;
+import de.bht.jvr.core.PickRay;
 import de.bht.jvr.core.SceneNode;
 import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.math.Vector3;
+import de.bht.jvr.math.Vector4;
 
 public abstract class Portal extends GroupNode {
 
@@ -22,7 +23,6 @@ public abstract class Portal extends GroupNode {
 	private SceneNode portal;
 	private Pipeline pipeline;
 	private ShapeNode portalShape;
-	
 	
 	public Portal(Pipeline pipeline, String name) throws Exception {
 		this.setName(name);
@@ -116,11 +116,25 @@ public abstract class Portal extends GroupNode {
 		camTrans = this.getTransform().invert().mul(camTrans);
 		camTrans = portalExit.getTransform().mul(Transform.rotateYDeg(180)).mul(camTrans);
 		this.camera.setTransform(camTrans);
+	}
+	
+	public Vector3 getPickPoint(CameraNode camera) {
+		// transform camera into world space
+		Vector3 orig = camera.getTransform().getMatrix().translation();
+		Vector3 dir = camera.getTransform().getMatrix().mul(camera.getProjectionMatrix()).translation().normalize();
 		
-		if(camera.getTransform().invert() == new Transform())
-		{
-			
+		// transform pick ray to object space
+        Vector4 localOrigin = this.getTransform().getInverseMatrix().mul(new Vector4(orig, 1));
+        Vector4 localDir = this.getTransform().getInverseMatrix().mul(new Vector4(dir, 0));
+        PickRay localRay = new PickRay(localOrigin.xyz(), localDir.xyz());
+				
+		Vector3 pickPoint = this.getPortalShape().getGeometry().pick(localRay);
+		
+		if(pickPoint != null) {
+            pickPoint = this.getTransform().getMatrix().mul(new Vector4(pickPoint, 1)).homogenize().xyz();
 		}
+		
+		return pickPoint;
 	}
 	
 	public abstract void render();
