@@ -132,9 +132,26 @@ public abstract class Portal extends GroupNode {
 		
 		if(pickPoint != null) {
             pickPoint = this.getTransform().getMatrix().mul(new Vector4(pickPoint, 1)).homogenize().xyz();
+            
+            if(distance(orig, pickPoint) <= 0.5) {
+    			this.teleport(camera);
+    		}
 		}
 		
 		return pickPoint;
+	}
+	
+	public double distance(Vector3 vec1, Vector3 vec2) {
+		double one = Math.pow(vec2.x() - vec1.x(), 2);
+		double two = Math.pow(vec2.y() - vec1.y(), 2);
+		double three = Math.pow(vec2.z() - vec1.z(), 2);
+		double square = Math.sqrt(one + two + three);
+		return square;
+	}
+	
+	private void teleport(SceneNode node) {
+		node.setTransform(this.getPortalExit().getTransform());
+		System.out.println(this.getName() + " Exit is: " + this.getPortalExit().getName());
 	}
 	
 	public abstract void render();
