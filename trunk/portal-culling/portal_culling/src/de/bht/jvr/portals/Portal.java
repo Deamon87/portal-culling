@@ -133,7 +133,7 @@ public abstract class Portal extends GroupNode {
 		if(pickPoint != null) {
             pickPoint = this.getTransform().getMatrix().mul(new Vector4(pickPoint, 1)).homogenize().xyz();
             
-            if(distance(orig, pickPoint) <= 0.5) {
+            if(distance(orig, pickPoint) <= 0.4) {
     			this.teleport(camera);
     		}
 		}
@@ -149,9 +149,25 @@ public abstract class Portal extends GroupNode {
 		return square;
 	}
 	
-	private void teleport(SceneNode node) {
-		node.setTransform(this.getPortalExit().getTransform());
-		System.out.println(this.getName() + " Exit is: " + this.getPortalExit().getName());
+	private void teleport(CameraNode node) {
+//		Transform newTrans = this.getTransform().invert().mul(node.getTransform());
+//		System.out.println(this.getName() + " test: " + newTrans.getMatrix().translation());
+//		Transform exitTrans = this.getPortalExit().getTransform().invert().mul(newTrans);
+//		System.out.println(this.getPortalExit().getName() + " test: " + exitTrans.getMatrix().translation());
+		
+		Transform newTrans = node.getTransform().invert();
+		newTrans = this.getTransform().invert().mul(newTrans);
+		newTrans = this.getPortalExit().getTransform().mul(newTrans);
+		
+		
+		//Transform nodeTrans = node.getTransform().invert().getMatrix().rotationMatrix();
+		//nodeTrans = node.getTransform().mul(Transform.rotateYDeg(90)).mul(nodeTrans);
+		//node.setTransform(nodeTrans);
+		System.out.println(node.getTransform().invert().getMatrix().rotationMatrix());
+		//node.setTransform(exitTrans);
+		//node.setTransform(this.getPortalExit().getTransform());
+		//System.out.println(this.getName() + " Exit is: " + this.getPortalExit().getName());
+		//System.out.println(this.getName() + " Transformation: \n" + this.getPortalExit().getTransform().invert());
 	}
 	
 	public abstract void render();

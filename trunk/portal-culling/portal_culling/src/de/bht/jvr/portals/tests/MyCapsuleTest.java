@@ -47,9 +47,13 @@ public class MyCapsuleTest extends TestBase {
         root.addChildNode(cursor);
 		
 		camera = new CameraNode("camera", 4/3, 60);
-		camera.setTransform(Transform.translate(0, 0.5f, 10));
+		camera.setTransform(Transform.translate(0, 0.5f, 10).mul(Transform.rotateYDeg(90)));
 		this.cams.add(camera);
 		root.addChildNode(camera);
+		
+		//camera.setTransform(camera.getTransform().mul(Transform.rotateYDeg(90)));
+		
+		System.out.println(camera.getTransform().extractRotation());
 		
 		Pipeline p = new Pipeline(root);
 		
@@ -113,7 +117,7 @@ public class MyCapsuleTest extends TestBase {
 			
 			if(PortalList.getPickPoint(camera) != null) {
 				cursor.setTransform(Transform.translate(PortalList.getPickPoint(camera)).mul(Transform.scale(0.05f)));
-				System.out.println(this.distance(PortalList.getPickPoint(camera), camera.getTransform().getMatrix().translation()));
+				//System.out.println(this.distance(PortalList.getPickPoint(camera), camera.getTransform().getMatrix().translation()));
 			}
 			
 			i++;
