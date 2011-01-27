@@ -22,7 +22,7 @@ import de.bht.jvr.portals.PortalList;
 import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
-import de.bht.jvr.tests.TestBase;
+import de.bht.jvr.util.TestBase;
 
 public class MyCapsuleTest extends TestBase {
 	
@@ -53,7 +53,7 @@ public class MyCapsuleTest extends TestBase {
 		
 		//camera.setTransform(camera.getTransform().mul(Transform.rotateYDeg(90)));
 		
-		System.out.println(camera.getTransform().extractRotation());
+		//System.out.println(camera.getTransform().extractRotation());
 		
 		Pipeline p = new Pipeline(root);
 		
@@ -72,12 +72,10 @@ public class MyCapsuleTest extends TestBase {
 		Portal portal4 = new Door(p, "portal4");
 		portal4.setTransform(Transform.translate(0, 10, 0).mul(Transform.rotateXDeg(90)));
 		root.addChildNode(portal4);
+				
+		PortalConnection.connect(portal1, portal2);
 		
-		//System.out.println(portal1.getPortalShape().getTransform());
-		
-		PortalConnection.connect(portal1, portal3);
-		
-		PortalConnection.connect(portal2, portal4);
+		PortalConnection.connect(portal3, portal4);
 		
 		SceneNode scene = ColladaLoader.load(new File("meshes/testwelt01.dae"));
 		scene.setTransform(Transform.rotateXDeg(-90).mul(Transform.scale(0.1f)));
