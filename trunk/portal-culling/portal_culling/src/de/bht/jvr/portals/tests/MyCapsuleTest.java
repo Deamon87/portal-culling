@@ -113,16 +113,18 @@ public class MyCapsuleTest extends TestBase {
 			Transform portalTrans = portal3.getTransform().mul(Transform.rotateYDeg(i));
 			portal3.setTransform(portalTrans);
 			
-			if(PortalList.getPickPoint(camera) != null) {
-				cursor.setTransform(Transform.translate(PortalList.getPickPoint(camera)).mul(Transform.scale(0.05f)));
-				//System.out.println(this.distance(PortalList.getPickPoint(camera), camera.getTransform().getMatrix().translation()));
-			}
-			
 			i++;
 			i = i * 0.1f;
 			
 			v.display();
-			move(System.currentTimeMillis() - start, 0.01f);
+			move(System.currentTimeMillis() - start, 0.005f);
+			
+			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
+			
+			if(PortalList.getPickPoint(camera, moveSpeed) != null) {
+				cursor.setTransform(Transform.translate(PortalList.getPickPoint(camera, moveSpeed)).mul(Transform.scale(0.05f)));
+				//System.out.println(this.distance(PortalList.getPickPoint(camera), camera.getTransform().getMatrix().translation()));
+			}
 		}
 	}
 	

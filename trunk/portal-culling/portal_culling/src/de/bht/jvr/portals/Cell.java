@@ -3,10 +3,12 @@ package de.bht.jvr.portals;
 import java.util.ArrayList;
 
 import de.bht.jvr.core.GroupNode;
+import de.bht.jvr.core.LightNode;
 
 public class Cell extends GroupNode {
 
 	private ArrayList<Wall> walls;
+	private LightNode light;
 	private float length;
 	private float width;
 	
@@ -32,6 +34,14 @@ public class Cell extends GroupNode {
 	
 	public void setWidth(float width) {
 		this.width = width;
+	}
+	
+	public LightNode getLight() {
+		return light;
+	}
+	
+	public void setLight(LightNode light) {
+		this.light = light;
 	}
 	
 	public void drawWalls() {
