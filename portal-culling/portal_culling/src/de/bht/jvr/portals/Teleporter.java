@@ -7,6 +7,7 @@ import de.bht.jvr.core.Finder;
 import de.bht.jvr.core.ShaderMaterial;
 import de.bht.jvr.core.ShaderProgram;
 import de.bht.jvr.core.ShapeNode;
+import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.core.uniforms.UniformBool;
 
@@ -24,10 +25,14 @@ public class Teleporter extends Portal {
 	
 	public Teleporter(Pipeline p, String name) throws Exception {
 		super(p, name);
+		
 		ShaderMaterial shaderMat = new ShaderMaterial("AMBIENT", shaderProg);
 		shaderMat.setMaterialClass(this.getName() + "Mat");
 		
-		this.setPortalShape(Finder.find(this, ShapeNode.class, null));
+		
+		ShapeNode shape = Finder.find(this, ShapeNode.class, null);
+		shape.setTransform(Transform.scale(2, 3, 1));
+		this.setPortalShape(shape);
 		this.getPortalShape().setMaterial(shaderMat);
 		
 		PortalList.add(this);

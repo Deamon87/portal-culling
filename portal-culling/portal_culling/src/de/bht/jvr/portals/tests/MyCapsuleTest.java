@@ -36,7 +36,7 @@ public class MyCapsuleTest extends TestBase {
 	public MyCapsuleTest() throws Exception {
 		root = new GroupNode();
 		
-		camera = new CameraNode("camera", 4/3, 60);
+		camera = new CameraNode("camera", 4/3f, 60);
 		camera.setTransform(Transform.translate(0, 0.5f, 10).mul(Transform.rotateYDeg(90)));
 		this.cams.add(camera);
 		root.addChildNode(camera);
@@ -45,6 +45,7 @@ public class MyCapsuleTest extends TestBase {
 		
 		portal1 = new Teleporter(p, "portal1");
 		portal1.setTransform(Transform.translate(0, 2, 0));
+		//portal1.setHeight(3);
 		root.addChildNode(portal1);
 		
 		Portal portal2 = new Teleporter(p, "portal2");
@@ -87,7 +88,7 @@ public class MyCapsuleTest extends TestBase {
 		
 		PortalList.render(p);
 		
-		RenderWindow win = new NewtRenderWindow(p);
+		RenderWindow win = new NewtRenderWindow(p, 800, 600);
 		win.addKeyListener(this);
 		win.addMouseListener(this);
 		

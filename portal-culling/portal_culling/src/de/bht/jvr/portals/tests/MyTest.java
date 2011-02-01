@@ -80,7 +80,7 @@ public class MyTest extends TestBase{
         pLight.setTransform(Transform.translate(0, 400, 200));
         root.addChildNode(pLight);
         
-        CameraNode cam = new CameraNode("cam", 4/3, 60f);
+        CameraNode cam = new CameraNode("cam", 4/3f, 60f);
         cam.setTransform(Transform.translate(0, 0.5f, 10));
         this.cams.add(cam);
         root.addChildNode(cam);
