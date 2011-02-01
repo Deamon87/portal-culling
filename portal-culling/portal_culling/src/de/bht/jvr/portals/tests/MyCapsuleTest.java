@@ -5,16 +5,11 @@ import java.io.File;
 
 import de.bht.jvr.collada14.loader.ColladaLoader;
 import de.bht.jvr.core.CameraNode;
-import de.bht.jvr.core.Finder;
 import de.bht.jvr.core.GroupNode;
-import de.bht.jvr.core.PickRay;
 import de.bht.jvr.core.PointLightNode;
 import de.bht.jvr.core.SceneNode;
-import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
-import de.bht.jvr.math.Vector3;
-import de.bht.jvr.math.Vector4;
 import de.bht.jvr.portals.Door;
 import de.bht.jvr.portals.Portal;
 import de.bht.jvr.portals.PortalConnection;
@@ -29,8 +24,6 @@ public class MyCapsuleTest extends TestBase {
 	private CameraNode camera;
 	private Portal portal1;
 	private GroupNode root;
-	private SceneNode cursor;
-	
 	public static void main(String[] args) {
 		try {
 			new MyCapsuleTest();
@@ -42,18 +35,10 @@ public class MyCapsuleTest extends TestBase {
 	public MyCapsuleTest() throws Exception {
 		root = new GroupNode();
 		
-		cursor = ColladaLoader.load(new File("meshes/sphere.dae"));
-        Finder.find(cursor, ShapeNode.class, null).setName("MyCursor");
-        root.addChildNode(cursor);
-		
 		camera = new CameraNode("camera", 4/3, 60);
 		camera.setTransform(Transform.translate(0, 0.5f, 10).mul(Transform.rotateYDeg(90)));
 		this.cams.add(camera);
 		root.addChildNode(camera);
-		
-		//camera.setTransform(camera.getTransform().mul(Transform.rotateYDeg(90)));
-		
-		//System.out.println(camera.getTransform().extractRotation());
 		
 		Pipeline p = new Pipeline(root);
 		
@@ -107,9 +92,7 @@ public class MyCapsuleTest extends TestBase {
 				
 		while(v.isRunning()) {
 			long start = System.currentTimeMillis();
-			
-			PortalList.update(camera);
-			
+						
 			Transform portalTrans = portal3.getTransform().mul(Transform.rotateYDeg(i));
 			portal3.setTransform(portalTrans);
 			
@@ -121,38 +104,7 @@ public class MyCapsuleTest extends TestBase {
 			
 			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
 			
-			if(PortalList.getPickPoint(camera, moveSpeed) != null) {
-				cursor.setTransform(Transform.translate(PortalList.getPickPoint(camera, moveSpeed)).mul(Transform.scale(0.05f)));
-				//System.out.println(this.distance(PortalList.getPickPoint(camera), camera.getTransform().getMatrix().translation()));
-			}
+			PortalList.update(camera, moveSpeed);
 		}
-	}
-	
-	public Vector3 getPickPoint(Portal portal) {
-		
-		// transform camera into world space
-		Vector3 orig = camera.getTransform().getMatrix().translation();
-		Vector3 dir = camera.getTransform().getMatrix().mul(camera.getProjectionMatrix()).translation().normalize();
-		
-		// transform pick ray to object space
-        Vector4 localOrigin = portal.getTransform().getInverseMatrix().mul(new Vector4(orig, 1));
-        Vector4 localDir = portal.getTransform().getInverseMatrix().mul(new Vector4(dir, 0));
-        PickRay localRay = new PickRay(localOrigin.xyz(), localDir.xyz());
-				
-		Vector3 pickPoint = portal.getPortalShape().getGeometry().pick(localRay);
-		
-		if(pickPoint != null) {
-            pickPoint = portal.getTransform().getMatrix().mul(new Vector4(pickPoint, 1)).homogenize().xyz();
-		}
-		
-		return pickPoint;
-	}
-	
-	public double distance(Vector3 vec1, Vector3 vec2) {
-		double one = Math.pow(vec2.x() - vec1.x(), 2);
-		double two = Math.pow(vec2.y() - vec1.y(), 2);
-		double three = Math.pow(vec2.z() - vec1.z(), 2);
-		double square = Math.sqrt(one + two + three);
-		return square;
 	}
 }
