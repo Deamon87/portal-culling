@@ -149,7 +149,7 @@ public abstract class Portal extends GroupNode {
 		return square;
 	}
 	
-	private void teleport(SceneNode node, double moveSpeed) {		
+	private void teleport(SceneNode node, double moveSpeed) {
 		Transform newTrans = node.getTransform();
 		newTrans = this.getTransform().invert().mul(newTrans);
 		
@@ -157,8 +157,10 @@ public abstract class Portal extends GroupNode {
 		Transform transTrans = newTrans.extractTranslation();
 		
 		newTrans = this.getPortalExit().getTransform().mul(rotTrans);
-		newTrans = newTrans.mul(Transform.translate(0, 0, (float)moveSpeed).mul(Transform.rotateYDeg(180)));		
-		node.setTransform(newTrans.mul(Transform.translate(transTrans.getMatrix().translation())));
+		newTrans = newTrans.mul(Transform.translate(0, 0, (float)moveSpeed));
+		newTrans = newTrans.mul(Transform.rotateYDeg(180));
+		newTrans = newTrans.mul(Transform.translate(transTrans.getMatrix().translation()));
+		node.setTransform(newTrans);
 	}
 	
 	public abstract void render();
