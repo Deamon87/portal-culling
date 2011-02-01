@@ -164,6 +164,4 @@ public abstract class Portal extends GroupNode {
 	}
 	
 	public abstract void render();
-	
-	public abstract void init();
 }
