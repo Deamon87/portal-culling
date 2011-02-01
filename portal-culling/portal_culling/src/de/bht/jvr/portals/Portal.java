@@ -118,7 +118,7 @@ public abstract class Portal extends GroupNode {
 		this.camera.setTransform(camTrans);
 	}
 	
-	public Vector3 getPickPoint(CameraNode camera) {
+	public Vector3 getPickPoint(CameraNode camera, double moveSpeed) {
 		// transform camera into world space
 		Vector3 orig = camera.getTransform().getMatrix().translation();
 		Vector3 dir = camera.getTransform().getMatrix().mul(camera.getProjectionMatrix()).translation().normalize();
@@ -133,8 +133,8 @@ public abstract class Portal extends GroupNode {
 		if(pickPoint != null) {
             pickPoint = this.getTransform().getMatrix().mul(new Vector4(pickPoint, 1)).homogenize().xyz();
             
-            if(distance(orig, pickPoint) <= 0.4) {
-    			this.teleport(camera);
+            if(distance(orig, pickPoint) <= moveSpeed) {
+    			this.teleport(camera, moveSpeed);
     		}
 		}
 		
@@ -149,11 +149,12 @@ public abstract class Portal extends GroupNode {
 		return square;
 	}
 	
-	private void teleport(SceneNode node) {		
+	private void teleport(SceneNode node, double moveSpeed) {		
 		Transform newTrans = node.getTransform();
 		newTrans = this.getTransform().invert().mul(newTrans);
-		newTrans = this.getPortalExit().getTransform();
-		node.setTransform(newTrans.mul(Transform.translate(0, 0, 0.5f).mul(Transform.rotateYDeg(180))));
+		System.out.println(newTrans.getMatrix().translation());
+		newTrans = this.getPortalExit().getTransform().mul(newTrans);
+		node.setTransform(newTrans.mul(Transform.translate(0, 0, (float)moveSpeed).mul(Transform.rotateYDeg(180))));
 		System.out.println(this.getName() + " Exit is: " + this.getPortalExit().getName());
 	}
 	

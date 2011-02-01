@@ -15,12 +15,12 @@ public class PortalList {
 		}
 	}
 	
-	public static Vector3 getPickPoint(CameraNode camera) {
+	public static Vector3 getPickPoint(CameraNode camera, double moveSpeed) {
 		Vector3 pickPoint = null;
 		
 		for (Portal portal : portals) {
-			if(portal.getPickPoint(camera) != null) {
-				pickPoint = portal.getPickPoint(camera);
+			if(portal.getPickPoint(camera, moveSpeed) != null) {
+				pickPoint = portal.getPickPoint(camera, moveSpeed);
 			}
 		}
 		
