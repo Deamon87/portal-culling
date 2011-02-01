@@ -14,10 +14,4 @@ public class Window extends Portal {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void init() {
-		// TODO Auto-generated method stub
-		
-	}
 }

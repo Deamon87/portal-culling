@@ -10,10 +10,11 @@ import de.bht.jvr.core.PointLightNode;
 import de.bht.jvr.core.SceneNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
-import de.bht.jvr.portals.Door;
+import de.bht.jvr.portals.Mirror;
 import de.bht.jvr.portals.Portal;
 import de.bht.jvr.portals.PortalConnection;
 import de.bht.jvr.portals.PortalList;
+import de.bht.jvr.portals.Teleporter;
 import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
@@ -42,21 +43,25 @@ public class MyCapsuleTest extends TestBase {
 		
 		Pipeline p = new Pipeline(root);
 		
-		portal1 = new Door(p, "portal1");
+		portal1 = new Teleporter(p, "portal1");
 		portal1.setTransform(Transform.translate(0, 2, 0));
 		root.addChildNode(portal1);
 		
-		Portal portal2 = new Door(p, "portal2");
+		Portal portal2 = new Teleporter(p, "portal2");
 		portal2.setTransform(Transform.translate(-2, 2, -20).mul(Transform.rotateYDeg(90)));
 		root.addChildNode(portal2);
 		
-		Portal portal3 = new Door(p, "portal3");
+		Portal portal3 = new Teleporter(p, "portal3");
 		portal3.setTransform(Transform.translate(-10, 2, 0).mul(Transform.rotateYDeg(180)));
 		root.addChildNode(portal3);
 		
-		Portal portal4 = new Door(p, "portal4");
+		Portal portal4 = new Teleporter(p, "portal4");
 		portal4.setTransform(Transform.translate(0, 10, 0).mul(Transform.rotateXDeg(90)));
 		root.addChildNode(portal4);
+		
+		Portal mirror = new Mirror(p, "mirror");
+		mirror.setTransform(Transform.translate(0, 2, -10).mul(Transform.rotateYDeg(90)));
+		root.addChildNode(mirror);
 				
 		PortalConnection.connect(portal1, portal2);
 		

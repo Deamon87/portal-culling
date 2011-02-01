@@ -10,10 +10,10 @@ import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.core.uniforms.UniformBool;
 
-public class Door extends Portal {
+public class Teleporter extends Portal {
 
 	private static ShaderProgram shaderProg;
-		
+	
 	static {
 		try {
 			shaderProg = new ShaderProgram(new File("shader/portal.fs"), new File("shader/portal.vs"));			
@@ -22,7 +22,7 @@ public class Door extends Portal {
 		}
 	}
 	
-	public Door(Pipeline p, String name) throws Exception {
+	public Teleporter(Pipeline p, String name) throws Exception {
 		super(p, name);
 		ShaderMaterial shaderMat = new ShaderMaterial("AMBIENT", shaderProg);
 		shaderMat.setMaterialClass(this.getName() + "Mat");
@@ -34,7 +34,7 @@ public class Door extends Portal {
 		
 		this.render();
 	}
-	
+
 	@Override
 	public void render() {
 		getPipeline().setUniform("jvr_UseClipPlane0", new UniformBool(false));
