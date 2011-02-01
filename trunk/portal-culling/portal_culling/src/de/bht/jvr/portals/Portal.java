@@ -28,7 +28,7 @@ public abstract class Portal extends GroupNode {
 		this.setName(name);
 		this.pipeline = pipeline;
 		this.portal = ColladaLoader.load(new File("meshes/plane.dae"));
-		this.camera = new CameraNode("portalCam", 4/3, 60);
+		this.camera = new CameraNode("portalCam", 4/3f, 60);
 		this.clipPlane = new ClipPlaneNode();
 		this.clipPlane.setTransform(this.getTransform().mul(Transform.rotateYDeg(180)));
 		this.addChildNodes(this.portal, this.clipPlane);

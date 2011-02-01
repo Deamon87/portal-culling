@@ -32,7 +32,7 @@ public class Mirror extends Portal {
 		this.setPortalShape(Finder.find(this, ShapeNode.class, null));
 		this.getPortalShape().setMaterial(shaderMat);
 		
-		this.getCamera().setAspectRatio(-4f/3f);
+		this.getCamera().setAspectRatio(-4/3f);
 		
 		PortalList.add(this);
 		
