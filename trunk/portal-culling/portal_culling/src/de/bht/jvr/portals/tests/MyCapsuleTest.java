@@ -12,7 +12,7 @@ import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.portals.Mirror;
 import de.bht.jvr.portals.Portal;
-import de.bht.jvr.portals.PortalConnection;
+import de.bht.jvr.portals.PortalConnector;
 import de.bht.jvr.portals.PortalList;
 import de.bht.jvr.portals.Teleporter;
 import de.bht.jvr.renderer.NewtRenderWindow;
@@ -64,9 +64,9 @@ public class MyCapsuleTest extends TestBase {
 		mirror.setTransform(Transform.translate(0, 2, -10).mul(Transform.rotateYDeg(90)));
 		root.addChildNode(mirror);
 				
-		PortalConnection.connect(portal1, portal2);
+		PortalConnector.connect(portal1, portal2);
 		
-		PortalConnection.connect(portal3, portal4);
+		PortalConnector.connect(portal3, portal4);
 		
 		SceneNode scene = ColladaLoader.load(new File("meshes/testwelt01.dae"));
 		scene.setTransform(Transform.rotateXDeg(-90).mul(Transform.scale(0.1f)));
