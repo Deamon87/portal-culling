@@ -8,7 +8,7 @@ import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.portals.Cell;
 import de.bht.jvr.portals.Portal;
-import de.bht.jvr.portals.PortalConnection;
+import de.bht.jvr.portals.PortalConnector;
 import de.bht.jvr.portals.PortalList;
 import de.bht.jvr.portals.Teleporter;
 import de.bht.jvr.renderer.NewtRenderWindow;
@@ -51,7 +51,7 @@ public class MyCellTest extends TestBase {
 		portal2.setTransform(Transform.translate(12, 0, 0));
 		root.addChildNode(portal2);
 		
-		PortalConnection.connect(portal1, portal2);
+		PortalConnector.connect(portal1, portal2);
 		
 		p.switchFrameBufferObject(null);
 		p.switchCamera(cam);
