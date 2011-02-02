@@ -14,7 +14,7 @@ import de.bht.jvr.portals.Teleporter;
 import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
-import de.bht.jvr.tests.TestBase;
+import de.bht.jvr.util.TestBase;
 
 public class MyCellTest extends TestBase {
 
@@ -57,8 +57,8 @@ public class MyCellTest extends TestBase {
 		p.switchCamera(cam);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
 		p.setBackFaceCulling(false);
-		p.drawGeometry("AMBIENT", "(?!portal).*");
-		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal).*");
+		p.drawGeometry("AMBIENT", null);
+		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		
 		PortalList.render(p);
 		

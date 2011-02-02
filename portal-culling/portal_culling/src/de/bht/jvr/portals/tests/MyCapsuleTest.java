@@ -83,8 +83,8 @@ public class MyCapsuleTest extends TestBase {
 		p.switchCamera(camera);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
 		//p.setBackFaceCulling(false);
-		p.drawGeometry("AMBIENT", "(?!portal).*");
-		p.doLightLoop(true, true).drawGeometry("LIGHTING", "(?!portal).*");
+		p.drawGeometry("AMBIENT", null);
+		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		
 		PortalList.render(p);
 		
