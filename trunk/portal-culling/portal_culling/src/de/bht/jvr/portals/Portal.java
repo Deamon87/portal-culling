@@ -125,12 +125,13 @@ public abstract class Portal extends GroupNode {
 		Vector3 orig = camera.getTransform().getMatrix().translation();
 		Vector3 dir = camera.getTransform().getMatrix().mul(camera.getProjectionMatrix()).translation().normalize();
 		
-		// transform pick ray to object space
+		// transform pickray into object space
         Vector4 localOrigin = this.getTransform().getInverseMatrix().mul(new Vector4(orig, 1));
         Vector4 localDir = this.getTransform().getInverseMatrix().mul(new Vector4(dir, 0));
         PickRay localRay = new PickRay(localOrigin.xyz(), localDir.xyz());
 				
 		Vector3 pickPoint = this.getPortalShape().getGeometry().pick(localRay);
+		//System.out.println(this.getPortalShape().getBBox().getCenter());
 		
 		if(pickPoint != null) {
             pickPoint = this.getTransform().getMatrix().mul(new Vector4(pickPoint, 1)).homogenize().xyz();

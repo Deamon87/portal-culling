@@ -37,7 +37,7 @@ public class MyCapsuleTest extends TestBase {
 		root = new GroupNode();
 		
 		camera = new CameraNode("camera", 4/3f, 60);
-		camera.setTransform(Transform.translate(0, 0.5f, 10).mul(Transform.rotateYDeg(90)));
+		camera.setTransform(Transform.translate(0, 0.5f, 10));
 		this.cams.add(camera);
 		root.addChildNode(camera);
 		
