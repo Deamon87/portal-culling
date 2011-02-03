@@ -5,13 +5,11 @@ import de.bht.jvr.collada14.loader.ColladaLoader;
 import de.bht.jvr.core.CameraNode;
 import de.bht.jvr.core.ClipPlaneNode;
 import de.bht.jvr.core.GroupNode;
-import de.bht.jvr.core.PickRay;
 import de.bht.jvr.core.SceneNode;
 import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.math.Vector3;
-import de.bht.jvr.math.Vector4;
 
 public abstract class Portal extends GroupNode {
 
@@ -116,30 +114,20 @@ public abstract class Portal extends GroupNode {
 		camTrans = this.getTransform().invert().mul(camTrans);
 		camTrans = portalExit.getTransform().mul(Transform.rotateYDeg(180)).mul(camTrans);
 		this.camera.setTransform(camTrans);
-		this.getPickPoint(camera, moveSpeed);
-		
+		this.getPickPoint(camera, moveSpeed);	
 	}
 	
 	public void getPickPoint(CameraNode camera, double moveSpeed) {
-		// transform camera into world space
-		Vector3 orig = camera.getTransform().getMatrix().translation();
-		Vector3 dir = camera.getTransform().getMatrix().mul(camera.getProjectionMatrix()).translation().normalize();
+		Transform trans = this.getTransform().invert().mul(camera.getTransform());
+		Vector3 vec = trans.getMatrix().translation();
 		
-		// transform pickray into object space
-        Vector4 localOrigin = this.getTransform().getInverseMatrix().mul(new Vector4(orig, 1));
-        Vector4 localDir = this.getTransform().getInverseMatrix().mul(new Vector4(dir, 0));
-        PickRay localRay = new PickRay(localOrigin.xyz(), localDir.xyz());
-				
-		Vector3 pickPoint = this.getPortalShape().getGeometry().pick(localRay);
-		//System.out.println(this.getPortalShape().getBBox().getCenter());
-		
-		if(pickPoint != null) {
-            pickPoint = this.getTransform().getMatrix().mul(new Vector4(pickPoint, 1)).homogenize().xyz();
-            
-            if(distance(orig, pickPoint) <= moveSpeed) {
-    			this.teleport(camera, moveSpeed);
-    		}
-		}
+		if(vec.x() <= this.getBBox().getMax().x() && vec.x() >= this.getBBox().getMin().x()
+		&& vec.y() <= this.getBBox().getMax().y() && vec.y() >= this.getBBox().getMin().y()
+		&& vec.z() < this.getBBox().getMax().z() + moveSpeed && vec.z() > this.getBBox().getMin().z())
+		{
+			this.teleport(camera, moveSpeed);
+			System.out.println("port");
+		}		
 	}
 	
 	public double distance(Vector3 vec1, Vector3 vec2) {
@@ -158,7 +146,7 @@ public abstract class Portal extends GroupNode {
 		Transform transTrans = newTrans.extractTranslation();
 		
 		newTrans = this.getPortalExit().getTransform().mul(rotTrans);
-		newTrans = newTrans.mul(Transform.translate(0, 0, (float)moveSpeed));
+		newTrans = newTrans.mul(Transform.translate(0, 0, (float)moveSpeed + 0.02f));
 		newTrans = newTrans.mul(Transform.rotateYDeg(180));
 		newTrans = newTrans.mul(Transform.translate(transTrans.getMatrix().translation()));
 		node.setTransform(newTrans);

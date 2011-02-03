@@ -34,7 +34,7 @@ public class MyCellTest extends TestBase {
 		root.addChildNode(cell);		
 		
 		Cell cell2 = new Cell("greenCell", 10, 10, 5, new Color(0.0f, 1.0f, 0.0f));
-		cell2.setTransform(Transform.translate(10.001f, 0, 0));
+		cell2.setTransform(Transform.translate(10, 0, 0));
 		root.addChildNode(cell2);
 		
 		System.out.println(cell2.getBBox().getWidth());
@@ -54,12 +54,14 @@ public class MyCellTest extends TestBase {
 		portal2.setTransform(Transform.translate(12, 0, 0));
 		root.addChildNode(portal2);
 		
+		System.out.println(portal1.getBBox());
+		
 		PortalConnector.connect(portal1, portal2);
 		
 		p.switchFrameBufferObject(null);
 		p.switchCamera(cam);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
-		p.setBackFaceCulling(false);
+		//p.setBackFaceCulling(false);
 		p.drawGeometry("AMBIENT", null);
 		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		
@@ -77,7 +79,7 @@ public class MyCellTest extends TestBase {
 			v.display();
 			move(System.currentTimeMillis() - start, 0.005f);
 			
-			System.out.println(CellList.checkInside(cam.getTransform().getMatrix().translation()));
+			System.out.println(CellList.checkCell(cam));
 			
 			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
 			
