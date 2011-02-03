@@ -7,6 +7,7 @@ import de.bht.jvr.core.GroupNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.portals.Cell;
+import de.bht.jvr.portals.CellList;
 import de.bht.jvr.portals.Portal;
 import de.bht.jvr.portals.PortalConnector;
 import de.bht.jvr.portals.PortalList;
@@ -29,12 +30,14 @@ public class MyCellTest extends TestBase {
 	public MyCellTest() throws Exception {
 		GroupNode root = new GroupNode();
 		
-		Cell cell = new Cell(10, 10, 5, new Color(1.0f, 0.0f, 0.0f));
-		root.addChildNode(cell);
+		Cell cell = new Cell("redCell", 10, 10, 5, new Color(1.0f, 0.0f, 0.0f));
+		root.addChildNode(cell);		
 		
-		Cell cell2 = new Cell(10, 10, 5, new Color(0.0f, 1.0f, 0.0f));
-		cell2.setTransform(Transform.translate(12, 0, 0));
-		root.addChildNode(cell2);	
+		Cell cell2 = new Cell("greenCell", 10, 10, 5, new Color(0.0f, 1.0f, 0.0f));
+		cell2.setTransform(Transform.translate(10.001f, 0, 0));
+		root.addChildNode(cell2);
+		
+		System.out.println(cell2.getBBox().getWidth());
 		
 		CameraNode cam = new CameraNode("camera", 4/3f, 60);
 		cam.setTransform(Transform.translate(0, 2, 10));
@@ -73,6 +76,8 @@ public class MyCellTest extends TestBase {
 			long start = System.currentTimeMillis();
 			v.display();
 			move(System.currentTimeMillis() - start, 0.005f);
+			
+			System.out.println(CellList.checkInside(cam.getTransform().getMatrix().translation()));
 			
 			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
 			
