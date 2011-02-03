@@ -2,17 +2,17 @@ package de.bht.jvr.portals;
 
 import java.util.ArrayList;
 
-import de.bht.jvr.math.Vector3;
+import de.bht.jvr.core.SceneNode;
 
 public class CellList {
 
 	private static ArrayList<Cell> cells = new ArrayList<Cell>();
 	
-	public static String checkInside(Vector3 vec3) {
+	public static String checkCell(SceneNode node) {
 		String name = "";
 		
 		for(Cell cell : cells) {
-			if(cell.isInsideCell(vec3))
+			if(cell.contains(node))
 			{
 				name = cell.getName();
 			}
