@@ -71,156 +71,9 @@ Techniken eingesetzt werden um unnötige Objekte vom Rendern auszuschließen.
 
 \section{Aufbau der Arbeit}
 
-
-
-\section{Klassendiagramm}
-
 \chapter{Aufgabenstellung}
 
 \chapter{Stand der Technik}
-
-\section{jVR-Framework}
-
-Wie schon vorangehend erwähnt, spielt der Einsatz des jVR-Frameworks eine
-zentrale Rolle dieser Arbeit. Dies lässt sich zum einen dadurch begründen, dass
-das Framework schon ein grundlegendes Maß an wichtigen Funktionen bietet, die
-nötig sind um 3D-Echtzeit-Anwendungen zu erstellen und zum anderen, da es um
-weitere nützliche Funktionen erweitert werden kann um Performance bzw.
-Produktivität zu steigern.
-
-Das jVR-Framework ist im Rahmen einer Masterarbeit entstanden.Das Frameworks
-soll den Studenten eine Plattform zu liefern mit denen sie komplexe
-3D-Programme erzeugen können. Außerdem soll es den Studenten ein besseres
-Verständnis über die Funktionen von 3D-Engines vermitteln.
-
-\subsection{Java}
-
-Das Framework entstand auf Basis der Programmiersprache Java. Java wurde
-von Sun Microsystems entwickelt. Der Vorteil von Java ist die nahezu
-Plattformunabhangigkeit. Um Java-Programme ausführen zu können muss eine so
-genannte Java Virtual Machine kurz JVM auf dem jeweiligen Betriebssystem
-installiert sein. Für alle relevanten Betriebssysteme wie z.B. Windows, Mac
-OS X und diverse Linuxdistributionen steht eine solche JVM zur Verfügung
-und kann bei Bedarf installiert werden. 
-
-Java findet sich auch auf mobilen Endgeräten wieder. Durch einige
-Einschränkungen lassen sich bestehende Java-Anwendung ohne große Probleme auf
-Handys oder Organizer portieren.
-
-Java bietet alle Funktionen die man von einer vollwertigen Programmiersprache
-erwartet. Sie bietet einen Umgang mit Interfaces, Schleifen, Kontrollstrukturen
-usw. an.
-
-Ein weiterer Vorteil von Java bietet das Speichermanagement. Dieses wird von dem
-Garbage Collector übernommen. Wird ein Objekt zur Laufzeit nicht mehr verwendet,
-wird es mit Hilfe des Garbage Collectors vom Stack genommen.
-
-\subsection{OpenGL}
-
-Für die 3D-Beschleunigung wird die Grafikbibliothek OpenGL verwendet. \emph{Open
-Graphics Library}, kurz OpenGL ist ein offener Grafikstandard der zur 2D- und
-3D-Echtzeit-berechnung verwendet wird.
-
-OpenGL geht aus der von Silicon Graphics Inc. (SGI) entwickelten IRIS GL API
-hervor. Ab 1992 wurde OpenGL vom OpenGL ARB (Architecture Review Board)
-beaufsichtigt und weiterentwickelt. Heute ist die Khronos Group für die
-Weiterentwicklung der API zuständig. Die Khronos Group zählt weit über 100
-Mitglieder, darunter AMD, Intel und NVIDIA.
-
-OpenGL wird von nahezu jeder Grafikkarte unterstützt, die richtigen Treiber
-vorausgesetzt. Die Besonderheit von OpenGL ist im Gegenzug zu Direct3D seine
-Plattformunabhängigkeit. Genauso wie Java lässt sich OpenGL auf jedem gängigen
-Betriebssystem finden und verwenden.
-
-OpenGL Embedded Systems ist eine spezielle Zusammenstellung der OpenGL API für
-mobile Geräte. Dadurch lassen sich Anwendungen auf mobilen Geräten realisieren.
-Durch Begrenzung der mobilen Hardware, ist diese Version der OpenGL API um
-einige Funktionen erleichtert worden.
-
-Ins jVR-Framework wurden viele häufig benutzten Grundfunktionen implementiert.
-Dies dient dazu um die Produktivität zu steigern. Dadurch kommt der Entwickler
-so gut wie nie in Kontakt mit reinen  OpenGL-Befehlen.
-
-\subsection{GLSL}
-
-Eine weitere Besonderheit des jVR-Frameworks bietet die Unterstützung von
-Shadern, die in der \emph{OpenGL Shader Language}, kurz GLSL geschrieben werden.
-Shader sind kleine Programme die direkt auf der GPU ausgführt werden. Sie
-ersetzen zudem die Fixed Function Pipeline von OpenGL.
-
-GLSL besitzt eine C-ähnliche Syntax und besitzt zudem noch zusätzliche
-Datentypen wie Vektoren und Matrizen. Vor der Verwendung müssen die Shader
-compiliert werden. Dies bietet den Grafikkartenherstellern den Vorteil, den
-Compiler für die eigene Hardware zu optimieren.
-
-GLSL bietet außerdem die Möglichkeit ein besseres Beleuchtungsmodell zu
-verwenden, als das von der Fixed Function Pipeline bereitgestellte. Seit Version
-3.1 von OpenGL sind Fragment- und Vertex-Shader ein wichtiger Bestandteil der
-Spezifikation und müssen zwingend implementiert werden. Optional kommen noch
-Geometry- und Tesselation-Shader hinzu.
-
-Dadurch lassen sich Oberflächeneffekte oder auch Effekte, wie Motion Blur und
-Depth of Field erzeugen.
-
-\subsection{JOGL}
-
-Im jVR-Framework wird die \emph{Java Bindings for OpenGL} (JOGL) verwendet, um
-OpenGL mit Java nutzen zu können. JOGL stellt eine Wrapperbibliothek dar, die die
-OpenGL-Befehle über Javafunktionen ansteuern lässt.
-
-Auf die native OpenGL API wird mit Hilfe des \emph{Java Native Interface} (JNI)
-zugegriffen. Der native C-Code ist auf allen großen Systemen wie Windows, Mac OS
-X und Linux verfügbar.
-
-JOGL wurde von der Sun Microsystems Game Technology Group entwickelt. Es steht
-als Open Source zur Verfügung und wird unter der BSD Lizenz angeboten. Es stellt
-zudem eine Referenzimplementierung der Java Specification Request (JSR-231) dar.
-JOGL wird möglicherweise in einer späteren Java-Version zu den
-Standarbibliotheken mit aufgenommen.
-
-\subsection{COLLADA}
-
-Ein wichtiger Bestandteil des jVR-Frameworks stellt die Benutzung des
-3D-Austausch-formats COLLADA dar. Dieses Format ist basiert auf der
-Auszeichnungssprache XML. Es dient dazu wichtige Daten zwischen verschiedenen
-3D-Programmen zu verwalten. Weiterhin ist als offener Standard definiert.
-
-Eine COLLADA-Datei setzt sich aus mehreren Bereichen zusammen. Zum einen werden
-die Geometrien beschrieben und zum anderen werden die verwendeten Texturen über
-Pfade angesteuert. Weitere Bereiche sind Lichter, Materialien und Kameras.
-
-Seit der Version 1.4 können auch physikalische Eigenschaften in COLLADA-Dateien
-hinterlegt werden. Dabei können Oberflächeneigenschaften wie Reibung definiert
-werden.
-
-\subsection{Virtual Reality}
-
-Zusätzlich bietet das jVR-Framework noch die Möglichkeit eine Art virtueller
-Realität zu erzeugen. Dabei werden stereoskopische Bilder erzeugt, die durch
-eine entsprechende Brille einen räumlichen Effekt simulieren. Dies wird
-durch die Funktion des Multithreading geschafft.
-
-Multithreading bedeutet mehrere Prozesse bzw. Aufgaben von der Engine
-gleichzeitig durchführen zu lassen. Im Falle vom jVR-Framework lassen sich
-mehrere Szenen gleichzeitig rendern.
-
-Um stereoskopische Bilder zu erzeugen werden 2 voneinander versetzte Kameras
-aufgestellt und die Szene simultan aus Sicht der beiden Kameras gerendert. Bei
-der Darstellung werden die 2 erzeugten Bilder übereinandergelegt. Mit der schon
-erwähnten Brille werden die Bilder aus Sicht des Betrachters zusammengefügt. Es
-entsteht ein 3dimensionaler Effekt.
-
-Ein weiterer Teil der virtuellen Realität ist die Funktion des Headtrackings.
-Dabei werden die Bewegung des Kopfes vom Betrachter aufgezeichnet und vom
-Programm verarbeitet. Je nach Neigung bzw. Drehung des Kopfes wird die
-betrachtete Szene angepasst, was dem Betrachter die Illusion vermittelt sich
-tatsächlich in der Szene zu bewegen.
-
-\subsection{Pipeline}
-
-\subsection{Aufbau}
-
-\subsection{Struktur}
 
 \section{Portal Culling}
 
@@ -258,7 +111,7 @@ liegt. Dadurch wird die komplette Zelle und alle enthaltenen Objekte nicht
 gerendert.
 
 Der erste Portal Culling Algorithmus wurde 1990 von Airey vorgestellt. Im
-späteren Verlauf wurden von Teller und Séquin bzw. Teller und Hanrahan
+späteren Verlauf wurden von \cite{visComp} bzw. \cite{visAlgo}
 verbesserte komplexere und vor allem effizientere Algorithmen zum Thema Portal
 Culling entwickelt.
 
@@ -360,7 +213,154 @@ werden alle Objekte bestimmt die innerhalb dieser Zelle für den Betrachter nicht
 sichtbar sind, da verdeckt. Diese Methode bietet den Vorteil den Vorgang nur
 dann zu wiederholen, falls man den Bereich der Zelle verlässt.
 
-\chapter{Systementwurf}
+\section{jVR-Framework}
+% TODO: besser formulieren, jVR wurde nicht von mir ausgewählt, ist Teil der
+% Arbeit
+Wie schon vorangehend erwähnt, spielt der Einsatz des jVR-Frameworks eine
+zentrale Rolle dieser Arbeit. Dies lässt sich zum einen dadurch begründen, dass
+das Framework schon ein grundlegendes Maß an wichtigen Funktionen bietet, die
+nötig sind um 3D-Echtzeit-Anwendungen zu erstellen und zum anderen, da es um
+weitere nützliche Funktionen erweitert werden kann um Performance bzw.
+Produktivität zu steigern.
+
+Das jVR-Framework ist im Rahmen einer Masterarbeit entstanden. Das Framework
+soll den Studenten eine Plattform liefern mit denen sie komplexe
+3D-Programme erzeugen können. Außerdem soll es den Studenten ein besseres
+Verständnis über die Funktionen von 3D-Engines vermitteln.
+
+\subsection{Pipelinekonzept}
+
+Die Pipeline im jVR-Framework macht es möglich einzelne Szeneobjekte getrennt
+voneinander zu rendern. Man kann zudem verschiedene Materialien zu
+Materialklassen zusammenfassen. Materialklassen können wiederum aus mehreren
+Shaderkontexten bestehen und somit aus mehreren Shaderprogrammen. 
+
+Shaderkontexte werden größtenteils dafür verwendet Objekte richtig zu
+beleuchten. Erst wird mit einem Shaderprogramm die Umgebungsbeleuchtung
+(Ambient-Pass) für das Objekt gerendert. Anschließend darauf werden die Objekte
+für jede Lichtquelle mit dem Shaderprogramm mit der eigentlichen Beleuchtung
+gerendert (Lighting-Pass). Die zuvor erzeugten Bildinformationen werden mittels
+des Blending-Verfahrens aufaddiert, (vergleiche auch \cite[S. 46]{jvrMast}).
+
+\subsection{Aufbau}
+
+\subsection{Struktur}
+
+\subsection{OpenGL}
+
+Für die 3D-Beschleunigung wird die Grafikbibliothek OpenGL verwendet. \emph{Open
+Graphics Library}, kurz OpenGL ist ein offener Grafikstandard, der zur
+2D- und 3D-Echtzeit-berechnung verwendet wird.
+
+OpenGL geht aus der von Silicon Graphics Inc. (SGI) entwickelten IRIS GL API
+hervor. Ab 1992 wurde OpenGL vom OpenGL ARB (Architecture Review Board)
+beaufsichtigt und weiterentwickelt. Heute ist die Khronos Group für die
+Weiterentwicklung der API zuständig. Die Khronos Group zählt weit über 100
+Mitglieder, darunter AMD, Intel und NVIDIA.
+
+OpenGL wird von nahezu jeder Grafikkarte unterstützt, die richtigen Treiber
+vorausgesetzt. Die Besonderheit von OpenGL ist im Vergleich zu Direct3D seine
+Plattformunabhängigkeit. Ebenso wie Java lässt sich eine Implementation von
+OpenGL auf jedem gängigen Betriebssystem, wie Windows, Mac OS X und Linux
+finden. Dies erleichtert Programmierern Anwendungen zu erstellen und in
+verschiedenen Umgebungen zu testen.
+
+\emph{OpenGL Embedded Systems}, kurz OpenGL ES ist eine spezielle
+Zusammenstellung der OpenGL API für mobile Geräte. Dadurch lassen sich
+Anwendungen auf mobilen Geräten realisieren. Durch die begrenzten Kapazitäten,
+wie Arbeitsspeicher und Rechenleistung der mobilen Hardware, ist diese Version
+der OpenGL API um einige Funktionen erleichtert worden.
+
+Ins jVR-Framework wurden viele häufig benutzten Grundfunktionen implementiert.
+Dies dient dazu um die Produktivität zu steigern. Dadurch kommt der Entwickler
+so gut wie nie in Kontakt mit reinen OpenGL-Befehlen.
+
+\subsection{GLSL}
+
+Eine weitere Besonderheit des jVR-Frameworks bietet die Unterstützung von
+Shadern, die in der \emph{OpenGL Shader Language}, kurz GLSL geschrieben werden.
+Shader sind kleine Programme die direkt auf der GPU ausgführt werden. Sie
+ersetzen zudem die Fixed Function Pipeline von OpenGL.
+
+GLSL besitzt eine C-ähnliche Syntax und besitzt zudem noch zusätzliche
+Datentypen wie Vektoren und Matrizen. Vor der Verwendung müssen die Shader
+compiliert werden. Dies bietet den Grafikkartenherstellern den Vorteil, den
+Compiler für die eigene Hardware zu optimieren.
+
+GLSL bietet außerdem die Möglichkeit ein besseres Beleuchtungsmodell zu
+verwenden, als das von der Fixed Function Pipeline bereitgestellte. Seit Version
+3.1 von OpenGL sind Fragment- und Vertex-Shader ein wichtiger Bestandteil der
+Spezifikation und müssen zwingend implementiert werden. Optional kommen noch
+Geometry- und Tesselation-Shader hinzu.
+
+Dadurch lassen sich Oberflächeneffekte oder auch Effekte, wie Motion Blur und
+Depth of Field erzeugen.
+
+\subsection{JOGL}
+
+Im jVR-Framework wird die \emph{Java Bindings for OpenGL} (JOGL) verwendet, um
+OpenGL mit Java nutzen zu können. JOGL stellt eine Wrapperbibliothek dar, die die
+OpenGL-Befehle über Javafunktionen ansteuern lässt.
+
+Auf die native OpenGL API wird mit Hilfe des \emph{Java Native Interface} (JNI)
+zugegriffen. Der native C-Code ist auf allen großen Systemen wie Windows, Mac OS
+X und Linux verfügbar.
+
+JOGL wurde von der Sun Microsystems Game Technology Group entwickelt. Es steht
+als Open Source zur Verfügung und wird unter der BSD Lizenz angeboten. Es stellt
+zudem eine Referenzimplementierung der Java Specification Request (JSR-231) dar.
+JOGL wird möglicherweise in einer späteren Java-Version zu den
+Standarbibliotheken mit aufgenommen.
+
+In der Version 2 von JOGL wurden die GLProfile eingeführt. Diese ermöglichen es
+dem Entwickler sich für ein OpenGL-Version zu entscheiden. Dadurch kann
+bestimmt werden auf welchen Plattformen die erstellten Anwendungen laufen
+und es werden zudem Kompatibilitätsprobleme vermieden.
+
+% \begin{figure}[ht]
+% 	\includegraphics[width=\linewidth]{img/glprofiles.png}
+% 	\caption{Test 123}
+% \end{figure}
+
+\subsection{COLLADA}
+
+Ein wichtiger Bestandteil des jVR-Frameworks stellt die Benutzung des
+3D-Austausch-formats COLLADA dar. Dieses Format ist basiert auf der
+Auszeichnungssprache XML. Es dient dazu wichtige Daten zwischen verschiedenen
+3D-Programmen zu verwalten. Weiterhin ist als offener Standard definiert.
+
+Eine COLLADA-Datei setzt sich aus mehreren Bereichen zusammen. Zum einen werden
+die Geometrien beschrieben und zum anderen werden die verwendeten Texturen über
+Pfade angesteuert. Weitere Bereiche sind Lichter, Materialien und Kameras.
+
+Seit der Version 1.4 können auch physikalische Eigenschaften in COLLADA-Dateien
+hinterlegt werden. Dabei können Oberflächeneigenschaften wie Reibung definiert
+werden.
+
+\subsection{Virtual Reality}
+
+Zusätzlich bietet das jVR-Framework noch die Möglichkeit eine Art virtueller
+Realität zu erzeugen. Dabei werden stereoskopische Bilder erzeugt, die durch
+eine entsprechende Brille einen räumlichen Effekt simulieren. Dies wird
+durch die Funktion des Multithreading geschafft.
+
+Multithreading bedeutet mehrere Prozesse bzw. Aufgaben von der Engine
+gleichzeitig durchführen zu lassen. Im Falle vom jVR-Framework lassen sich
+mehrere Szenen gleichzeitig rendern.
+
+Um stereoskopische Bilder zu erzeugen werden 2 voneinander versetzte Kameras
+aufgestellt und die Szene simultan aus Sicht der beiden Kameras gerendert. Bei
+der Darstellung werden die 2 erzeugten Bilder übereinandergelegt. Mit der schon
+erwähnten Brille werden die Bilder aus Sicht des Betrachters zusammengefügt. Es
+entsteht ein 3dimensionaler Effekt.
+
+Ein weiterer Teil der virtuellen Realität ist die Funktion des Headtrackings.
+Dabei werden die Bewegung des Kopfes vom Betrachter aufgezeichnet und vom
+Programm verarbeitet. Je nach Neigung bzw. Drehung des Kopfes wird die
+betrachtete Szene angepasst, was dem Betrachter die Illusion vermittelt sich
+tatsächlich in der Szene zu bewegen.
+
+\chapter{Entwurf des Portal Cullings}
 
 Alle zuvor diskutierten Themen stellen die Schwerpunkte der Arbeit dar. Die
 Integration einer Portalfunktion in das jVR-Framework ist dabei als
@@ -494,10 +494,6 @@ sichtbar würden.
 \chapter{Ergebnisse und Bewertung}
 
 \chapter{Zusammenfassung und Ausblick}
-
-Test \cite{real_time}
-
-Test2 \cite{OGL}
 
 \bibliography{lit}
 \bibliographystyle{apalike}
