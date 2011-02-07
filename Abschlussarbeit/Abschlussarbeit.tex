@@ -7,6 +7,7 @@
 \usepackage[colorlinks=false,pdfborder={0 0 0}]{hyperref}
 \usepackage{cite}
 \usepackage{graphicx}
+\usepackage{mathtools}
 \DeclareGraphicsExtensions{.png}
 
 \begin{document}
@@ -227,6 +228,109 @@ Das jVR-Framework ist im Rahmen einer Masterarbeit entstanden. Das Framework
 soll den Studenten eine Plattform liefern mit denen sie komplexe
 3D-Programme erzeugen können. Außerdem soll es den Studenten ein besseres
 Verständnis über die Funktionen von 3D-Engines vermitteln.
+
+\subsection{Szenegraph}
+
+Um die Objekte innerhalb einer 2D bzw. 3D-Szene verwalten zu können, wird in dem
+jVR-Framework Verwendung von einem Szenegraphen gemacht. Ein Szenegraph
+ist eine baumförmige Datenstruktur. Objekte in einer Szene können zum einen
+geometrische Objekte oder Lichtquellen sein. Jedes Objekt in der Szene besitzt
+eine eigene Transformation. Es besteht außerdem die Möglichkeit Objekte einer
+Szene zu animieren. Dies geschieht, indem man die Transformationen in zeitlichen
+Intervallen manipuliert.
+
+Über einen Szenengraph lassen sich außerdem Objekte animieren, die in
+hierarchischer Beziehung zueinander stehen. Werden mehrere Objekte in einem
+Gruppenknoten zusammengefasst entsteht eine hierarchische Beziehung. Dabei kann
+der ganze Gruppenknoten transformiert werden, mitsamt den enthaltenen Objekten
+oder aber jeder einzelne Objektknoten innerhalb des Gruppenknoten.
+
+\subsubsection{Szeneknoten}
+
+Das jVR-Framework unterscheidet zwischen mehreren Knotentypen. Es gibt zum einen
+den schon erwähnten \texttt{GroupNode}. Dieser Knoten kann als einziger
+Kinderkoten enthalten. Zusätzlich gibt es noch den \texttt{LightNode}. Dieser
+repräsentiert die verschiedenen Lichtquellen und wird von 3 Standardlichtquwllwn
+abgeleitet. Diese 3 Lichtquellen sind \texttt{PointLightNode},
+\texttt{DirectionalLightNode} und \texttt{SpotLightNode}.
+
+Die \texttt{PointLightNode} strahlt Licht in alle Richtungen gleichzeitig.
+Anders hingegen die \texttt{SpotLightNode}, die Licht nur innerhalb eines
+gerichteten Kegels ausstrahlt. Die letzte Lichtquelle, die
+\texttt{DirectionalLightNode} strahlt Licht parallel in eine bestimmte Richtung.
+
+Die Position des Betrachters wird in der Szene über eine Kamera dargestellt. Der
+passende Knotentyp ist die \texttt{CameraNode}. Hinzu kommt die
+\texttt{VRCameraNode}, die für den Einsatz in VR-Systemen gedacht ist.
+
+Um geometrische Objekte in einer Szene abzubilden, wird die \texttt{ShapeNode}
+genutzt. Einer \texttt{ShapeNode} lassen sich eine Geometrie und ein passendes
+Material zuordnen. \texttt{ShapeNodes} lassen sich im Szenegraphen
+wiederverwenden. Dazu wird die \texttt{ShapeNode} an verschiedene
+\texttt{GroupNodes} gehängt, die unterschiedlich transformiert werden.
+
+Der letzte Knotentyp, über den das jVR-Framework verfügt, ist die
+\texttt{ClipPlaneNode}. Sie dient dazu, eine Szene in 2 Halbräume zu unterteilen
+und einen der beiden Räume auszublenden.
+
+\subsubsection{Transformationen}
+
+Das verfügt über mehrere Möglichkeiten Knoten innerhalb einer Szene zu
+transformieren. Es werden 3 Arten der Transformation unterschieden.
+
+\begin{align}
+\textbf{Transformation:} &
+\begin{pmatrix}
+\phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
+\alpha}&\phantom{-\sin \alpha}\\[-2.5ex] 
+1 & 0 & 0 & {t}_{x} \\
+0 & 1 & 0 & {t}_{y} \\
+0 & 0 & 1 & {t}_{z} \\
+0 & 0 & 0 & 1
+\end{pmatrix} \\
+\textbf{Skalierung:} &
+\begin{pmatrix}
+\phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
+\alpha}&\phantom{-\sin \alpha}\\[-2.5ex]
+{s}_{x} & 0 & 0 & 0 \\
+0 & {s}_{y} & 0 & 0 \\
+0 & 0 & {s}_{z} & 0 \\
+0 & 0 & 0 & 0
+\end{pmatrix} \\
+\textbf{Rotation um X-Achse:} &
+\begin{pmatrix}
+\phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
+\alpha}&\phantom{-\sin \alpha}\\[-2.5ex] 
+1 & 0 & 0 & 0 \\
+0 & \cos \alpha & -\sin \alpha & 0 \\
+0 & \sin \alpha & \cos \alpha & 0 \\
+0 & 0 & 0 & 1 
+\end{pmatrix} \\
+\textbf{Rotation um Y-Achse:} &
+\begin{pmatrix}
+\phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
+\alpha}&\phantom{-\sin \alpha}\\[-2.5ex] 
+\cos \beta & 0 & \sin \beta & 0 \\
+0 & 1 & 0 & 0 \\
+-\sin \beta & 0 & \cos \beta & 0 \\
+0 & 0 & 0 & 1
+\end{pmatrix} \\
+\textbf{Rotation um Z-Achse:} &
+\begin{pmatrix}
+\phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
+\alpha}&\phantom{-\sin \alpha}\\[-2.5ex] 
+\cos \gamma & -\sin \gamma & 0 & 0 \\
+\sin \gamma & \cos \gamma & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+\end{pmatrix}
+\end{align}
+
+\subsubsection{Traversierung}
+
+\subsection{Drawlisten}
+
+
 
 \subsection{Pipelinekonzept}
 
