@@ -15,7 +15,6 @@
 \pagenumbering{Roman}
 \tableofcontents
 
-
 \chapter{Einleitung}
 \pagenumbering{arabic}
 
@@ -275,8 +274,8 @@ und einen der beiden Räume auszublenden.
 
 \subsubsection{Transformationen}
 
-Das verfügt über mehrere Möglichkeiten Knoten innerhalb einer Szene zu
-transformieren. Es werden 3 Arten der Transformation unterschieden.
+Das jVR-Framework verfügt über mehrere Möglichkeiten Knoten innerhalb einer
+Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden.
 
 \begin{align}
 \textbf{Transformation:} &
@@ -328,9 +327,25 @@ transformieren. Es werden 3 Arten der Transformation unterschieden.
 
 \subsubsection{Traversierung}
 
+Um eine baumförmige Datenstruktur wie den Szenegraph zu durchlaufen wird
+Gebrauch von der Traversierung gemacht. Dabei werden die einzelnen Knoten der
+Szene verarbeitet. Traversierung macht vor allem dann Sinn, wenn z.B.
+Szeneknoten mit bestimmten Eigenschaften gesucht werden müssen. Zum Rendern muss
+der Szenegraph ebenfalls durchlaufen werden. Angefangen wird dabei beim
+Wurzelknoten. Jeder Szeneknoten der an der Wurzel hängt wird in
+Welttransformation überführt. Dies geschieht, indem alle Transformationen vom
+Wurzelknoten bis zum Szeneknoten multipliziert werden.
+
 \subsection{Drawlisten}
 
+In Drawlisten werden die verschiedenen Szeneknoten mit ihren Weltransformationen
+gesammelt und nacheinander gerendert. Eine Drawliste kann zudem beliebig oft
+verwendet werden. Das bietet den Vorteil, den Szenegraph nicht nochmals zu
+traversieren, falls ein Objekt mehrmals gerendert werden muss.
 
+Nachdem die Drawlisten erstellt wurden, werden sie in der Pipeline gespeichert
+und ja nach Bedarf genutzt werden. Das heißt, dass Objekte nach bestimmten
+Materialeigenschaften gefiltert und gerendert werden können.
 
 \subsection{Pipelinekonzept}
 
@@ -345,10 +360,6 @@ beleuchten. Erst wird mit einem Shaderprogramm die Umgebungsbeleuchtung
 für jede Lichtquelle mit dem Shaderprogramm mit der eigentlichen Beleuchtung
 gerendert (Lighting-Pass). Die zuvor erzeugten Bildinformationen werden mittels
 des Blending-Verfahrens aufaddiert, (vergleiche auch \cite[S. 46]{jvrMast}).
-
-\subsection{Aufbau}
-
-\subsection{Struktur}
 
 \subsection{OpenGL}
 
@@ -375,6 +386,7 @@ Anwendungen auf mobilen Geräten realisieren. Durch die begrenzten Kapazitäten,
 wie Arbeitsspeicher und Rechenleistung der mobilen Hardware, ist diese Version
 der OpenGL API um einige Funktionen erleichtert worden.
 
+%TODO besser formulieren
 Ins jVR-Framework wurden viele häufig benutzten Grundfunktionen implementiert.
 Dies dient dazu um die Produktivität zu steigern. Dadurch kommt der Entwickler
 so gut wie nie in Kontakt mit reinen OpenGL-Befehlen.
@@ -421,6 +433,11 @@ dem Entwickler sich für ein OpenGL-Version zu entscheiden. Dadurch kann
 bestimmt werden auf welchen Plattformen die erstellten Anwendungen laufen
 und es werden zudem Kompatibilitätsprobleme vermieden.
 
+Das jVR-Framework benutzt in diesem Fall das GL2GL3-Profil. Es vereint alle
+Funktionen der Profile GL2 und GL3. Das Profil hat die Eigenschaft GL3 konform
+zu sein. Es können daher GL3-Anwendungen entwickelt werden, die aber auch auf
+Systemen lauffähig sind, die nur OpenGL 2 unterstützen.
+
 % \begin{figure}[ht]
 % 	\includegraphics[width=\linewidth]{img/glprofiles.png}
 % 	\caption{Test 123}
@@ -450,7 +467,8 @@ durch die Funktion des Multithreading geschafft.
 
 Multithreading bedeutet mehrere Prozesse bzw. Aufgaben von der Engine
 gleichzeitig durchführen zu lassen. Im Falle vom jVR-Framework lassen sich
-mehrere Szenen gleichzeitig rendern.
+mehrere Szenen gleichzeitig rendern. Es lassen sich zudem mehrere Anzeigegeräte
+ansteuern. Dabei werden die zu erzeugenden Teilbilder parallel gerendert.
 
 Um stereoskopische Bilder zu erzeugen werden 2 voneinander versetzte Kameras
 aufgestellt und die Szene simultan aus Sicht der beiden Kameras gerendert. Bei
@@ -554,6 +572,16 @@ Die Szene wird im Falle eines Portals aus Sicht der virtuellen Kamera gerendert.
 Jedes Portal besitzt eine eigene virtuelle Kamera. Diese kann direkt
 über das jeweilige Portal angesprochen werden. Somit lassen sich Eigenschaften,
 wie Sichtbereich oder die Transformation bestimmen.
+
+\section{Zellen}
+
+Zellen stellen in sich abgeschlossene Räume dar. Sie sind \texttt{GroupNodes}
+und können daher weitere Szeneknoten enthalten. Zellen können über Türen
+miteinander verbunden werden. Jede Zelle wird durch 4 Wände definiert, wobei die
+Breite, Länge und Höhe einer Zelle variieren kann. Innerhalb einer Zelle
+befindet sich zudem \texttt{PointLightNode}, um innerhalb positionierte Objekte
+richtig darstellen zu können. Eine Zelle lässt sich farblich anpassen, oder aber
+mit einer Textur versehen.
 
 \chapter{Praktische Umsetzung}
 
