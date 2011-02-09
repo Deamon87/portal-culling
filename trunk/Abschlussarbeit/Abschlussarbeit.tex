@@ -313,8 +313,10 @@ Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden.
 0 & 1 & 0 & 0 \\
 -\sin \beta & 0 & \cos \beta & 0 \\
 0 & 0 & 0 & 1
-\end{pmatrix} \\
-\textbf{Rotation um Z-Achse:} &
+\end{pmatrix}
+\end{align}
+\begin{equation}
+\textbf{Rotation um Z-Achse:}
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
 \alpha}&\phantom{-\sin \alpha}\\[-2.5ex] 
@@ -323,7 +325,7 @@ Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden.
 0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 1
 \end{pmatrix}
-\end{align}
+\end{equation}
 
 \subsubsection{Traversierung}
 
@@ -380,6 +382,21 @@ OpenGL auf jedem gängigen Betriebssystem, wie Windows, Mac OS X und Linux
 finden. Dies erleichtert Programmierern Anwendungen zu erstellen und in
 verschiedenen Umgebungen zu testen.
 
+OpenGL kann als Zustandsautomat verstanden werden. Wird z.B. eine Farbe oder
+eine Transformation festgelegt, werden alle daraufhin gezeichneten Objekte mit
+der gewählten Farbe koloriert und der festgelegten Transformation transformiert.
+
+OpenGL besaß bis zur Version 1.5 eine Fixed Function Pipeline mit der die
+Objekte gerendert werden mussten. Die Fixed Function Pipeline war für die
+Beleuchtung und Transformation der Vertices verantwortlich. Erst mit der Version
+2.0 ließ sich die Pipeline über die \emph{OpenGL Shading Language} zum Teil
+programmieren.
+
+Seit OpenGL 3.0 wurde damit begonnen die meisten Befehle der Fixed Function
+Pipeline aus der Spezifikation zu entfernen. Mit der Veröffentlichung von OpenGL
+3.1 ist die Fixed Function Pipeline komplett aus der Spezifikation verschwunden.
+Die Befehle lassen sich aber weiterhin über OpenGL-Extensions nutzen.
+
 \emph{OpenGL Embedded Systems}, kurz OpenGL ES ist eine spezielle
 Zusammenstellung der OpenGL API für mobile Geräte. Dadurch lassen sich
 Anwendungen auf mobilen Geräten realisieren. Durch die begrenzten Kapazitäten,
@@ -406,11 +423,16 @@ Compiler für die eigene Hardware zu optimieren.
 GLSL bietet außerdem die Möglichkeit ein besseres Beleuchtungsmodell zu
 verwenden, als das von der Fixed Function Pipeline bereitgestellte. Seit Version
 3.1 von OpenGL sind Fragment- und Vertex-Shader ein wichtiger Bestandteil der
-Spezifikation und müssen zwingend implementiert werden. Optional kommen noch
-Geometry- und Tesselation-Shader hinzu.
-
-Dadurch lassen sich Oberflächeneffekte oder auch Effekte, wie Motion Blur und
+Spezifikation und müssen zwingend implementiert werden. Durch Verwendung dieser
+Shader lassen sich Oberflächeneffekte oder auch Effekte, wie Motion Blur und
 Depth of Field erzeugen.
+
+Mit OpenGL 3.2 kommen die Geometry-Shader zur Kernspezifikation hinzu. Diese
+Shader ermöglichen es Geometrien direkt auf der Grafikkarte zu erzeugen und zu
+verarbeiten. OpenGL 4.0 erweitert die Spezifikation um den Gebrauch von
+Tesselation-Shadern. Diese Shader können dazu verwendet vorhandene Polygone in
+weitere kleinere Polygone aufzuteilen und so die Oberfläche eines geometrischen
+Objekts zu verbessern.
 
 \subsection{JOGL}
 
@@ -523,19 +545,6 @@ Da die Tür als Trenner der Räume (auch als Zellen bezeichnet) dient, kann
 festgelegt werden welche 2 Räume miteinander verbunden sind. Dabei kann
 ermittelt werden, welche Räume überhaupt nötig zum Rendern sind.
 
-\subsection{Fenster}
-
-Fenster verhalten sich ähnlich wie Türen, können aber nicht durchtreten werden.
-Sie bieten nur die Möglichkeit in andere Räume bzw. außerhalb des Gebäudes zu
-blicken. Ein Fenster kann trotzdem als verbindendes Glied für Räume genutzt
-werden. Der Betrachter sieht einen anderen Raum, aber kann diesen nicht
-erreichen.
-
-Fenster bieten ebenfalls wie Türen ein Culling an. Beim Betrachten werden wieder
-nur jeweils die Objekte dessen BB innerhalb des View Frustums liegen gerendert.
-Ähnlich den Türen kann über ein Fenster ermittelt werden, welcher Raum mit einem
-anderen verbunden ist.
-
 \subsection{Spiegel}
 
 Ein besonderer Portaltyp ist der Spiegel. Er kann genau wie das Fenster nicht
@@ -553,25 +562,61 @@ aus Sicht der Spiegelfläche und negativer Skalierung.
 Der Teleporter ist eine Abwandlung der Tür. Im Gegensatz zur Tür, verbindet der
 Teleporter keine Räume miteinander. Der Teleporter dient als eine Art
 Schnellreisesystem. Er verbindet 2 Türen miteinander, die im Raum sehr weit weg
-voneinander entfernt liegen. Sie werden über die Klasse \texttt{PortalConnector}
+voneinander entfernt liegen. Sie werden über den \texttt{PortalConnector}
 verbunden.
 
-Wie die Tür erhält jeder Teleporter eine virtuelle Kamera. Diese Kamera werden
-relativ zur Position der Kamera des Betrachters zum Teleporter auf der
+Wie der Spiegel erhält jeder Teleporter eine virtuelle Kamera. Diese Kamera
+werden relativ zur Position der Kamera des Betrachters zum Teleporter auf der
 Gegenseite ausgerichtet. Je nach Bewegung des Betrachters bewegt sich auch die
 virtuelle Kamera.
 
+Teleporter prüfen, ob eine \texttt{SceneNode} nahe genug steht um teleportiert
+zu werden. Ist dies der Fall, wird die \texttt{SceneNode} an die Position des
+festgelegten Ausgangs transformiert. Zudem werden die transformierten
+\texttt{SceneNodes} nicht in ihrer Orientierung oder Bewegungsrichtung
+beeinflusst. Durchtritt ein Betrachter den \texttt{Teleporter} blickt immernoch
+in die gleiche Richtung, die ihm die Ausgangsprojektion suggeriert hat.
+
 \section{Virtuelle Kameras}
 
-Die virtuellen Kameras sind ein wichtiger Bestandteil der Portale. Sie stellen
-die Szene aus sicht des Portals dar. Für jede virtuelle Kamera wird ein
-\texttt{FrameBufferObjekt} angelegt, welches erst im zum Schluss auf das
-jeweilige Portal projeziert wird.
+Die virtuellen Kameras sind ein wichtiger Bestandteil der Portale. Für jede
+virtuelle Kamera wird ein \texttt{FrameBufferObjekt} angelegt. Das
+\texttt{FrameBufferObject} ist die Repräsentation der Szene aus Sicht der
+virtuellen Kamera. Wird die Szene aus Sicht der Betrachterkamera gerendert,
+werden alle erzeugten \texttt{FrameBufferObjects} auf das jeweilige Portal
+projeziert.
 
-Die Szene wird im Falle eines Portals aus Sicht der virtuellen Kamera gerendert.
-Jedes Portal besitzt eine eigene virtuelle Kamera. Diese kann direkt
-über das jeweilige Portal angesprochen werden. Somit lassen sich Eigenschaften,
-wie Sichtbereich oder die Transformation bestimmen.
+Es gibt 2 Portaltypen, die eine virtuelle Kamera besitzen. Zum einen
+\texttt{Teleporter} und zum anderen \texttt{Mirror}. Diese beiden Portaltypen
+benötigen die virtuelle Kamera um die Szene aus einer gewissen Position zu
+rendern im Anschluss auf dem jeweiligen Typen anzuzeigen.
+
+Beim \texttt{Teleporter} rendert die virtuelle Kamera die Szene aus Sicht des
+zugeordneten Ausgangs. Dabei wird die Kamera an die Stelle des Ausgangs
+transformiert und bekommt zudem die Kameratransformation des Betrachters mit
+übergeben. Dies lässt den Betrachter durch den \texttt{Teleporter} blicken und
+bei Änderung des Blickwinkels wird auch der Blickwinkel der virtuellen Kamera
+mitverändert.
+
+Ähnlich funktioniert die virtuelle Kamera bei \texttt{Mirror}. Die virtuelle
+Kamera ist an der Stelle des Spiegels transformiert. Ebenfalls wird die
+Transformation der Betrachterkamera berücksichtigt. Bewegt sich die
+Betrachterkamera beispielsweise nach rechts, bewegt sich die virtuelle Kamera
+aus Sicht des Betrachters nach links. Da das Seitenverhältnis der virtuellen
+Kamera negiert ist, wird Eindruck eines Spiegels erzeugt.
+
+\section{Portallisten}
+
+Um alle Portale innerhalb einer Szene rendern zu können, kommen die Portallisten
+zum Einsatz. Wenn ein Portal erzeugt wird, wird es gleich darauf der
+\texttt{PortalList} hinzugefügt. Sie ruft für jedes Portal die jeweilige
+Render-Funktion auf erzeugt dementsprechend das aktuelle Portal.
+
+Zusätzlich verwalten die Portallisten die hinzugefügten Portale und
+aktualisieren die Transformationen der virtuellen Kameras. Dabei wird der
+Portalliste die Kameratransformation der Betrachterkamera übergeben und
+weiterverarbeitet. Dies bietet den Vorteil nicht jedes Portal einzeln verwalten
+zu müssen.
 
 \section{Zellen}
 
@@ -582,6 +627,12 @@ Breite, Länge und Höhe einer Zelle variieren kann. Innerhalb einer Zelle
 befindet sich zudem \texttt{PointLightNode}, um innerhalb positionierte Objekte
 richtig darstellen zu können. Eine Zelle lässt sich farblich anpassen, oder aber
 mit einer Textur versehen.
+
+Eine Zelle stellt eine \texttt{GroupNode} dar. Daher lässt sie sich nach
+Belieben transformieren, zusammen mit allen enthaltenen Kindknoten. Zellen
+können somit beliebig platziert werden und daraufhin mit einer benachbarten
+Zelle über eine Tür verbunden werden. Die Information ob 2 Zellen benachbart
+sind oder nicht wird in der Tür gespeichert.
 
 \chapter{Praktische Umsetzung}
 
@@ -632,4 +683,3 @@ sichtbar würden.
 \addcontentsline{toc}{chapter}{Literaturverzeichnis}
 
 \end{document}
-
