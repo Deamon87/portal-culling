@@ -57,6 +57,39 @@ das Bild nachhaltig aufwerten. Selbst die komplexe Physikberechnung wird auf
 Grafikkarten ausgelagert, wobei vor kurzem noch die CPU für diese Art von
 Berechnung zuständig war.
 
+\chapter{Aufgabenstellung}
+
+Die Aufgabe besteht darin eine Erweiterung in das jVR-Framework in Form einer
+Portal-Funktion zu integrieren. Man wird dadurch in die Lage versetzt innerhalb
+eines vordefinierten Raumes durch verschiedene Portale zu treten und bestimmte
+Orte innerhalb des Raumes zu erreichen.
+
+Weiterhin wird man in die Lage versetzt Portale bei Bedarf selbst zu erschaffen
+und zu positionieren. Außerdem kann man bestimmte Objekte nehmen und durch die
+Räume bewegen. Dabei sollen sich diese Objekte physikalisch korrekt verhalten
+und mit in die Portal-Funktionalität integriert werden. Das soll heißen, falls
+ein Objekt durch ein Portal befördert wird, soll es aus dem entsprechenden
+Gegenstück auch entsprechend der Erwartung physikalisch korrekt austreten.
+
+Als Ansatz dient das Portal-Rendering-Verfahren, welches in der Computergrafik
+dafür benutzt wird geschlossene Räume, die in verschiedene Segmente aufgeteilt
+sind untereinander zu verbinden und je nach Sichtbarkeit zu rendern. Dabei
+werden Lichteinfall sowie Schatteneinfall, sowie die Position der Kamera
+berücksichtigt.
+
+Durch die Erweiterung des jVR-Frameworks, welches speziell mit dem Gedanken
+implementiert wurde um das Holodeck der BHT und stereoskopische
+Rendering-Verfahren zu benutzen um 3dimensionale Szenen erzeugen die mit einer
+3D-Brille betrachtet werden. Weitere Möglichkeiten bietet das
+Headtracking-Verfahren um die Gesichtsposition zu ermitteln und so die
+Perspektive dementsprechend anzupassen.
+
+Das Ergebnis der Aufgabe wird eine Beispielimplementierung sein, die zum Einen
+die Erschaffung von Portalen demonstriert. Des Weiteren werden verschiedene
+Beispielszenen erstellt, in denen das Portal-Rendering und Lösungen
+verschiedener Problemfälle, die bei dem vorgestellten Rendering-Verfahren
+auftreten können vorgestellt werden.
+
 \section{Motivation}
 
 Die Arbeit beleuchtet einen besonderen Aspekt in der 3D-Echtzeitberechnung, das
@@ -71,7 +104,8 @@ Techniken eingesetzt werden um unnötige Objekte vom Rendern auszuschließen.
 
 \section{Aufbau der Arbeit}
 
-\chapter{Aufgabenstellung}
+Die Arbeit befasst sich im Kern mit der Technik des 3D-Echtzeitrenderings. Daher
+werden die 
 
 \chapter{Stand der Technik}
 
@@ -213,7 +247,7 @@ werden alle Objekte bestimmt die innerhalb dieser Zelle für den Betrachter nicht
 sichtbar sind, da verdeckt. Diese Methode bietet den Vorteil den Vorgang nur
 dann zu wiederholen, falls man den Bereich der Zelle verlässt.
 
-\section{jVR-Framework}
+\section{Techniken des jVR-Framework}
 % TODO: besser formulieren, jVR wurde nicht von mir ausgewählt, ist Teil der
 % Arbeit
 Wie schon vorangehend erwähnt, spielt der Einsatz des jVR-Frameworks eine
@@ -363,6 +397,34 @@ für jede Lichtquelle mit dem Shaderprogramm mit der eigentlichen Beleuchtung
 gerendert (Lighting-Pass). Die zuvor erzeugten Bildinformationen werden mittels
 des Blending-Verfahrens aufaddiert, (vergleiche auch \cite[S. 46]{jvrMast}).
 
+\subsection{FrameBufferObject}
+
+\subsection{Virtual Reality}
+
+Zusätzlich bietet das jVR-Framework noch die Möglichkeit eine Art virtueller
+Realität zu erzeugen. Dabei werden stereoskopische Bilder erzeugt, die durch
+eine entsprechende Brille einen räumlichen Effekt simulieren. Dies wird
+durch die Funktion des Multithreading geschafft.
+
+Multithreading bedeutet mehrere Prozesse bzw. Aufgaben von der Engine
+gleichzeitig durchführen zu lassen. Im Falle vom jVR-Framework lassen sich
+mehrere Szenen gleichzeitig rendern. Es lassen sich zudem mehrere Anzeigegeräte
+ansteuern. Dabei werden die zu erzeugenden Teilbilder parallel gerendert.
+
+Um stereoskopische Bilder zu erzeugen werden 2 voneinander versetzte Kameras
+aufgestellt und die Szene simultan aus Sicht der beiden Kameras gerendert. Bei
+der Darstellung werden die 2 erzeugten Bilder übereinandergelegt. Mit der schon
+erwähnten Brille werden die Bilder aus Sicht des Betrachters zusammengefügt. Es
+entsteht ein 3dimensionaler Effekt.
+
+Ein weiterer Teil der virtuellen Realität ist die Funktion des Headtrackings.
+Dabei werden die Bewegung des Kopfes vom Betrachter aufgezeichnet und vom
+Programm verarbeitet. Je nach Neigung bzw. Drehung des Kopfes wird die
+betrachtete Szene angepasst, was dem Betrachter die Illusion vermittelt sich
+tatsächlich in der Szene zu bewegen.
+
+\section{Verwendete Standards im jVR-Framework}
+
 \subsection{OpenGL}
 
 Für die 3D-Beschleunigung wird die Grafikbibliothek OpenGL verwendet. \emph{Open
@@ -465,6 +527,8 @@ Systemen lauffähig sind, die nur OpenGL 2 unterstützen.
 % 	\caption{Test 123}
 % \end{figure}
 
+\subsection{jBullet}
+
 \subsection{COLLADA}
 
 Ein wichtiger Bestandteil des jVR-Frameworks stellt die Benutzung des
@@ -479,30 +543,6 @@ Pfade angesteuert. Weitere Bereiche sind Lichter, Materialien und Kameras.
 Seit der Version 1.4 können auch physikalische Eigenschaften in COLLADA-Dateien
 hinterlegt werden. Dabei können Oberflächeneigenschaften wie Reibung definiert
 werden.
-
-\subsection{Virtual Reality}
-
-Zusätzlich bietet das jVR-Framework noch die Möglichkeit eine Art virtueller
-Realität zu erzeugen. Dabei werden stereoskopische Bilder erzeugt, die durch
-eine entsprechende Brille einen räumlichen Effekt simulieren. Dies wird
-durch die Funktion des Multithreading geschafft.
-
-Multithreading bedeutet mehrere Prozesse bzw. Aufgaben von der Engine
-gleichzeitig durchführen zu lassen. Im Falle vom jVR-Framework lassen sich
-mehrere Szenen gleichzeitig rendern. Es lassen sich zudem mehrere Anzeigegeräte
-ansteuern. Dabei werden die zu erzeugenden Teilbilder parallel gerendert.
-
-Um stereoskopische Bilder zu erzeugen werden 2 voneinander versetzte Kameras
-aufgestellt und die Szene simultan aus Sicht der beiden Kameras gerendert. Bei
-der Darstellung werden die 2 erzeugten Bilder übereinandergelegt. Mit der schon
-erwähnten Brille werden die Bilder aus Sicht des Betrachters zusammengefügt. Es
-entsteht ein 3dimensionaler Effekt.
-
-Ein weiterer Teil der virtuellen Realität ist die Funktion des Headtrackings.
-Dabei werden die Bewegung des Kopfes vom Betrachter aufgezeichnet und vom
-Programm verarbeitet. Je nach Neigung bzw. Drehung des Kopfes wird die
-betrachtete Szene angepasst, was dem Betrachter die Illusion vermittelt sich
-tatsächlich in der Szene zu bewegen.
 
 \chapter{Entwurf des Portal Cullings}
 
