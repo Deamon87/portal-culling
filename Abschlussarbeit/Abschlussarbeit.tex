@@ -17,6 +17,7 @@
 
 \chapter{Einleitung}
 \pagenumbering{arabic}
+%TODO komplett überarbeiten
 
 In der heutigen Zeit haben sich viele elektronische Unterhaltungsmedien
 entwickelt und sind im Alltag nicht mehr wegzudenken. Filme, Musik und vor
@@ -92,22 +93,67 @@ auftreten können vorgestellt werden.
 
 \section{Motivation}
 
-Die Arbeit beleuchtet einen besonderen Aspekt in der 3D-Echtzeitberechnung, das
-Portal Rendering bzw. Portal Culling. Innerhalb der Arbeit werden die
-verschiedenen Anwendungsmöglichkeiten dieser Technik dargelegt und mit
-Beispielen fundiert.
+Im Rahmen des Masterkurses \emph{Computer Graphics and Effects} an der Beuth
+Hochschule für Technik wird den Teilnehmern ein Verständnis für
+3D-Echtzeitprogrammierung vermittelt. Der Kurs befasst sich vor allem mit dem
+Einsatz von Shadern und deren Programmierung. Im Laufe des Kurses wird eine
+3D-Echtzeitanwendung entwickelt. Zur Erstellung der Anwendung wird das
+jVR-Framework verwendet.
+
+Das Framework besitzt bereits eine Vielzahl an Möglichkeiten 3D-Anwendungen zu
+erstellen. Es können Shader eingesetzt, Modelle geladen und transformiert und
+Schatten erzeugt werden.
+
+Im Falle dieser Arbeit, wird ein besonderer Aspekt in der 3D-Echtzeitberechnung
+beleuchtet , das Portal Rendering bzw. Portal Culling. Innerhalb der Arbeit
+werden die verschiedenen Anwendungsmöglichkeiten dieser Technik dargelegt und
+mit Beispielen fundiert.
 
 Als Basis dieser Arbeit dient das jVR-Framework, welches um die Funktionen des
-Portal Cullings erweitert wird. Dies ermöglicht den Aufbau von komplexeren
-Szenen mit einem geringeren Rechenaufwand, da im Verlauf der Erweiterung
-Techniken eingesetzt werden um unnötige Objekte vom Rendern auszuschließen.
+Portal Cullings erweitert wird. Dies ermöglicht den Aufbau von Szenen, die sich
+in weitere Szenen unterteilen lassen.
 
 \section{Aufbau der Arbeit}
 
-Die Arbeit befasst sich im Kern mit der Technik des 3D-Echtzeitrenderings. Daher
-werden die 
+Zu Beginn der Arbeit werden mehrere Konzepte in Bezug auf Portal Rendering bzw.
+Portal Culling vorgestellt. Dies soll einen Überblick geben in welchen Rahmen
+diese Technik eingesetzt wird und welchen Nutzen in 3D-Anwendungen daraus
+gezogen werden können. Zusätzlich werden Beispiele aufgezählt in denen sich die
+Anwendung von Portal Rendering besonders lohnt.
+
+Ein weiterer Teil der Arbeit betrifft das jVR-Framework. In diesem Abschnitt
+werden die verschiedenen Konzepte, die in diesem Framework ihre Anwendung finden
+genauer beleuchtet. Zudem wird darauf eingegangen wie Anwendungen im
+jVR-Framework umgesetzt werden. Die Standards die in dem Framework verwendet
+werden, werden ebenfalls behandelt.
+
+Der nächste Abschnitt befasst sich mit dem Entwurf des Portal Cullings. Hier
+werden die verschiedenen Portaltypen vorgestellt, die in der Implementierung
+erstellt werden sollen. Es werden außerdem die verschiedenen Vorgehensweisen
+betrachtet, mit denen die Portale erstellt werden.
+
+Das Kapitel der Praktischen Umsetzung befasst sich mit der eigentlichen
+Implementierung. Dort werden Klassen und Funktionalitäten näher erklärt. Es
+werden die verschiedenen Techniken betrachtet mit denen die Portale realisiert
+wurden. Außerdem werden die verwendeten DesignPattern begründet und
+dargelegt.
+
+Das vorletzte Kapitel gibt einen Überblick über die Ergebnisse. Es
+wird untersucht, in wie fern die Anforderungen der Arbeit erfüllt wurden. Zudem
+werden die Ergebnisse kritisch betrachtet und analysiert.
+
+Im letzten Kapitel wird eine Zusammenfassung gegeben, die nocheinmal die Arbeit
+in kurzen Worten wiedergibt. Zuletzt wird ein Ausblick gemacht, wie Ergebnisse
+verbessert bzw. erweitert werden können.
 
 \chapter{Stand der Technik}
+
+Das folgende Kapitel soll einen Überblick darüber geben, was Portal Culling ist
+und wie es in der 3D-Echtzeitgrafik Anwendung findet. Zudem werden andere
+Algorithmen vorgestellt, die die Performanz in 3D-Anwendungen steigern. Im
+weiteren Verlauf wird das jVR-Framework genauer betrachtet wichtige Funltionen
+diskutiert. Die Standards, die in dem Framework verwendet werden, werden
+ebenfalls vorgestellt.
 
 \section{Portal Culling}
 
@@ -329,7 +375,9 @@ Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden.
 0 & {s}_{y} & 0 & 0 \\
 0 & 0 & {s}_{z} & 0 \\
 0 & 0 & 0 & 0
-\end{pmatrix} \\
+\end{pmatrix}
+\end{align}
+\begin{align}
 \textbf{Rotation um X-Achse:} &
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
@@ -347,10 +395,8 @@ Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden.
 0 & 1 & 0 & 0 \\
 -\sin \beta & 0 & \cos \beta & 0 \\
 0 & 0 & 0 & 1
-\end{pmatrix}
-\end{align}
-\begin{equation}
-\textbf{Rotation um Z-Achse:}
+\end{pmatrix}\\
+\textbf{Rotation um Z-Achse:} &
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
 \alpha}&\phantom{-\sin \alpha}\\[-2.5ex] 
@@ -359,16 +405,17 @@ Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden.
 0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 1
 \end{pmatrix}
-\end{equation}
+\end{align}
 
 \subsubsection{Traversierung}
 
 Um eine baumförmige Datenstruktur wie den Szenegraph zu durchlaufen wird
 Gebrauch von der Traversierung gemacht. Dabei werden die einzelnen Knoten der
 Szene verarbeitet. Traversierung macht vor allem dann Sinn, wenn z.B.
-Szeneknoten mit bestimmten Eigenschaften gesucht werden müssen. Zum Rendern muss
-der Szenegraph ebenfalls durchlaufen werden. Angefangen wird dabei beim
-Wurzelknoten. Jeder Szeneknoten der an der Wurzel hängt wird in
+Szeneknoten mit bestimmten Eigenschaften gesucht werden müssen. 
+
+Zum Rendern muss der Szenegraph ebenfalls durchlaufen werden. Angefangen wird
+dabei beim Wurzelknoten. Jeder Szeneknoten der an der Wurzel hängt wird in
 Welttransformation überführt. Dies geschieht, indem alle Transformationen vom
 Wurzelknoten bis zum Szeneknoten multipliziert werden.
 
@@ -381,7 +428,8 @@ traversieren, falls ein Objekt mehrmals gerendert werden muss.
 
 Nachdem die Drawlisten erstellt wurden, werden sie in der Pipeline gespeichert
 und ja nach Bedarf genutzt werden. Das heißt, dass Objekte nach bestimmten
-Materialeigenschaften gefiltert und gerendert werden können.
+Materialeigenschaften gefiltert und gerendert werden können, siehe \cite[S.
+47-48]{jvrMast}.
 
 \subsection{Pipelinekonzept}
 
@@ -397,7 +445,29 @@ für jede Lichtquelle mit dem Shaderprogramm mit der eigentlichen Beleuchtung
 gerendert (Lighting-Pass). Die zuvor erzeugten Bildinformationen werden mittels
 des Blending-Verfahrens aufaddiert, (vergleiche auch \cite[S. 46]{jvrMast}).
 
-\subsection{FrameBufferObject}
+\subsection{FrameBuffer Object}
+
+Um beim jVR-Framework mehrere Szenen in einem Bild zusammenlegen zu können, wird
+das \emph{FrameBuffer Object}, kurz FBO verwendet. Mit dem \emph{FrameBuffer
+Object} kann direkt in eine Textur gerendert werden. Das bietet den Vorteil das
+eine Szene erst erzeugt wird und in die Textur geschrieben wird und danach noch
+mit Grafikoperationen verändert wird.
+
+Eine weitere Möglichkeit ist die Szene in ein \emph{FrameBuffer Object} zu
+rendern und die erzeugte Textur auf eine vorhandene Geometrie zu projezieren.
+Als Beispiel lässt sich der Spiegel nennen. Wird die Szene gespiegelt gerendert
+und danach auf eine Ebene projeziert erhält man eine spiegelnde Oberfläche.
+
+Das \emph{FrameBuffer Object} findet vor allem dann Anwendung, wenn eine Szene
+nachträglich verändert werden soll. Dieses Verfahren wird auch
+\emph{Post-Processing} genannt. Diese Nachbearbeitung dient dazu ein optischen
+Effekt zu erzeugen, der dem Anwender ein realeres Bild vermitteln soll.
+
+Depth-of-Field ist ein solcher Effekt, der mit der Hilfe des
+\emph{FrameBuffer Objects} realisiert wird. Dabei wird ein Z-Buffer-Test von
+der Szene gemacht und in die Textur geschrieben. Die erhaltenen Informationen
+stellen den Abstand der Pixel zum Betrachter dar. Je weiter ein Pixel vom
+Betrachter weg steht, desto stärker wird dieser weichgezeichnet.
 
 \subsection{Virtual Reality}
 
@@ -458,6 +528,23 @@ Seit OpenGL 3.0 wurde damit begonnen die meisten Befehle der Fixed Function
 Pipeline aus der Spezifikation zu entfernen. Mit der Veröffentlichung von OpenGL
 3.1 ist die Fixed Function Pipeline komplett aus der Spezifikation verschwunden.
 Die Befehle lassen sich aber weiterhin über OpenGL-Extensions nutzen.
+
+%TODO Abbildung Pipeline OpenGL
+
+Die Abbildung zeigt die OpenGL Pipeline. Zuerst werden die Attribute der
+Vertices an den Vertex-Shader übergeben. Dieser reicht die verarbeiteten Daten
+weiter an den Geometry-Shader. Nachdem die Geometrien erzeugt bzw. verarbeitet
+wurden wird das Clipping vorgenommen. Nachdem dieser Schritt beendet ist, wird
+die erhaltene Szene auf den Bildschirm gemappt. Das bedeutet die Szene wird aus
+Sicht der Kamera gerendert und danach über den Rasterizer in die festgelegte
+Auflösung überführt.
+
+Die rasterisierte Szene wird dem Fragment-Shader übergeben, der weitere
+Verarbeitungsschritte vornimmt. Zum Beispiel werden die Sichtbarkeit der
+einzelnen Pixel getestet (Z-Buffer). Zum Schluss werden alle erzeugten Fragmente
+zusammengelegt und den FrameBuffer geschrieben. Der FrameBuffer wird entweder
+von der Pipeline als Textur weiterverwendet oder in einer Fensterumgebung auf
+dem Bildschirm ausgegeben.
 
 \emph{OpenGL Embedded Systems}, kurz OpenGL ES ist eine spezielle
 Zusammenstellung der OpenGL API für mobile Geräte. Dadurch lassen sich
@@ -529,12 +616,38 @@ Systemen lauffähig sind, die nur OpenGL 2 unterstützen.
 
 \subsection{jBullet}
 
+Um physikalische Effekte in dem jVR-Framework zu realisieren wird Gebrauch von
+jBullet gemacht. jBullet ist eine Bibliothek, die die Möglichkeit bietet
+Kollisionen zwischen Objekten zu erkennen und geometrische Objekte mit
+physikalischen Eigenschaften zu versehen.
+
+Es kann ein physikalische Umgebung beschrieben werden, die betimmten
+physikalische Gesetzen folgt. Zum Beispiel kann die Stärke der Gravitation und
+das Gewicht der Körper festgelegt werden. Dadurch lassen sich Szenen entwickeln,
+die entweder eine realistische Physik bieten, wie sie auf der Erde vorhanden ist
+oder aber mondähnliche Verhältnisse geschaffen werden, in denen die Körper in
+trägerer Art und Weise durch die Gegend bewegt werden können.
+
+Die Engine bietet zudem eine Kollisionserkennung. Mit ihrer Hilfe lassen sich
+Situationen simulieren, in denen mehrere Objekte miteinander kollidieren. Die
+Objekte müssen sich je nach Gewicht und Beschaffenheit korrekt verhalten. Diese
+komplexen Berechnungen übernimmt die jBullet-Engine.
+
+Die jBullet-Engine ist eine Portierung der Bullet-Engine. Bullet wurde in C++
+entwickelt. Die Bullet-Engine ist eine weit verbreitete Physik-Engine, die
+selbst in vielen kommerziellen Projekten Anwendung findet. Sie wurde zum
+Beispiel in Filmen wie 2012, Shrek 4 und A-Team verwendet.
+
+Viele der bekannten 3D-Authoring Programme lassen sich mit einem PlugIn
+erweitern, das alle Eigenschaften der Bullet-Engine integriert. Damit lassen
+sich auch in diesen Programmen physikalisch korrekte Szenen simulieren.
+
 \subsection{COLLADA}
 
 Ein wichtiger Bestandteil des jVR-Frameworks stellt die Benutzung des
 3D-Austausch-formats COLLADA dar. Dieses Format ist basiert auf der
 Auszeichnungssprache XML. Es dient dazu wichtige Daten zwischen verschiedenen
-3D-Programmen zu verwalten. Weiterhin ist als offener Standard definiert.
+3D-Programmen zu verwalten. Weiterhin ist es als offener Standard definiert.
 
 Eine COLLADA-Datei setzt sich aus mehreren Bereichen zusammen. Zum einen werden
 die Geometrien beschrieben und zum anderen werden die verwendeten Texturen über
@@ -543,6 +656,11 @@ Pfade angesteuert. Weitere Bereiche sind Lichter, Materialien und Kameras.
 Seit der Version 1.4 können auch physikalische Eigenschaften in COLLADA-Dateien
 hinterlegt werden. Dabei können Oberflächeneigenschaften wie Reibung definiert
 werden.
+
+Das COLLADA-Format wird von den meisten 3D-Authoring-Programmen
+unterstützt, darunter Blender, Autodesk Maya und Autodesk 3D Studio Max.
+Außerdem kommt es in Google SketchUp und Google Earth zur Anwendung, was zu
+einem Großteil der Verbreitung beigetragen hat.
 
 \chapter{Entwurf des Portal Cullings}
 
