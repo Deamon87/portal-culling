@@ -17,46 +17,53 @@
 
 \chapter{Einleitung}
 \pagenumbering{arabic}
-%TODO komplett überarbeiten
 
 In der heutigen Zeit haben sich viele elektronische Unterhaltungsmedien
-entwickelt und sind im Alltag nicht mehr wegzudenken. Filme, Musik und vor
-allem Spiele werden in größerem Ausmaß konsumiert als je zuvor.
+entwickelt und sind im Alltag nicht mehr wegzudenken. Ein besonders großer
+Industriezweig, der sich in den letzten Jahren rasant entwickelt hat, ist die
+Videospielindustrie.
 
-Besonders die Computerspielindustrie hat in den letzten Jahren eine Entwicklung
-durchgemacht, wie in keinem Industriezweig vor ihr. Der Sprung von wenigen Pixeln zu 
-aufwendigen 3D-Grafiken wurde in weniger als einem Jahrzehnt vollzogen und die Zukunft 
-bietet immer interessantere Möglichkeiten.
+In kürzester Zeit haben sich aus pixelbasierten 2D-Grafiken komplexe 3D-Welten
+entwickelt, die kaum von realen Bilder zu unterscheiden sind. Möglich wird all
+dies durch immer leistungsfähigere Hardware, die von Jahr zu Jahr immer mehr
+Performance im Bereich der 3D-Echtzeitberechnung bringt.
 
-3D-Echtzeit ist das bestimmende Thema in der aktuellen Spieleentwicklung.
-Umwerfende Bilder und Effekte werden mit Hilfe von aktueller Hardware generiert
-und in flüssigen Bildfolgen zur Verfügung gestellt. Der Spieler taucht geradezu
-ein in diese virtuelle Realität, da sich die echte und die virtuelle Welt kaum 
-mehr voneinander unterscheiden.
+Um die Hardware auch für die Entwickler programmierbar zu machen, stehen mehrere
+Grafik APIs zur Verfügung. Die beiden bekanntesten sind Microsofts Direct3D und
+die freie Grafikbibliothek OpenGL. OpenGL ist ein wichtiger Bestandteil dieser
+Arbeit und wird im späteren Verlauf der Arbeit näher betrachtet.
 
-Um diese Tiefe in einem Spiel zu erreichen werden aufwendige Engines entwickelt,
-die aus mehreren Bereichen zusammengesetzt sind. Zum einen der visuelle Anteil,
-aber auch wichtige Funktionen wie Physik und Sounduntermalung. Wie der Name schon 
-suggeriert, sind Spieleengines komplexe Programme, die oft aus tausenden Zeilen von 
-Code bestehen und meist in größeren Teams entwickelt werden.
+Mit Hilfe dieser Grafikbibliotheken lassen sich, mit wenig Aufwand
+3D-Anwendungen programmieren. Der Aufwand steigt je nach Komplexität des
+Projekts. Heutzutage werden 3D-Anwendungen, wie zum Beispiel Spiele nicht von
+Grund auf neu entwickelt. In diesem Fall kommen die Grafik-Engines zum Einsatz.
 
-Im Laufe der Zeit wurden die implementierten Algorithmen immer komplexer und mit
-ihnen die Möglichkeiten, die eine aktuelle Engine zur Verfügung stellt. Licht,
-sowie Schattenwurf und auch verschiedene optische Effekte, wie Bewegungs- bzw.
-Tiefenunschärfe sind nur Bruchteile dessen was mit heutiger 3D-Technologie
-simuliert werden kann.
+Grafik-Engines unterstützen von vornherein wichtige Konzepte zur
+Spieleentwicklung, wie zum Beispiel Shaderunterstützung, fertige Komponenten
+wie Kamera, Szenegraphen usw.. Die verbreitesten Engines sind die Unreal Engine
+von Epic Games, die Source Engine von Valve Corporation und die Cry-Engine von
+Crytek.
 
-Im Wandel befindet sich vor allem die Hardware, die mit der Menge an zu
-verarbeitenden Daten fertig werden muss. Grafikkarten sind eigene Rechenwerke,
-die Milliarden von Transistoren besitzen und selbst Computer von vor wenigen
-Jahren in Bezug auf Rechenleistung ohne Probleme schlagen können.
+Im Mittelpunkt dieser Arbeit steht das jVR-Framework. Es ist komplett auf Java
+aufgebaut. Als Grafikbibliothek wird OpenGL in Form von JOGL verwendet. Ein
+Besonderheit des jVR-Frameworks ist die Möglichkeit, Virtual Reality Systeme
+zu entwerfen. Die Beuth Hochschule für Technik besitzt ein Holodeck, wo
+mehrere Anwendungen demonstriert werden, die mit jVR entwickelt wurden.
 
-Diese Leistung ist in den heutigen Grafikanwendungen auch nötig, da in einer
-Szene schon gut und gerne mehrere Millionen Polygone gleichzeitig dargestellt
-werden müssen. Hinzu kommen noch die eingesetzten Post-Processing Effekte, die
-das Bild nachhaltig aufwerten. Selbst die komplexe Physikberechnung wird auf
-Grafikkarten ausgelagert, wobei vor kurzem noch die CPU für diese Art von
-Berechnung zuständig war.
+Ein weiteres Konzept in der Spieleentwicklung ist das sogenannte Portal Culling
+bzw. Portal Rendering. Besonders populär wurde diese Art des Renderings mit der
+Veröffent-lichung des Spiels Portal von Valve Corporation. Darin wird der
+Spieler in die Lage versetzt Portal von Hand zu erschaffen und so Orte zu
+erreichen, die zuvor unerreichbar schienen.
+
+Um Entwicklern die Möglichkeit zu bieten, selbst ein Spiel im Stile von Portal
+entwickeln zu können, besteht der Schwerpunkt dieser Arbeit darin das 
+jVR-Framework um die Funktion zu erweitern, Portale nach Belieben zu erschaffen
+und zu platzieren. Portale können dann wie Kameras oder Objekte in Szenen
+verwendet werden.
+
+Portale lassen sich vielseitig einsetzen. Sie können zum Beispiel dazu genutzt
+werden große Entfernungen in kürzester Zeit zu überbrücken. 
 
 \chapter{Aufgabenstellung}
 
@@ -204,16 +211,62 @@ Sichtbereichs vom Rendern ausgeschlossen. Diese Vorgehensweise kann rekursiv
 fortgesetzt werden, falls sich innerhalb des betrachteten Raumes ein weiteres
 Portal befindet.
 
+Um Portal Culling zu betreiben muss ein gewisser Aufwand von Vorberechnungen
+erledigt werden. Nach \cite{portals} muss eine Szene in folgenden Schritten
+gerendert werden um ein optimales Ergebnis zu erreichen.
+
+\begin{enumerate}
+  \item Als erstes muss die Zelle \emph{V} bestimmt werden, in der sich der
+  Viewer bzw. die Betrachterkamera befindet.
+  \item Des weiteren soll eine 2-dimensionale \emph{Bounding Box} \emph{P}
+  erzeugt werden, die in Maßen dem rechteckigen Bildschirm entspricht.
+  \item Danach wird die Geometrie der Zelle \emph{V} gerendert. Dabei wird View
+  Frustum Culling angewendet. Das Frustum, das vom Betrachter ausgeht wird aus
+  dem Rechteck \emph{P} gebildet, in diesem Falle ist das der ganze Bildschirm.
+  \item Alle Portale der benachbarten Zellen von \emph{V} werden rekursiv
+  durchlaufen. Für jedes Portal der aktuellen Zelle, in der sich der Betrachter
+  befindet wird das Portal auf den Bildschirm projeziert. Daraufhin wird eine
+  2-dimensionale, an den Achsen ausgerichtete \emph{Bounding Box} (BB)
+  erzeugt. Dann wird die Schnittmenge zwischen der BB und \emph{P} ermittelt.
+  \item Für jede Schnittmenge gilt: Ist die Schnittmenge leer, ist die
+  benachbarte Zelle, die über das Portal verbunden ist aus dem aktuellen
+  Betrachterstandpunkt nicht sichtbar. Daher kann die Zelle aus dem
+  Rendervorgang ausgeschlossen werden. Ist die Schnittmenge wiederum nicht leer,
+  wird der Inhalt der Zelle an Hand des Frustums, welches vom Betrachter
+  ausgeht und aus der Schnittmenge gecullt.
+  \item War die Schnittmenge nicht leer, kann es möglich sein, dass die Nachbarn
+  der benachbarten Zelle ebenfalls sichtbar für den Betrachter sind. Dabei wird
+  der dritte Schritt wiederholt, diesmal mit der Schnittmenge als \emph{P}.
+  Jedes Objekt, welches gerendert wurde sollte markiert werden, um es kein 2tes
+  Mal zu rendern.
+\end{enumerate}
+
 \subsection{Portale als Spiegel}
 
 Ein weiterer Verwendungszweck von Portal Culling ist die Erzeugung von Spiegeln.
 Spiegel reflektieren den Sichtbereich des Betrachters. Wenn man aus Sicht des
 Spiegels in die Szene schaut und diese nochmals spiegelt, erhält man das Bild
-welches der Betrachter bei Blick in den Spiegel erhält. Man nimmt den Spiegel in
-diesem Fall als Spiegelebene und erstellt an der gespiegelten Position des
-Betrachters eine Kamera. Diese rendert dann die Szene durch den Spiegel. Danach
-wird die gerenderte Szene aus Sicht der Spiegelkamera auf den Spiegel
-projeziert.
+welches der Betrachter bei Blick in den Spiegel erhält. 
+
+Man nimmt den Spiegel in diesem Fall als Spiegelebene und erstellt an der
+gespiegelten Position des Betrachters eine Kamera. Diese rendert dann die Szene
+durch den Spiegel. Danach wird die gerenderte Szene aus Sicht der Spiegelkamera
+auf den Spiegel projeziert.
+
+Dies wird dadurch erreicht, indem man die Kamera $C$ in das
+Koordinatensystem der Spiegelebene überträgt. Besitzt die Ebene eine
+Transformation $M$, wird die Kamera über $M^{-1}$ das
+Objektkoordinatensystem der Ebene transformiert. Mit der Skalierung
+$S(1,1,-1)$ wird die Kamera gespiegelt (vergleiche auch \cite[S. 33]{jvrMast}).
+
+\begin{equation}
+{C}_{mirror} := M * S * M^{-1} * C
+\end{equation}
+
+Bei diesem Verfahren werden aber auch Geometrien dargestellt, die eigentlich
+hinter dem Spiegel liegen. Um dies vorzubeugen wird der Gebrauch von
+Clippingebenen gemacht. Die Clippingebene verwirft alle Fragmente die sich
+hinter Spiegel befinden und daher nicht gespiegelt werden können.
 
 Spiegel werden häufig in Szenen eingesetzt, die eingerichtete Wohnungen oder
 Räumlich-keiten repräsentieren sollen. Dadurch bekommt der Betrachter einen
@@ -355,7 +408,8 @@ und einen der beiden Räume auszublenden.
 \subsubsection{Transformationen}
 
 Das jVR-Framework verfügt über mehrere Möglichkeiten Knoten innerhalb einer
-Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden.
+Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden,
+vergleiche dazu auch \cite{compOL}.
 
 \begin{align}
 \textbf{Transformation:} &
