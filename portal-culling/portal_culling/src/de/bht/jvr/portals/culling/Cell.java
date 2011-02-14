@@ -1,4 +1,4 @@
-package de.bht.jvr.portals;
+package de.bht.jvr.portals.culling;
 
 import java.awt.Color;
 import de.bht.jvr.core.GroupNode;

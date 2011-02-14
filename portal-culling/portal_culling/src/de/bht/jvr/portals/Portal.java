@@ -17,7 +17,6 @@ public abstract class Portal extends GroupNode {
 	private float width;
 	private CameraNode camera;
 	private ClipPlaneNode clipPlane;
-	private Portal portalExit;
 	private SceneNode portal;
 	private Pipeline pipeline;
 	private ShapeNode portalShape;
@@ -36,8 +35,6 @@ public abstract class Portal extends GroupNode {
 		this.height = height;
 		this.width = width;
 		this.camera = cam;
-		this.portalExit = null;
-		
 		this.portal = ColladaLoader.load(new File("meshes/plane.dae"));
 		this.addChildNode(this.portal);
 		this.addChildNode(this.camera);
@@ -77,14 +74,6 @@ public abstract class Portal extends GroupNode {
 		this.clipPlane = clipPlane;
 	}
 	
-	public void setPortalExit(Portal portalExit) {
-		this.portalExit = portalExit;
-	}
-	
-	public Portal getPortalExit() {
-		return portalExit;
-	}
-	
 	public SceneNode getPortal() {
 		return portal;
 	}
@@ -109,48 +98,7 @@ public abstract class Portal extends GroupNode {
 		this.portalShape = portalShape;
 	}
 
-	public void update(CameraNode camera, double moveSpeed) {
-		Transform camTrans = camera.getTransform();
-		camTrans = this.getTransform().invert().mul(camTrans);
-		camTrans = portalExit.getTransform().mul(Transform.rotateYDeg(180)).mul(camTrans);
-		this.camera.setTransform(camTrans);
-		this.getPickPoint(camera, moveSpeed);	
-	}
-	
-	public void getPickPoint(CameraNode camera, double moveSpeed) {
-		Transform trans = this.getTransform().invert().mul(camera.getTransform());
-		Vector3 vec = trans.getMatrix().translation();
-		
-		if(vec.x() <= this.getBBox().getMax().x() && vec.x() >= this.getBBox().getMin().x()
-		&& vec.y() <= this.getBBox().getMax().y() && vec.y() >= this.getBBox().getMin().y()
-		&& vec.z() < this.getBBox().getMax().z() + moveSpeed && vec.z() > this.getBBox().getMin().z())
-		{
-			this.teleport(camera, moveSpeed);
-			System.out.println("port");
-		}		
-	}
-	
-	public double distance(Vector3 vec1, Vector3 vec2) {
-		double one = Math.pow(vec2.x() - vec1.x(), 2);
-		double two = Math.pow(vec2.y() - vec1.y(), 2);
-		double three = Math.pow(vec2.z() - vec1.z(), 2);
-		double square = Math.sqrt(one + two + three);
-		return square;
-	}
-	
-	private void teleport(SceneNode node, double moveSpeed) {
-		Transform newTrans = node.getTransform();
-		newTrans = this.getTransform().invert().mul(newTrans);
-		
-		Transform rotTrans = newTrans.extractRotation();
-		Transform transTrans = newTrans.extractTranslation();
-		
-		newTrans = this.getPortalExit().getTransform().mul(rotTrans);
-		newTrans = newTrans.mul(Transform.translate(0, 0, (float)moveSpeed + 0.02f));
-		newTrans = newTrans.mul(Transform.rotateYDeg(180));
-		newTrans = newTrans.mul(Transform.translate(transTrans.getMatrix().translation()));
-		node.setTransform(newTrans);
-	}
+	public abstract void update(CameraNode camera, double moveSpeed);
 	
 	public abstract void render();
 }
