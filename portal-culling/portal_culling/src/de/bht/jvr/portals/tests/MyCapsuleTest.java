@@ -18,9 +18,9 @@ import de.bht.jvr.portals.Teleporter;
 import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
-import de.bht.jvr.util.TestBase;
+import de.bht.jvr.util.PortalTestBase;
 
-public class MyCapsuleTest extends TestBase {
+public class MyCapsuleTest extends PortalTestBase {
 	
 	private CameraNode camera;
 	private Teleporter portal1;

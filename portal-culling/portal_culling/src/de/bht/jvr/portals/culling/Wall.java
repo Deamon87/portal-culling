@@ -11,38 +11,20 @@ import de.bht.jvr.core.ShaderMaterial;
 import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.uniforms.UniformColor;
+import de.bht.jvr.portals.Door;
 
 public class Wall extends GroupNode {
 
 	private float height;
 	private float width;
-	//private static SceneNode wall;
-	
-	static {
-		try {
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	private Color color;
+	private SceneNode wall;
 	
 	public Wall(float height, float width, Color color) {
-		
-		try {
-			this.height = height;
-			this.width = width;
-			SceneNode wall;
-			wall = ColladaLoader.load(new File("meshes/plane.dae"));
-			
-			ShaderMaterial phong = ShaderMaterial.makePhongShaderMaterial();
-			phong.setUniform("LIGHTING", "jvr_Material_Diffuse", new UniformColor(color));
-			
-			ShapeNode wallShape = Finder.find(wall, ShapeNode.class, null);
-			wallShape.setTransform(Transform.scale(width, height, 1));
-			wallShape.setMaterial(phong);
-		this.addChildNode(wall);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.height = height;
+		this.width = width;
+		this.color = color;
+		this.init();
 	}
 	
 	public float getHeight() {
@@ -61,7 +43,42 @@ public class Wall extends GroupNode {
 		this.width = width;
 	}
 	
-	public void draw() {
-		
+	public Color getColor() {
+		return color;
+	}
+	
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	public void init() {
+		try {
+			wall = ColladaLoader.load(new File("meshes/plane.dae"));
+			
+			ShaderMaterial phong = ShaderMaterial.makePhongShaderMaterial();
+			phong.setUniform("LIGHTING", "jvr_Material_Diffuse", new UniformColor(this.color));
+			
+			ShapeNode wallShape = Finder.find(wall, ShapeNode.class, null);
+			wallShape.setTransform(Transform.scale(width, height, 1));
+			wallShape.setMaterial(phong);
+			this.addChildNode(wall);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void addDoor(Door door) {
+		door.getHeight();
+		door.getWidth();
+		this.removeChildNode(wall);
+		door.setTransform(Transform.rotateYDeg(180));
+		this.addChildNode(door);
+		GroupNode leftPiece, rightPiece, upPiece;
+		leftPiece = new GroupNode();
+		//leftPiece.addChildNode(wall);
+		rightPiece = new GroupNode();
+		//rightPiece.addChildNode(wall);
+		upPiece = new GroupNode();
+		//upPiece.addChildNode(wall);
 	}
 }

@@ -13,9 +13,9 @@ import de.bht.jvr.portals.culling.Cell;
 import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
-import de.bht.jvr.util.TestBase;
+import de.bht.jvr.util.PortalTestBase;
 
-public class MyCellTest extends TestBase {
+public class MyCellTest extends PortalTestBase {
 
 	public static void main(String[] args) {
 		try {
@@ -34,6 +34,9 @@ public class MyCellTest extends TestBase {
 		Cell cell2 = new Cell("greenCell", 10, 10, 5, new Color(0.0f, 1.0f, 0.0f));
 		cell2.setTransform(Transform.translate(10, 0, 0));
 		root.addChildNode(cell2);
+		
+		cell.removeChildNode(cell.getEastWall());
+		cell2.removeChildNode(cell2.getWestWall());
 		
 		System.out.println(cell2.getBBox().getWidth());
 		
