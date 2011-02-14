@@ -14,7 +14,7 @@ import de.bht.jvr.input.KeyListener;
 import de.bht.jvr.input.MouseEvent;
 import de.bht.jvr.input.MouseListener;
 
-public abstract class TestBase implements KeyListener, MouseListener
+public abstract class PortalTestBase implements KeyListener, MouseListener
 {
     protected List<SceneNode> cams = new ArrayList<SceneNode>();
     protected boolean run = true;

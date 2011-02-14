@@ -1,13 +1,12 @@
 package de.bht.jvr.portals;
 
 import java.io.File;
+
 import de.bht.jvr.collada14.loader.ColladaLoader;
 import de.bht.jvr.core.CameraNode;
-import de.bht.jvr.core.ClipPlaneNode;
 import de.bht.jvr.core.GroupNode;
 import de.bht.jvr.core.SceneNode;
 import de.bht.jvr.core.ShapeNode;
-import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.math.Vector3;
 
@@ -16,7 +15,6 @@ public abstract class Portal extends GroupNode {
 	private float height;
 	private float width;
 	private CameraNode camera;
-	private ClipPlaneNode clipPlane;
 	private SceneNode portal;
 	private Pipeline pipeline;
 	private ShapeNode portalShape;
@@ -26,9 +24,7 @@ public abstract class Portal extends GroupNode {
 		this.pipeline = pipeline;
 		this.portal = ColladaLoader.load(new File("meshes/plane.dae"));
 		this.camera = new CameraNode("portalCam", 4/3f, 60);
-		this.clipPlane = new ClipPlaneNode();
-		this.clipPlane.setTransform(this.getTransform().mul(Transform.rotateYDeg(180)));
-		this.addChildNodes(this.portal, this.clipPlane);
+		this.addChildNodes(this.portal);
 	}
 	
 	public Portal(float height, float width, Vector3 direction, CameraNode cam) throws Exception {
@@ -64,14 +60,6 @@ public abstract class Portal extends GroupNode {
 	
 	public CameraNode getCamera() {
 		return this.camera;
-	}
-	
-	public ClipPlaneNode getClipPlane() {
-		return clipPlane;
-	}
-	
-	public void setClipPlane(ClipPlaneNode clipPlane) {
-		this.clipPlane = clipPlane;
 	}
 	
 	public SceneNode getPortal() {

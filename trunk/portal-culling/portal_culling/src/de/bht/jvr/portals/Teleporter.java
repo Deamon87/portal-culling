@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.File;
 
 import de.bht.jvr.core.CameraNode;
+import de.bht.jvr.core.ClipPlaneNode;
 import de.bht.jvr.core.Finder;
 import de.bht.jvr.core.SceneNode;
 import de.bht.jvr.core.ShaderMaterial;
@@ -18,6 +19,7 @@ public class Teleporter extends Portal {
 
 	private static ShaderProgram shaderProg;
 	private Portal portalExit;
+	private ClipPlaneNode clipPlane;
 	
 	public void setPortalExit(Portal portalExit) {
 		this.portalExit = portalExit;
@@ -46,6 +48,11 @@ public class Teleporter extends Portal {
 		shape.setTransform(Transform.scale(2, 3, 1));
 		this.setPortalShape(shape);
 		this.getPortalShape().setMaterial(shaderMat);
+		
+		this.clipPlane = new ClipPlaneNode();
+		this.clipPlane.setTransform(this.getTransform().mul(Transform.rotateYDeg(180)));
+		
+		this.addChildNode(clipPlane);
 		
 		PortalList.add(this);
 		

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.File;
 
 import de.bht.jvr.core.CameraNode;
+import de.bht.jvr.core.ClipPlaneNode;
 import de.bht.jvr.core.Finder;
 import de.bht.jvr.core.ShaderMaterial;
 import de.bht.jvr.core.ShaderProgram;
@@ -14,6 +15,7 @@ import de.bht.jvr.core.pipeline.Pipeline;
 public class Mirror extends Portal {
 
 	private static ShaderProgram shaderProg;
+	private ClipPlaneNode clipPlane;
 	
 	static {
 		try {
@@ -33,6 +35,11 @@ public class Mirror extends Portal {
 		this.getPortalShape().setMaterial(shaderMat);
 		
 		this.getCamera().setAspectRatio(-4/3f);
+		
+		this.clipPlane = new ClipPlaneNode();
+		this.clipPlane.setTransform(this.getTransform().mul(Transform.rotateYDeg(180)));
+		
+		this.addChildNode(clipPlane);
 		
 		PortalList.add(this);
 		
