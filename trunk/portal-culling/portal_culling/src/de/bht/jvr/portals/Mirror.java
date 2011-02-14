@@ -36,10 +36,9 @@ public class Mirror extends Portal {
 		
 		PortalList.add(this);
 		
-		this.render();
+		this.init();
 	}
 	
-	@Override
 	public void update(CameraNode camera, double moveSpeed) {
 		Transform camTrans = camera.getTransform();
 		camTrans = this.getTransform().invert().mul(camTrans);
@@ -47,13 +46,18 @@ public class Mirror extends Portal {
 		this.getCamera().setTransform(camTrans);
 	}
 
-	@Override
-	public void render() {
+	public void init() {
 		this.getPipeline().createFrameBufferObject(this.getName() + "FBO", false, 1, 1, 0);
 		this.getPipeline().switchFrameBufferObject(this.getName() + "FBO");
 		this.getPipeline().switchCamera(this.getCamera());
 		this.getPipeline().clearBuffers(true, true, new Color(121, 188, 255));
 		this.getPipeline().drawGeometry("AMBIENT", null);
 		this.getPipeline().doLightLoop(true, true).drawGeometry("LIGHTING", null);
+	}
+
+	@Override
+	public void render() {
+		this.getPipeline().bindColorBuffer("jvr_PortalTexture", this.getName() + "FBO", 0);
+		this.getPipeline().drawGeometry("AMBIENT", this.getName() + "Mat");
 	}
 }

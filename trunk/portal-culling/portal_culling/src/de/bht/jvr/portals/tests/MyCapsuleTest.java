@@ -23,7 +23,7 @@ import de.bht.jvr.util.TestBase;
 public class MyCapsuleTest extends TestBase {
 	
 	private CameraNode camera;
-	private Portal portal1;
+	private Teleporter portal1;
 	private GroupNode root;
 	public static void main(String[] args) {
 		try {
@@ -48,15 +48,15 @@ public class MyCapsuleTest extends TestBase {
 		//portal1.setHeight(3);
 		root.addChildNode(portal1);
 		
-		Portal portal2 = new Teleporter(p, "portal2");
+		Teleporter portal2 = new Teleporter(p, "portal2");
 		portal2.setTransform(Transform.translate(-2, 2, -20).mul(Transform.rotateYDeg(90)));
 		root.addChildNode(portal2);
 		
-		Portal portal3 = new Teleporter(p, "portal3");
+		Teleporter portal3 = new Teleporter(p, "portal3");
 		portal3.setTransform(Transform.translate(-10, 2, 0).mul(Transform.rotateYDeg(180)));
 		root.addChildNode(portal3);
 		
-		Portal portal4 = new Teleporter(p, "portal4");
+		Teleporter portal4 = new Teleporter(p, "portal4");
 		portal4.setTransform(Transform.translate(0, 10, 0).mul(Transform.rotateXDeg(90)));
 		root.addChildNode(portal4);
 		
@@ -86,7 +86,7 @@ public class MyCapsuleTest extends TestBase {
 		p.drawGeometry("AMBIENT", null);
 		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		
-		PortalList.render(p);
+		PortalList.render();
 		
 		RenderWindow win = new NewtRenderWindow(p, 800, 600);
 		win.addKeyListener(this);

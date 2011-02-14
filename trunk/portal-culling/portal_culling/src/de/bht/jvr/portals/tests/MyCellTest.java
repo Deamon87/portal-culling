@@ -6,12 +6,10 @@ import de.bht.jvr.core.CameraNode;
 import de.bht.jvr.core.GroupNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
-import de.bht.jvr.portals.Cell;
-import de.bht.jvr.portals.CellList;
-import de.bht.jvr.portals.Portal;
 import de.bht.jvr.portals.PortalConnector;
 import de.bht.jvr.portals.PortalList;
 import de.bht.jvr.portals.Teleporter;
+import de.bht.jvr.portals.culling.Cell;
 import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
@@ -46,11 +44,11 @@ public class MyCellTest extends TestBase {
 		
 		Pipeline p = new Pipeline(root);
 		
-		Portal portal1 = new Teleporter(p, "portal1");
+		Teleporter portal1 = new Teleporter(p, "portal1");
 		portal1.setTransform(Transform.translate(0, 0, 0));
 		root.addChildNode(portal1);
 		
-		Portal portal2 = new Teleporter(p, "portal2");
+		Teleporter portal2 = new Teleporter(p, "portal2");
 		portal2.setTransform(Transform.translate(12, 0, 0));
 		root.addChildNode(portal2);
 		
@@ -65,7 +63,7 @@ public class MyCellTest extends TestBase {
 		p.drawGeometry("AMBIENT", null);
 		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		
-		PortalList.render(p);
+		PortalList.render();
 		
 		RenderWindow win = new NewtRenderWindow(p, 800, 600);
 		
@@ -79,7 +77,7 @@ public class MyCellTest extends TestBase {
 			v.display();
 			move(System.currentTimeMillis() - start, 0.005f);
 			
-			System.out.println(CellList.checkCell(cam));
+			//System.out.println(CellList.checkCell(cam));
 			
 			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
 			

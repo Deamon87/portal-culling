@@ -3,6 +3,7 @@ package de.bht.jvr.portals;
 import java.awt.Color;
 import java.io.File;
 
+import de.bht.jvr.core.CameraNode;
 import de.bht.jvr.core.Finder;
 import de.bht.jvr.core.ShaderMaterial;
 import de.bht.jvr.core.ShaderProgram;
@@ -48,5 +49,11 @@ public class Door extends Portal {
 		//getPipeline().setUniform("jvr_UseClipPlane1", new UniformBool(true));
 		getPipeline().drawGeometry("AMBIENT", null);
 		getPipeline().doLightLoop(true, true).drawGeometry("LIGHTING", null);
+	}
+
+	@Override
+	public void update(CameraNode camera, double moveSpeed) {
+		// TODO Auto-generated method stub
+		
 	}
 }

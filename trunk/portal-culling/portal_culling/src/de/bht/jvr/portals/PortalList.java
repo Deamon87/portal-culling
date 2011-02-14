@@ -3,7 +3,6 @@ package de.bht.jvr.portals;
 import java.util.ArrayList;
 
 import de.bht.jvr.core.CameraNode;
-import de.bht.jvr.core.pipeline.Pipeline;
 
 public class PortalList {
 	private static ArrayList<Portal> portals = new ArrayList<Portal>();
@@ -14,10 +13,9 @@ public class PortalList {
 		}
 	}
 	
-	public static void render(Pipeline p) {
+	public static void render() {
 		for (Portal portal : portals) {
-			p.bindColorBuffer("jvr_PortalTexture", portal.getName() + "FBO", 0);
-			p.drawGeometry("AMBIENT", portal.getName() + "Mat");
+			portal.render();
 		}		
 	}
 	

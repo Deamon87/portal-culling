@@ -1,4 +1,4 @@
-package de.bht.jvr.portals;
+package de.bht.jvr.portals.culling;
 
 import java.awt.Color;
 import java.io.File;
