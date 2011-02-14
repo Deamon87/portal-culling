@@ -37,9 +37,9 @@ public class MyDoorTest extends PortalTestBase{
 		
 		door.getCell().getEastWall().addDoor(door2);
 		
-//		Door door3 = new Door("door3", 4, 2);
-//		
-//		door2.getCell().getWestWall().addDoor(door3);
+		Door door3 = new Door("door3", 4, 3);
+		
+		door2.getCell().getWestWall().addDoor(door3);
 //		
 //		Door door4 = new Door("door4", 4, 2);
 //		
@@ -73,6 +73,7 @@ public class MyDoorTest extends PortalTestBase{
 			v.display();
 			delta = System.currentTimeMillis() - start;
 			move(delta, 0.005f);
+			//System.out.println(CellList.checkCell(cam));
 		}
 	}
 }
