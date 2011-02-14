@@ -18,6 +18,7 @@ public class Wall extends GroupNode {
 	private float height;
 	private float width;
 	private Color color;
+	private GroupNode wallNode;
 	private SceneNode wall;
 	
 	public Wall(float height, float width, Color color) {
@@ -54,14 +55,17 @@ public class Wall extends GroupNode {
 	public void init() {
 		try {
 			wall = ColladaLoader.load(new File("meshes/plane.dae"));
+			wallNode = new GroupNode();
 			
 			ShaderMaterial phong = ShaderMaterial.makePhongShaderMaterial();
 			phong.setUniform("LIGHTING", "jvr_Material_Diffuse", new UniformColor(this.color));
 			
 			ShapeNode wallShape = Finder.find(wall, ShapeNode.class, null);
-			wallShape.setTransform(Transform.scale(width, height, 1));
+			//wallShape.setTransform(Transform.scale(width, height, 1));
 			wallShape.setMaterial(phong);
-			this.addChildNode(wall);
+			wallNode.addChildNode(wall);
+			wallNode.setTransform(Transform.scale(width, height, 1));
+			this.addChildNode(wallNode);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -70,15 +74,32 @@ public class Wall extends GroupNode {
 	public void addDoor(Door door) {
 		door.getHeight();
 		door.getWidth();
-		this.removeChildNode(wall);
+		Cell cell = new Cell(door.getName() + "Cell",  10, 10, this.getHeight());
+		cell.setTransform(Transform.translate(0, 0, cell.getLength() / 2.0f));
+		cell.removeChildNode(cell.getNorthWall());
+		door.setCell(cell);
+		this.removeChildNode(wallNode);
 		door.setTransform(Transform.rotateYDeg(180));
 		this.addChildNode(door);
 		GroupNode leftPiece, rightPiece, upPiece;
+		
+		float width = (cell.getNorthWall().getWidth() / 2.0f) - (door.getWidth() / 2.0f);
 		leftPiece = new GroupNode();
-		//leftPiece.addChildNode(wall);
+		leftPiece.addChildNode(wall);
+		leftPiece.setTransform(Transform.scale(width, this.getHeight(), 1)
+				.mul(Transform.translate(-(cell.getNorthWall().getWidth()) / 2.0f + width, 0, 0)));
+		
 		rightPiece = new GroupNode();
-		//rightPiece.addChildNode(wall);
+		rightPiece.addChildNode(wall);
+		rightPiece.setTransform(Transform.scale(width, this.getHeight(), 1)
+				.mul(Transform.translate(cell.getNorthWall().getWidth() / 2.0f - width, 0, 0)));
+		
+		float height = this.getHeight() - door.getHeight();
 		upPiece = new GroupNode();
-		//upPiece.addChildNode(wall);
+		upPiece.addChildNode(wall);
+		upPiece.setTransform(Transform.scale(door.getWidth(), height, 1)
+				.mul(Transform.translate(0, cell.getNorthWall().getHeight() - door.getHeight(), 0)));
+		
+		this.addChildNodes(rightPiece);		
 	}
 }
