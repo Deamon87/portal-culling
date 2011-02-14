@@ -32,7 +32,19 @@ public class MyDoorTest extends PortalTestBase{
 		Door door = new Door("door", 4, 2);
 		
 		cell.getNorthWall().addDoor(door);
-				
+		
+		Door door2 = new Door("door2", 4, 2);
+		
+		door.getCell().getEastWall().addDoor(door2);
+		
+//		Door door3 = new Door("door3", 4, 2);
+//		
+//		door2.getCell().getWestWall().addDoor(door3);
+//		
+//		Door door4 = new Door("door4", 4, 2);
+//		
+//		door2.getCell().getSouthWall().addDoor(door4);
+		
 		CameraNode cam = new CameraNode("camera", 4/3f, 60);
 		cam.setTransform(Transform.translate(0, 2, 10));
 		this.cams.add(cam);
@@ -43,12 +55,10 @@ public class MyDoorTest extends PortalTestBase{
 		p.switchFrameBufferObject(null);
 		p.switchCamera(cam);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
-		//p.setBackFaceCulling(false);
+		p.setBackFaceCulling(false);
 		p.drawGeometry("AMBIENT", null);
 		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
-		
-		//PortalList.render();
-		
+				
 		RenderWindow win = new NewtRenderWindow(p, 800, 600);
 		
 		win.addKeyListener(this);
@@ -63,10 +73,6 @@ public class MyDoorTest extends PortalTestBase{
 			v.display();
 			delta = System.currentTimeMillis() - start;
 			move(delta, 0.005f);
-			
-			//double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
-			
-			//PortalList.update(cam, moveSpeed);
 		}
 	}
 }

@@ -53,6 +53,7 @@ public class Teleporter extends Portal {
 		this.clipPlane.setTransform(this.getTransform().mul(Transform.rotateYDeg(180)));
 		
 		this.addChildNode(clipPlane);
+		this.addChildNode(this.getPortal());
 		
 		PortalList.add(this);
 		

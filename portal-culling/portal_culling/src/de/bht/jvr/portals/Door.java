@@ -1,7 +1,6 @@
 package de.bht.jvr.portals;
 
 import de.bht.jvr.core.CameraNode;
-import de.bht.jvr.core.Transform;
 import de.bht.jvr.portals.culling.Cell;
 
 public class Door extends Portal {
@@ -12,9 +11,8 @@ public class Door extends Portal {
 		super(null, name);
 		this.setHeight(height);
 		this.setWidth(width);
-		cell = new Cell(this.getName() + "Cell", 3, 3, 3);
-		cell.setTransform(Transform.translate(0, 0, cell.getLength() / 2.0f));
-		this.addChildNode(cell);
+		this.removeChildNode(this.getPortal());
+		//this.getPortal();
 	}
 	
 	public Cell getCell() {
@@ -23,6 +21,7 @@ public class Door extends Portal {
 	
 	public void setCell(Cell cell) {
 		this.cell = cell;
+		this.addChildNode(cell);
 	}
 	
 	public Cell getNeighbor() {

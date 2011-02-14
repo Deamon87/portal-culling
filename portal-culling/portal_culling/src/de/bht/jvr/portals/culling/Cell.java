@@ -16,28 +16,7 @@ public class Cell extends GroupNode {
 	private Wall northWall, westWall, eastWall, southWall;
 	
 	public Cell(String name, float length, float width, float height) {
-		this.setName(name);
-		this.length = length;
-		this.width = width;
-		PointLightNode pLight = new PointLightNode();
-        pLight.setColor(new Color(1.0f, 1.0f, 1.0f));
-        pLight.setShadowBias(0);
-        pLight.setTransform(Transform.translate(0, 0, 0));
-		northWall = new Wall(height, width, new Color(1.0f, 1.0f, 1.0f));
-		northWall.setTransform(Transform.translate(0, 0, -length / 2));
-		westWall = new Wall(height, length, new Color(1.0f, 1.0f, 1.0f));
-		westWall.setTransform(Transform.translate(-width / 2, 0, 0).mul(Transform.rotateYDeg(90)));
-		eastWall = new Wall(height, length, new Color(1.0f, 1.0f, 1.0f));
-		eastWall.setTransform(Transform.translate(width / 2, 0, 0).mul(Transform.rotateYDeg(-90)));
-		southWall = new Wall(height, width, new Color(1.0f, 1.0f, 1.0f));
-		southWall.setTransform(Transform.translate(0, 0, length / 2).mul(Transform.rotateYDeg(180)));
-		Wall floor = new Wall(length, width, new Color(1.0f, 1.0f, 1.0f));
-		floor.setTransform(Transform.rotateXDeg(-90).mul(Transform.translate(0, 0, -height / 2f)));
-		Wall roof = new Wall(length, width, new Color(1.0f, 1.0f, 1.0f));
-		roof.setTransform(Transform.rotateXDeg(90).mul(Transform.translate(0, 0, -height / 2f)));
-		this.addChildNodes(northWall, westWall, eastWall, southWall, floor, roof, pLight);
-		
-		CellList.add(this);
+		this(name, length, width, height, new Color(1.0f, 1.0f, 1.0f));
 	}
 	
 	public Cell(String name, float length, float width, float height, Color color) {
@@ -49,17 +28,17 @@ public class Cell extends GroupNode {
         pLight.setShadowBias(0);
         pLight.setTransform(Transform.translate(0, 0, 0));
 		northWall = new Wall(height, width, color);
-		northWall.setTransform(Transform.translate(0, 0, -length / 2));
+		northWall.setTransform(Transform.translate(0, 0, -length / 2.0f));
 		westWall = new Wall(height, length, color);
-		westWall.setTransform(Transform.translate(-width / 2, 0, 0).mul(Transform.rotateYDeg(90)));
+		westWall.setTransform(Transform.translate(-width / 2.0f, 0, 0).mul(Transform.rotateYDeg(90)));
 		eastWall = new Wall(height, length, color);
-		eastWall.setTransform(Transform.translate(width / 2, 0, 0).mul(Transform.rotateYDeg(-90)));
+		eastWall.setTransform(Transform.translate(width / 2.0f, 0, 0).mul(Transform.rotateYDeg(-90)));
 		southWall = new Wall(height, width, color);
-		southWall.setTransform(Transform.translate(0, 0, length / 2).mul(Transform.rotateYDeg(180)));
+		southWall.setTransform(Transform.translate(0, 0, length / 2.0f).mul(Transform.rotateYDeg(180)));
 		Wall floor = new Wall(length, width, color);
-		floor.setTransform(Transform.rotateXDeg(-90).mul(Transform.translate(0, 0, -height / 2f)));
+		floor.setTransform(Transform.rotateXDeg(-90).mul(Transform.translate(0, 0, -height / 2.0f)));
 		Wall roof = new Wall(length, width, color);
-		roof.setTransform(Transform.rotateXDeg(90).mul(Transform.translate(0, 0, -height / 2f)));
+		roof.setTransform(Transform.rotateXDeg(90).mul(Transform.translate(0, 0, -height / 2.0f)));
 		this.addChildNodes(northWall, westWall, eastWall, southWall, floor, roof, pLight);
 		
 		CellList.add(this);
