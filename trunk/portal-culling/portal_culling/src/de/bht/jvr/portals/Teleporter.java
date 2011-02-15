@@ -91,7 +91,7 @@ public class Teleporter extends Portal {
 		
 		if(vec.x() <= this.getBBox().getMax().x() && vec.x() >= this.getBBox().getMin().x()
 		&& vec.y() <= this.getBBox().getMax().y() && vec.y() >= this.getBBox().getMin().y()
-		&& vec.z() < this.getBBox().getMax().z() + moveSpeed && vec.z() > this.getBBox().getMin().z())
+		&& vec.z() < this.getBBox().getMax().z() && vec.z() > this.getBBox().getMin().z() - moveSpeed)
 		{
 			this.teleport(node, moveSpeed);
 			System.out.println("port");
@@ -106,7 +106,7 @@ public class Teleporter extends Portal {
 		Transform transTrans = newTrans.extractTranslation();
 		
 		newTrans = this.getPortalExit().getTransform().mul(rotTrans);
-		newTrans = newTrans.mul(Transform.translate(0, 0, (float)moveSpeed + 0.02f));
+		newTrans = newTrans.mul(Transform.translate(0, 0, 0.02f));
 		newTrans = newTrans.mul(Transform.rotateYDeg(180));
 		newTrans = newTrans.mul(Transform.translate(transTrans.getMatrix().translation()));
 		node.setTransform(newTrans);
