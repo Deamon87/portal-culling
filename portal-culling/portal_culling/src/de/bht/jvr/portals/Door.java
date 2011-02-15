@@ -1,6 +1,9 @@
 package de.bht.jvr.portals;
 
 import de.bht.jvr.core.CameraNode;
+import de.bht.jvr.core.Finder;
+import de.bht.jvr.core.ShapeNode;
+import de.bht.jvr.core.Transform;
 import de.bht.jvr.portals.culling.Cell;
 
 public class Door extends Portal {
@@ -11,6 +14,10 @@ public class Door extends Portal {
 		super(null, name);
 		this.setHeight(height);
 		this.setWidth(width);
+		this.setHeight(height);
+		this.setWidth(width);
+		ShapeNode shape = Finder.find(this, ShapeNode.class, null);
+		shape.setTransform(Transform.scale(this.getWidth(), this.getHeight(), 1));
 		this.removeChildNode(this.getPortal());
 		//this.getPortal();
 	}
