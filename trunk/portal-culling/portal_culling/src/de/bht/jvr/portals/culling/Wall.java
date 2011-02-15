@@ -72,12 +72,15 @@ public class Wall extends GroupNode {
 	}
 	
 	public void addDoor(Door door) {
-		Cell cell = new Cell(door.getName() + "Cell",  10, 10, this.getHeight());
+		Cell cell = new Cell(door.getName() + "Cell",  10, 10, this.getHeight(), new Color(0.5f, 0.5f, 0.f));
 		cell.setTransform(Transform.translate(0, 0, cell.getLength() / 2.0f));
 		cell.removeChildNode(cell.getNorthWall());
 		door.setCell(cell);
 		this.removeChildNode(wallNode);
 		door.setTransform(Transform.rotateYDeg(180));
+		
+		//TODO: richtige Höhe finden
+		door.getPortal().setTransform(Transform.translate(0, -0.5f, 0));
 		this.addChildNode(door);
 		GroupNode leftPiece, rightPiece, upPiece;
 		
@@ -93,10 +96,11 @@ public class Wall extends GroupNode {
 				.mul(Transform.scale(width, this.getHeight(), 1)));
 				
 		float height = this.getHeight() - door.getHeight();
+
 		upPiece = new GroupNode();
 		upPiece.addChildNode(wall);
-		upPiece.setTransform(Transform.scale(door.getWidth(), height, 1)
-				.mul(Transform.translate(0, (cell.getNorthWall().getHeight() / 2.0f) - (height / 2.0f), 0)));
+		upPiece.setTransform(Transform.translate(0, (cell.getNorthWall().getHeight() / 2.0f) - (height / 2.0f), 0)
+				.mul(Transform.scale(door.getWidth(), height, 1)));
 		
 		this.addChildNodes(leftPiece, rightPiece, upPiece);		
 	}

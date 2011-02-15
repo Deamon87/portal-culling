@@ -8,6 +8,7 @@ import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.portals.Door;
 import de.bht.jvr.portals.culling.Cell;
+import de.bht.jvr.portals.culling.CellList;
 import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
@@ -26,10 +27,10 @@ public class MyDoorTest extends PortalTestBase{
 	public MyDoorTest() throws Exception {		
 		GroupNode root = new GroupNode();
 		
-		Cell cell = new Cell("redCell", 10, 10, 5, new Color(1.0f, 0.0f, 0.0f));
+		Cell cell = new Cell("redCell", 10, 10, 7, new Color(1.0f, 0.0f, 0.0f));
 		root.addChildNode(cell);
 		
-		Door door = new Door("door", 4, 2);
+		Door door = new Door("door", 4, 5);
 		
 		cell.getNorthWall().addDoor(door);
 		
@@ -40,7 +41,9 @@ public class MyDoorTest extends PortalTestBase{
 		Door door3 = new Door("door3", 4, 3);
 		
 		door2.getCell().getWestWall().addDoor(door3);
-//		
+		
+		System.out.println(door.getCell().getTransform().getMatrix().translation());
+		
 //		Door door4 = new Door("door4", 4, 2);
 //		
 //		door2.getCell().getSouthWall().addDoor(door4);
