@@ -5,6 +5,7 @@ import java.io.File;
 
 import javax.vecmath.Vector3f;
 
+import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.dynamics.RigidBody;
 
@@ -67,6 +68,24 @@ public class MyPhysicsTest extends PortalTestBase {
 		physics.addRigidBody(sphere, new SphereShape(1), 1);
 		root.addChildNode(sphere);
 		
+		GroupNode boxes = new GroupNode();
+        SceneNode box = ColladaLoader.load(new File("meshes/box.dae"));
+        for(int x=-2; x<3; x++)
+        {
+            for(int y=2; y<6; y++)
+            {
+                GroupNode boxRoot = new GroupNode();
+                boxRoot.addChildNode(box);
+                boxRoot.setTransform(Transform.translate(x * 1.2f, y * 1.2f, -5)); // set start transformation for this box
+                physics.addRigidBody(boxRoot, new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1); // add the box to physics
+                boxes.addChildNode(boxRoot);
+            }
+        }
+        
+        boxes.setTransform(Transform.translate(-10, 0, 0));
+		
+        root.addChildNode(boxes);
+        
 		Cell cell = new Cell("redCell", 10, 10, 5, new Color(1.0f, 0.0f, 0.0f));
 		root.addChildNode(cell);		
 		
@@ -87,11 +106,11 @@ public class MyPhysicsTest extends PortalTestBase {
 		Pipeline p = new Pipeline(root);
 		
 		Teleporter portal1 = new Teleporter(p, "portal1");
-		portal1.setTransform(Transform.translate(0, 0, 0));
+		portal1.setTransform(Transform.translate(0, 0, 0).mul(Transform.rotateYDeg(180)));
 		root.addChildNode(portal1);
 		
 		Teleporter portal2 = new Teleporter(p, "portal2");
-		portal2.setTransform(Transform.translate(12, 0, 0));
+		portal2.setTransform(Transform.translate(8, 0, 0));
 		root.addChildNode(portal2);
 		
 		System.out.println(portal1.getBBox());
