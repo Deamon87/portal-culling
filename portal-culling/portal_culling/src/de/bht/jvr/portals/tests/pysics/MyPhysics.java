@@ -42,6 +42,11 @@ public class MyPhysics
     private DiscreteDynamicsWorld dynamicsWorld;
     private List<CollisionShape> collisionShapes;
     
+    public DiscreteDynamicsWorld getDynamicsWorld()
+    {
+    	return this.dynamicsWorld;
+    }
+    
     public MyPhysics()
     {
         // collision configuration contains default setup for memory, collision
@@ -251,6 +256,35 @@ public class MyPhysics
                 }
             }
         }
+    }
+    
+    public RigidBody getRigidBody(SceneNode node, CollisionShape colShape)
+    {
+        collisionShapes.add(colShape);
+
+        // Create Dynamic Objects
+        Transform startTransform = new Transform();
+        startTransform.setIdentity();
+
+        float mass = 1f;
+
+        // rigidbody is dynamic if and only if mass is non zero,
+        // otherwise static
+        boolean isDynamic = (mass != 0f);
+
+        Vector3f localInertia = new Vector3f(0, 0, 0);
+        if (isDynamic)
+        {
+            colShape.calculateLocalInertia(mass, localInertia);
+        }
+
+        // a motion state is a link between the graphic and the physics
+        MyMotionState myMotionState = new MyMotionState(node);
+
+        RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(mass, myMotionState, colShape, localInertia);
+        RigidBody body = new RigidBody(rbInfo);
+
+        return body;
     }
     
     public void drag()

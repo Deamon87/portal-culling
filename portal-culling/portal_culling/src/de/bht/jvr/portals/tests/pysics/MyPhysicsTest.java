@@ -3,25 +3,41 @@ package de.bht.jvr.portals.tests.pysics;
 import java.awt.Color;
 import java.io.File;
 
+import javax.vecmath.Vector3f;
+
 import com.bulletphysics.collision.shapes.SphereShape;
+import com.bulletphysics.dynamics.RigidBody;
 
 import de.bht.jvr.collada14.loader.ColladaLoader;
 import de.bht.jvr.core.CameraNode;
+import de.bht.jvr.core.Finder;
+import de.bht.jvr.core.Geometry;
 import de.bht.jvr.core.GroupNode;
 import de.bht.jvr.core.SceneNode;
+import de.bht.jvr.core.ShaderMaterial;
+import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
+import de.bht.jvr.math.Vector3;
 import de.bht.jvr.portals.PortalConnector;
-import de.bht.jvr.portals.PortalList;
 import de.bht.jvr.portals.Teleporter;
 import de.bht.jvr.portals.culling.Cell;
+import de.bht.jvr.portals.util.PortalList;
+import de.bht.jvr.portals.util.PortalTestBase;
+import de.bht.jvr.portals.util.TeleporterList;
 import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
-import de.bht.jvr.util.PortalTestBase;
 
 public class MyPhysicsTest extends PortalTestBase {
 
+	private CameraNode cam;
+	private GroupNode spheres;
+	private SceneNode sphere;
+	private ShapeNode sphereShape;
+	private RigidBody sphereBody;
+	private MyPhysics physics;
+	
 	public static void main(String[] args) {
 		try {
 			new MyPhysicsTest();
@@ -32,12 +48,20 @@ public class MyPhysicsTest extends PortalTestBase {
 	
 	public MyPhysicsTest() throws Exception {
 		
-		MyPhysics physics = new MyPhysics();
+		physics = new MyPhysics();
 		
-		physics.addGroundPlane(0);
+		physics.addGroundPlane(-2.5f);
 		
 		GroupNode root = new GroupNode();
 		
+		spheres = new GroupNode();
+		sphere = ColladaLoader.load(new File("meshes/sphere.dae"));
+		ShaderMaterial phong = ShaderMaterial.makePhongShaderMaterial();
+        Geometry sphereGeo = Finder.findGeometry(sphere, null);
+        sphereShape = new ShapeNode("Sphere", sphereGeo, phong);
+		//sphereShape.setTransform(Transform.scale(0.12f).mul(Transform.translate(0.0f, 1.272f, 5.405f)));
+		root.addChildNode(spheres);
+        
 		SceneNode sphere = ColladaLoader.load(new File("meshes/sphere.dae"));
 		sphere.setTransform(Transform.translate(5,5,0));
 		physics.addRigidBody(sphere, new SphereShape(1), 1);
@@ -55,7 +79,7 @@ public class MyPhysicsTest extends PortalTestBase {
 		
 		System.out.println(cell2.getBBox().getWidth());
 		
-		CameraNode cam = new CameraNode("camera", 4/3f, 60);
+		cam = new CameraNode("camera", 4/3f, 60);
 		cam.setTransform(Transform.translate(0, 2, 10));
 		this.cams.add(cam);
 		root.addChildNode(cam);
@@ -96,13 +120,99 @@ public class MyPhysicsTest extends PortalTestBase {
 			long start = System.currentTimeMillis();
 			v.display();
 			delta = System.currentTimeMillis() - start;
-			move(delta, 0.005f);
+			this.move(delta, 0.005f);
+			shoot();
 			physics.update(delta);
 			//System.out.println(CellList.checkCell(cam));
 			
 			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
 			
 			PortalList.update(cam, moveSpeed);
+			TeleporterList.check(spheres);
 		}
 	}
+	
+	protected void move(double renderDuration, double speed)
+    {
+        move(renderDuration*speed);
+    }
+    
+    protected void move(double renderDuration)
+    {
+        synchronized (pressedKeys)
+        {
+            if (mouseDragged || !pressedKeys.isEmpty())
+            {
+                for (SceneNode cam: this.cams)
+                {
+                    for (Character key: pressedKeys)
+                    {
+                        switch (key)
+                        {
+                        case 'W':
+                        	ry=0;
+                        	cam.setTransform(cam.getTransform().mul(Transform.translate(0, 0, (float)-renderDuration)));
+                            break;
+                        case 'S':
+                        	ry=0;
+                        	cam.setTransform(cam.getTransform().mul(Transform.translate(0, 0, (float)renderDuration)));
+                            break;
+                        case 'A':
+                        	ry=0;
+                        	cam.setTransform(cam.getTransform().mul(Transform.translate((float)-renderDuration, 0, 0)));
+                            break;
+                        case 'D':
+                        	ry=0;
+                        	cam.setTransform(cam.getTransform().mul(Transform.translate((float)renderDuration, 0, 0)));
+                            break;      
+                        case 'R':
+                        	ry=0;
+                        	cam.setTransform(cam.getTransform().mul(Transform.translate(0, (float)renderDuration, 0)));
+                        	break;
+                        case 'F':
+                        	ry=0;
+                        	cam.setTransform(cam.getTransform().mul(Transform.translate(0, (float)-renderDuration, 0)));
+                        	break;
+                        case 'Q':
+                            System.exit(0);
+                            break;
+                        }
+                    }
+                    
+                    cam.setTransform(cam.getTransform().mul(Transform.rotateYDeg(ry)));
+                    //cam.setTransform(cam.getTransform().mul(Transform.rotateXDeg(rx)));       
+                }
+            }
+        }
+    }
+    
+    private void shoot(){
+    	synchronized (pressedKeys)
+        {
+            if (!pressedKeys.isEmpty())
+            {
+                for (SceneNode cam: this.cams)
+                {
+                    for (Character key: pressedKeys)
+                    {
+                        switch (key)
+                        {
+					    case 'E':
+					    	System.out.println("shoot");
+					    	Vector3 vel = cam.getTransform().getMatrix().rotationMatrix().mul(new Vector3(0.0f, 0.0f, -30.0f));
+					    	spheres.removeChildNode(sphereShape);
+					    	spheres.addChildNode(sphereShape);
+					    	spheres.setTransform(cam.getTransform());
+					        sphereBody = physics.getRigidBody(spheres, new SphereShape(1.0f));
+					        sphereBody.setLinearVelocity(new Vector3f(vel.x(), vel.y(), vel.z()));
+					        sphereBody.setMassProps(10.0f, new Vector3f(1.0f, 1.0f, 1.0f));
+					        physics.getDynamicsWorld().addRigidBody(sphereBody);
+					        pressedKeys.remove('E');
+					        break;
+                        }
+                    }
+				}
+            }
+        }
+    }
 }

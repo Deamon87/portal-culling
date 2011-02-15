@@ -9,6 +9,7 @@ import de.bht.jvr.core.SceneNode;
 import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.math.Vector3;
+import de.bht.jvr.portals.util.PortalList;
 
 public abstract class Portal extends GroupNode {
 

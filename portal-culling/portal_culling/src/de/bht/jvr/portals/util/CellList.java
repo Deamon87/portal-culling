@@ -1,8 +1,9 @@
-package de.bht.jvr.portals.culling;
+package de.bht.jvr.portals.util;
 
 import java.util.ArrayList;
 
 import de.bht.jvr.core.SceneNode;
+import de.bht.jvr.portals.culling.Cell;
 
 public class CellList {
 

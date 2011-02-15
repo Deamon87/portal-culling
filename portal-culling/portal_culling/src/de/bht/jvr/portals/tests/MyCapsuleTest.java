@@ -13,12 +13,12 @@ import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.portals.Mirror;
 import de.bht.jvr.portals.Portal;
 import de.bht.jvr.portals.PortalConnector;
-import de.bht.jvr.portals.PortalList;
 import de.bht.jvr.portals.Teleporter;
+import de.bht.jvr.portals.util.PortalList;
+import de.bht.jvr.portals.util.PortalTestBase;
 import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
-import de.bht.jvr.util.PortalTestBase;
 
 public class MyCapsuleTest extends PortalTestBase {
 	
