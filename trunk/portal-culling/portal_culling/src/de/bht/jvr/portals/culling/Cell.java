@@ -7,6 +7,7 @@ import de.bht.jvr.core.PointLightNode;
 import de.bht.jvr.core.SceneNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.math.Vector3;
+import de.bht.jvr.portals.util.CellList;
 
 public class Cell extends GroupNode {
 

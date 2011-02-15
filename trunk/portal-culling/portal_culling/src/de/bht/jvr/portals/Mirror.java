@@ -11,6 +11,7 @@ import de.bht.jvr.core.ShaderProgram;
 import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
+import de.bht.jvr.portals.util.PortalList;
 
 public class Mirror extends Portal {
 

@@ -14,6 +14,8 @@ import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.core.uniforms.UniformBool;
 import de.bht.jvr.math.Vector3;
+import de.bht.jvr.portals.util.PortalList;
+import de.bht.jvr.portals.util.TeleporterList;
 
 public class Teleporter extends Portal {
 
@@ -56,6 +58,7 @@ public class Teleporter extends Portal {
 		this.addChildNode(this.getPortal());
 		
 		PortalList.add(this);
+		TeleporterList.add(this);
 		
 		this.init();
 	}
@@ -82,16 +85,16 @@ public class Teleporter extends Portal {
 		this.getPickPoint(node, moveSpeed);
 	}
 	
-	public void getPickPoint(SceneNode camera, double moveSpeed) {
-		Transform trans = this.getTransform().invert().mul(camera.getTransform());
+	public void getPickPoint(SceneNode node, double moveSpeed) {
+		Transform trans = this.getTransform().invert().mul(node.getTransform());
 		Vector3 vec = trans.getMatrix().translation();
 		
 		if(vec.x() <= this.getBBox().getMax().x() && vec.x() >= this.getBBox().getMin().x()
 		&& vec.y() <= this.getBBox().getMax().y() && vec.y() >= this.getBBox().getMin().y()
 		&& vec.z() < this.getBBox().getMax().z() + moveSpeed && vec.z() > this.getBBox().getMin().z())
 		{
-			this.teleport(camera, moveSpeed);
-			//System.out.println("port");
+			this.teleport(node, moveSpeed);
+			System.out.println("port");
 		}		
 	}
 	

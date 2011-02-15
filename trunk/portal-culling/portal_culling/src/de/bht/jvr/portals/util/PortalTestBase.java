@@ -1,4 +1,4 @@
-package de.bht.jvr.util;
+package de.bht.jvr.portals.util;
 
 import java.awt.Point;
 import java.util.ArrayList;

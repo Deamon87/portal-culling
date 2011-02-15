@@ -8,11 +8,10 @@ import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.portals.Door;
 import de.bht.jvr.portals.culling.Cell;
-import de.bht.jvr.portals.culling.CellList;
+import de.bht.jvr.portals.util.PortalTestBase;
 import de.bht.jvr.renderer.NewtRenderWindow;
 import de.bht.jvr.renderer.RenderWindow;
 import de.bht.jvr.renderer.Viewer;
-import de.bht.jvr.util.PortalTestBase;
 
 public class MyDoorTest extends PortalTestBase{
 

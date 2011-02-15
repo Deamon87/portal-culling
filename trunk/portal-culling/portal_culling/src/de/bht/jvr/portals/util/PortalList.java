@@ -1,8 +1,9 @@
-package de.bht.jvr.portals;
+package de.bht.jvr.portals.util;
 
 import java.util.ArrayList;
 
 import de.bht.jvr.core.CameraNode;
+import de.bht.jvr.portals.Portal;
 
 public class PortalList {
 	private static ArrayList<Portal> portals = new ArrayList<Portal>();
