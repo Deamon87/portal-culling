@@ -6,11 +6,23 @@
 \usepackage[ngerman]{babel}
 \usepackage[colorlinks=false,pdfborder={0 0 0}]{hyperref}
 \usepackage{cite}
+\usepackage{color}
 \usepackage{graphicx}
 \usepackage{mathtools}
+\usepackage{listings}
+\usepackage{scrhack}
 \DeclareGraphicsExtensions{.png}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{darkred}{rgb}{0.5,0,0}
 
 \begin{document}
+\lstset{language=Java,
+		basicstyle=\ttfamily,
+		numbers=left,
+		frame=single,
+		commentstyle=\color{darkgreen},
+		keywordstyle=\color{darkred},
+		stringstyle=\color{blue}}
 
 \pagenumbering{Roman}
 \tableofcontents
@@ -848,19 +860,122 @@ sind oder nicht wird in der Tür gespeichert.
 
 \chapter{Praktische Umsetzung}
 
+Dieses Kapitel befasst sich mit der Implementierung der Erweiterung für das
+jVR-Framework. Im ersten Teil werden die Portal-Klassen und ihre verschiedenen
+Methoden genauer betrachtet. Der zweite Teil stellt den Ansatz vor, mit dem das
+Portal Culling umgesetzt wurde.
+
 \section{Paketstruktur}
+
+Die Paketstruktur stellt eine Ergänzung zum jVR-Framework dar und fügt sich in
+dessen Struktur ein. Die Pakete unterteilen sich daher logisch und überschneiden
+sich nicht mit Paketen von jVR. Das Oberpaket \texttt{portals} enthält alle
+weiteren Unterpakete, sowie die verschiedenen Typen von Portalen, die im Laufe
+der Implementierung entstanden sind.
+
+Das Paket \texttt{culling} besteht aus den Klassen die für Portal Culling von
+Bedeutung sind. Mit ihnen können Zellen erzeugt werden, also Räume die
+untereinander verbunden sind. Zudem lassen sich verschiedene Arten von Wänden
+erzeugen, über die Klasse \texttt{Wall}.
+
+Das \texttt{tests}-Paket ist mit Anwendungen gefüllt, die das Verhalten der
+einzelnen Portaltypen testet und demonstriert. Die Tests sind ein wichtiger
+Bestandteil für die Entwicklung der Portale und ihren unterschiedlichen
+Implementierungen.
+
+Ein Unterpaket des \texttt{tests}-Pakets stellt das \texttt{physics}-Paket dar.
+Die Tests innerhalb des Paketes dienen dazu, das Verhalten zwischen
+physikalischen Objekten und den Portalen zu untersuchen. Sie werden mit
+Komponenten der jBullet-Bibliothek erweitert um physikalisch korrekte Bewegungen
+und Kollisionserkennung zu erzeugen.
+
+Das letzte Paket ist das \texttt{util}-Paket. Es enthält alle Hilfsklassen die
+für den Umgang von Portalen nötig sind. Außerdem bietet es eine
+Standardtestklasse an, die von allen Testklassen für die Portalfunktionen
+abgeleitet wird.
 
 \section{Portalimplementierung}
 
+Da es mehrere Typen von Portalen gibt, bietet es sich an eine Oberklasse zu
+implementieren von der alle konkreten Portaltypen abgeleitet werden können.
+Das Entwurfsmuster, welches als Grundlage dient ist das sogenannte
+Kompositionsmuster. Ähnlich der Szeneknoten im jVR-Framework, die alle von der
+Oberklasse \texttt{SceneNode} abgeleitet sind, werden die
+Portal-Unterklassen von der Oberklasse \texttt{Portal} abgeleitet. Sie selbst
+erbt von der Klasse \texttt{GroupNode} und kann daher mehrere Kindknoten
+beinhalten.
+
+Dadurch dass die Klasse \texttt{Portal} von der Klasse \texttt{GroupNode} erbt,
+übernimmt sie alle Eigenschaften eines Szeneknoten. Das bedeutet eine
+Unterklasse der \texttt{Portal}-Klasse lässt sich ohne Probleme transformieren
+und in einer Szene platzieren.
+
 \subsection{Teleporter-Klasse}
 
+
+
 \subsubsection{PortalConnector}
+
+\subsubsection{Physik}
 
 \subsection{Mirror-Klasse}
 
 \subsection{Door-Klasse}
 
 \subsection{PortalList}
+
+\subsection{Beispiel einer Portalanwendung}
+
+\begin{lstlisting}[captionpos=b,caption={Struktur einer Portalanwendung},label=lst:exa] 
+public static void main(String[] args){ 
+	// create root node
+	GroupNode root = new GroupNode();
+	// some scene nodes added ...
+	// camera and light node added ...
+	CameraNode cam = new CameraNode("cam", 4/3f, 60);
+	
+	// create Pipeline
+	Pipeline p = new Pipeline();
+	
+	// create teleporter
+	// needs pipeline for further rendering
+	Teleporter portal1 = new Teleporter(p, "portal1");
+	
+	// create another teleporter
+	Teleporter portal2 = new Teleporter(p, "portal2");
+	
+	// connect both teleporter
+	PortalConnector.connect(portal1, portal2);
+	
+	// some pipelinecommands ...
+	
+	// let the list render the scene into the portals
+	PortalList.render();
+	
+	// create render window
+	RenderWindow win = new NewtRenderWindow(p);
+	
+	// create viewer
+	Viewer v = new Viewer(win)
+	
+	// render loop
+	while(v.isRunning())
+	{
+		long start = System.currentTimeMillis();
+		
+		// render next frame
+		v.display();
+		
+		// move speed of the camera
+		double moveSpeed = (
+			System.currentTimeMillis()	
+			- start) * 0.005f;
+		
+		// upate scene rendered in the portals
+		PortalList.update(camera, moveSpeed);
+	}
+}
+\end{lstlisting}
 
 \section{Portal Culling}
 
@@ -870,33 +985,7 @@ sind oder nicht wird in der Tür gespeichert.
 
 \subsubsection{Wall-Klasse}
 
-\section{Mögliche Problemfälle und Optimierungen}
-
-Natürlich treten auch Probleme innerhalb der Implementierung auf, die
-berücksichtigt werden müssen. Mögliche auftretende Problem werden genauer
-beleuchtet und mit entsprechenden Gegenmaßnahmen gelöst.
-
-\subsection{Schatten}
-
-Dadurch, dass Objekte im Portal Culling nicht gerendert werden kann es auch zu
-Problemen bei der Darstellung der Szene kommen. Wenn z.B. ein Objekt innerhalb
-des Raumes, der durch ein Portal betrachtet wird einen Schatten wirft, aber in
-diesem Moment das Objekt nicht sichtbar ist und daher nicht gerendert wird, kann
-somit auch der Schatten nicht erzeugt und nicht in der Szene angezeigt werden.
-Dies fährt zu einem plötzlichen aufblitzen von Schatten, was dem natürlichem
-Verständnis vom Schattenwurf widerspricht.
-
-\subsection{Reflexionen}
-
-Ein weiteres Problem, welches Auftreten kann sind mögliche Reflexionen innerhalb
-des Raumes. Falls in dem betrachteten Raum ein Spiegel steht und die Objekte
-zwar nicht direkt durch die Tür bzw. das Fenster sichtbar sind, aber indirekt
-durch einen Spiegel betrachtet werden können. Es werden alle Objekte, die nicht
-direkt sichtbar wären ebenso wenig im Spiegel zu sehen. Ebenso verhält es sich
-mit möglichen anderen Portalen, die ebenfalls nur durch einen Blick um die Ecke
-sichtbar würden.
-
-\subsection{Lösungsansätze}
+\section{Optimierungen}
 
 \chapter{Ergebnisse und Bewertung}
 
