@@ -424,7 +424,7 @@ Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden,
 vergleiche dazu auch \cite{compOL}.
 
 \begin{align}
-\textbf{Transformation:} &
+\textbf{Translation:} &
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
 \alpha}&\phantom{-\sin \alpha}\\[-2.5ex] 
@@ -910,17 +910,119 @@ Dadurch dass die Klasse \texttt{Portal} von der Klasse \texttt{GroupNode} erbt,
 Unterklasse der \texttt{Portal}-Klasse lässt sich ohne Probleme transformieren
 und in einer Szene platzieren.
 
+Die Klasse \texttt{Portal} ist eine abstrakte Oberklasse. Die Getter und Setter
+für Höhe und Breite eines Portals sind vordefiniert und müssen nicht noch einmal
+implementiert werden. Zudem benötigt ein \texttt{Portal} die Pipeline und einen
+Namen in Form eines Strings.
+
+Die Pipeline wird benötigt, da die Szene zum Beispiel für den
+\texttt{Teleporter} erst in ein \emph{FrameBuffer Object} geschrieben werden
+muss und erst danach die eigentliche Szene gerendert werden kann, siehe auch
+Listing \ref{lst:exa}.
+
+Jedes Objekt vom Typ \texttt{Portal} besitzt eine virtuelle Kamera vom Typ
+\texttt{CameraNode}. Dies ist vor allem in den Klassen \texttt{Teleporter} und
+\texttt{Mirror} von Bedeutung, da diese für das Rendering der benötigt wird.
+
+Weiterhin stellt die \texttt{Portal}-Klasse 2 abstrakte Methoden bereit. Zum
+einen die \texttt{update}-Methode. Sie wird jedes Mal aufgerufen, wenn ein neuer
+Frame gezeichnet wird und dient zum Beispiel dazu die Kameraposition zu
+aktualisieren. Die zweite Methode ist \texttt{render}. Sie dient dazu die Szene
+im AMBIENT und LIGHTING-Pass zu rendern und danach in das \emph{FBO} zu
+schreiben.
+
 \subsection{Teleporter-Klasse}
 
+Die Klasse \texttt{Teleporter} ist in der Lage den Betrachter von einer Position
+zur anderen zu bewegen. Dazu sind 2 \texttt{Teleporter} notwendig. Für das
+Teleportieren wird die Methode \texttt{teleport} verwendet. Ihr wird eine
+\texttt{SceneNode} übergeben, sowie ein \texttt{double}-Wert, der die
+Bewegungsgeschwindigkeit der Kamera repräsentiert.
 
+Um den Betrachter teleportieren zu können, wird zunächst die
+\texttt{update}-Methode aufgerufen. Die übergebene \texttt{CameraNode} wird in
+das Objektkoordinatensystem des Portals überführt. Danach wird die
+Transformation gespeichert und wiederum mit der Transformation des
+\texttt{portalExit} multipliziert. Als letzten Schritt wird die Transformation
+um 180° auf der y-Achse gedreht. Die daraus resultierende Transformation wird
+auf die virtuellen Kamera angewendet. Die \texttt{update}-Methode ruft zudem die
+Methode \texttt{getPickPoint} auf.
+
+Die Methode \texttt{getPickPoint} bekommt als Argument eine \texttt{SceneNode}
+und deren Bewegungsgeschwindigkeit übergeben. Sie prüft, ob sich der
+Szeneknoten innerhalb der definierten \emph{Bounding Box} befindet. Ist dies der
+Fall wird darauf die \texttt{teleport}-Methode aufgerufen. Dies geschieht, indem
+der Szeneknoten ins Koordinatensystem des Portals transformiert wird.
+Daraufhin wird aus der Transformation der Translations-Vektor gewonnen und mit
+den minimalen swoie maximalen Werten der \emph{Bounding Box} verglichen.
+
+Die \texttt{teleport}-Methode nimmt die \texttt{SceneNode} und transformiert sie
+ins Objektkoordinatensystem. Aus der gewonnenen Transformation werden die
+Transformation für die Translation und die Rotation extrahiert. Danach wir die
+Transformation des \texttt{portalExit} mit der Rotationstransformation
+verrechnet. Dies wird gemacht, das der Szeneknoten mit der gleichen Rotation aus
+dem Teleporterausgang austritt, wie er den Teleportereingang betreten hat.
+
+Danach wird der Knoten noch mit einem Offset in die z-Richtung transformiert um
+vor dem Portal und dessen \emph{Bounding Box} zu landen und nicht darin. Wäre
+dies der Fall würde der Szeneknoten bei Austritt umgehend wieder teleportiert
+werden.
+
+Die extrahierte Translationstransformation bestimmt den genauen Eintrittspunkt
+des Teleporter und wird ebenfalls mit der Transformation verrechnet. Dies
+bedeutet, tritt der Knoten im oberen rechten Bereich des Teleporters ein, wird
+der Knoten an genau dieser Stelle auch beim Ausgang austreten. Dies verleiht dem
+Teleport einen weicheren Übergang.
+
+Um zu verhindern, dass der Knoten am Ende nicht auf der falschen Seite des
+Teleporterausgangs austritt, wird Knoten zusätzlich um 180° an der y-Achse
+gedreht.
+
+Der Vorgang wird nochmals im Gleichung \ref{eq:trans} veranschaulicht. Dabei ist
+$N$ die Transformation des Teleporterausgangs, $R$ ist die extrahierte
+Rotationstransformation und $T$ die extrahierte Translationstransformation.
+$S_{node}$ stellt die Transformation des Szeneknotens beim Teleporteraustritt
+dar.
+
+% TODO überarbeiten, nicht richtig!!!!
+\begin{equation}
+S_{node} = R * T * N
+\label{eq:trans}
+\end{equation}
 
 \subsubsection{PortalConnector}
 
+Um die Teleporter miteinander zu verbinden wird die Helferklasse
+\texttt{PortalConnector} aufgerufen. Sie stellt die statische Methode
+\texttt{connect} zur Verfügung. Ihr werden 2 Teleporter übergeben, die verbunden
+werden sollen.
+
+Die Verbindung zwischen den Teleportern wird hergestellt, indem den jeweiligen
+Teleporter die virtuelle Kamera des anderen Teleporters übergeben wird. Jeder
+Teleporter besitzt eine Klassenvariable \texttt{portalExit} vom Typ CameraNode.
+
 \subsubsection{Physik}
+
+Um mit physikalischen Objekten umgehen zu können, wird die jBullet-Bibliothek
+verwendet. Jedem Objekt mit physikalischen Eigenschaften wird ein
+\texttt{RigidBody} zugeordnet. Ein \texttt{RigidBody} ist ein Körper der unter
+dem Einfluss von Physik reagiert. Die Physik, die den Körper beeinflusst ist in
+der Klasse \texttt{MyPhysics} definiert. Sie verwaltet alle Kollisionsobjekte
+und physikalischen Eigenschaften innerhalb der Szene.
+
+\texttt{Teleporter} kann ebenfalls physikalische Objekte teleportieren. Dazu
+müssen diese in einer \texttt{GroupNode} gesammelt werden. Die
+\texttt{GroupNode} mit den Physikobjekten wird den Teleportern über die
+\texttt{update}-Methode übergeben. Die Szeneknoten in der \texttt{GroupNode}
+werden genau wie die Kamera transformiert und treten danach aus dem
+Portalausgang aus. Jeder einzelne Szeneknoten wird überprüft, ob er sich
+innerhalb der \emph{Bounding Box} des Teleporters befindet. Die Transformation
+wird erst dann angewendet, wenn dies der Fall ist.
 
 \subsection{Mirror-Klasse}
 
-\subsection{Door-Klasse}
+Die \texttt{Mirror}-Klasse ist die Repräsentation eines Spiegel. Sie kann die
+Szene reflektieren. 
 
 \subsection{PortalList}
 
@@ -978,6 +1080,8 @@ public static void main(String[] args){
 \end{lstlisting}
 
 \section{Portal Culling}
+
+\subsection{Door-Klasse}
 
 \subsection{Cell-Klasse}
 
