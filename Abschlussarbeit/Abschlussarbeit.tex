@@ -11,7 +11,7 @@
 \usepackage{mathtools}
 \usepackage{listings}
 \usepackage{scrhack}
-\DeclareGraphicsExtensions{.png}
+\DeclareGraphicsExtensions{.eps}
 \definecolor{darkgreen}{rgb}{0,0.5,0}
 \definecolor{darkred}{rgb}{0.5,0,0}
 
@@ -394,7 +394,7 @@ oder aber jeder einzelne Objektknoten innerhalb des Gruppenknoten.
 Das jVR-Framework unterscheidet zwischen mehreren Knotentypen. Es gibt zum einen
 den schon erwähnten \texttt{GroupNode}. Dieser Knoten kann als einziger
 Kinderkoten enthalten. Zusätzlich gibt es noch den \texttt{LightNode}. Dieser
-repräsentiert die verschiedenen Lichtquellen und wird von 3 Standardlichtquwllwn
+repräsentiert die verschiedenen Lichtquellen und wird von 3 Standardlichtquellen
 abgeleitet. Diese 3 Lichtquellen sind \texttt{PointLightNode},
 \texttt{DirectionalLightNode} und \texttt{SpotLightNode}.
 
@@ -595,10 +595,14 @@ Pipeline aus der Spezifikation zu entfernen. Mit der Veröffentlichung von OpenGL
 3.1 ist die Fixed Function Pipeline komplett aus der Spezifikation verschwunden.
 Die Befehle lassen sich aber weiterhin über OpenGL-Extensions nutzen.
 
-%TODO Abbildung Pipeline OpenGL
+\begin{figure}[ht]
+ 	\includegraphics[width=\linewidth]{img/pipeline}
+	\caption{OpenGL 3.2 Rendering-Pipeline}
+	\label{fig:og32}
+\end{figure}
 
-Die Abbildung zeigt die OpenGL Pipeline. Zuerst werden die Attribute der
-Vertices an den Vertex-Shader übergeben. Dieser reicht die verarbeiteten Daten
+Die Abbildung \ref{fig:og32} zeigt die OpenGL Pipeline. Zuerst werden die Attribute
+der Vertices an den Vertex-Shader übergeben. Dieser reicht die verarbeiteten Daten
 weiter an den Geometry-Shader. Nachdem die Geometrien erzeugt bzw. verarbeitet
 wurden wird das Clipping vorgenommen. Nachdem dieser Schritt beendet ist, wird
 die erhaltene Szene auf den Bildschirm gemappt. Das bedeutet die Szene wird aus
@@ -904,6 +908,15 @@ Oberklasse \texttt{SceneNode} abgeleitet sind, werden die
 Portal-Unterklassen von der Oberklasse \texttt{Portal} abgeleitet. Sie selbst
 erbt von der Klasse \texttt{GroupNode} und kann daher mehrere Kindknoten
 beinhalten.
+
+\begin{figure}[h]
+\includegraphics[width=\linewidth]{img/uml_portal}
+\caption{Der Implementierung der Portale liegt das Kompositionsmuster als
+Grundlage vor. \texttt{Portal} erbt von \texttt{GroupNode} und kann somit
+weitere Kindknoten enthalten. \texttt{Portal} fungiert als Oberklasse aller
+anderen Portalklassen}
+\label{fig:port_uml}
+\end{figure}
 
 Dadurch dass die Klasse \texttt{Portal} von der Klasse \texttt{GroupNode} erbt,
 übernimmt sie alle Eigenschaften eines Szeneknoten. Das bedeutet eine
