@@ -41,41 +41,50 @@ dies durch immer leistungsfähigere Hardware, die von Jahr zu Jahr immer mehr
 Performance im Bereich der 3D-Echtzeitberechnung bringt.
 
 Um die Hardware auch für die Entwickler programmierbar zu machen, stehen mehrere
-Grafik APIs zur Verfügung. Die beiden bekanntesten sind Microsofts Direct3D und
-die freie Grafikbibliothek OpenGL. OpenGL ist ein wichtiger Bestandteil dieser
-Arbeit und wird im späteren Verlauf der Arbeit näher betrachtet.
+Grafik APIs\footnote{Application Programming Interface} zur Verfügung. Die
+beiden bekanntesten sind Microsofts Direct3D und die freie Grafikbibliothek
+OpenGL. OpenGL ist ein wichtiger Bestandteil dieser Arbeit und wird im späteren
+Verlauf der Arbeit näher betrachtet.
 
-Mit Hilfe dieser Grafikbibliotheken lassen sich, mit wenig Aufwand
-3D-Anwendungen programmieren. Der Aufwand steigt je nach Komplexität des
-Projekts. Heutzutage werden 3D-Anwendungen, wie zum Beispiel Spiele nicht von
-Grund auf neu entwickelt. In diesem Fall kommen die Grafik-Engines zum Einsatz.
+Mit Hilfe dieser Grafikbibliotheken lassen sich, mit relativ wenig Aufwand
+Anwendungen mit 3D-Inhalten programmieren. Da die APIs der Bibliotheken in
+viele Befehle besitzen, die low-level Grafikbefehle unterstützen steigt der
+Aufwand bei größeren Projekten erheblich. Heutzutage werden 3D-Anwendungen, wie
+zum Beispiel Spiele nicht von Grund auf neu entwickelt. In diesem Fall werden 
+Grafik-Engines eingesetzt, die eine höhere Abstraktionsschicht besitzen und
+somit effektiver programmiert werden kann.
 
-Grafik-Engines unterstützen von vornherein wichtige Konzepte zur
-Spieleentwicklung, wie zum Beispiel Shaderunterstützung, fertige Komponenten
-wie Kamera, Szenegraphen usw.. Die verbreitesten Engines sind die Unreal Engine
-von Epic Games, die Source Engine von Valve Corporation und die Cry-Engine von
+Grafik-Engines unterstützen von vornherein wichtige Konzepte, die bei der
+heutigen Spieleentwicklung angewendet werden. Eines dieser Konzepte ist die
+Shaderunterstützung, mit der sich zum Beispiel Oberflächeneigenschaften
+simulieren oder auch optische Effekte, wie Wasserspiegelungen erzeugen lassen. 
+Moderne Engines bieten zudem Komponenten wie Kameras, Szenegraphen und
+Multithreaded-Rendering. Die verbreitetsten Engines sind die Unreal Engine von
+Epic Games, die Source Engine von Valve Corporation und die Cry-Engine von
 Crytek.
 
-Im Mittelpunkt dieser Arbeit steht das jVR-Framework. Es ist komplett auf Java
-aufgebaut. Als Grafikbibliothek wird OpenGL in Form von JOGL verwendet. Ein
-Besonderheit des jVR-Frameworks ist die Möglichkeit, Virtual Reality Systeme
-zu entwerfen. Die Beuth Hochschule für Technik besitzt ein Holodeck, wo
-mehrere Anwendungen demonstriert werden, die mit jVR entwickelt wurden.
+Im Mittelpunkt dieser Arbeit steht das jVR-Framework. Es stellt eine 3D-Engine
+dar, die komplett auf Java aufgebaut ist. Als Grafikbibliothek wird OpenGL 
+verwendet. Um OpenGL in Java nutzen zu können, wird die Wrapper-Bibliothek
+JOGL verwendet. Ein Besonderheit des jVR-Frameworks ist die Möglichkeit, Virtual
+Reality Systeme zu entwerfen. Dies bedeutet es können 3D-Szenen erzeugt werden
+die einen räumlichen Effekt haben. Die Beuth Hochschule für Technik besitzt ein
+Holodeck, wo mehrere Anwendungen demonstriert werden, die mit jVR entwickelt
+wurden.
 
 Ein weiteres Konzept in der Spieleentwicklung ist das sogenannte Portal Culling
-bzw. Portal Rendering. Besonders populär wurde diese Art des Renderings mit der
-Veröffent-lichung des Spiels Portal von Valve Corporation. Darin wird der
-Spieler in die Lage versetzt Portal von Hand zu erschaffen und so Orte zu
-erreichen, die zuvor unerreichbar schienen.
+bzw. Portal Rendering. Dieses Konzept beschreibt eine Szene durch ein
+Portal. Das bedeutet, man kann durch ein Portal treten und befindet
+sich im Nachhinein an einem Ort der vorher mehrere 100m weit weg war. Besonders
+populär wurde diese Art des Renderings mit der Veröffent-lichung des Spiels
+Portal von Valve Corporation. Darin wird der Spieler in die Lage versetzt Portal
+von Hand zu erschaffen und so Orte zu erreichen, die zuvor unerreichbar schienen.
 
 Um Entwicklern die Möglichkeit zu bieten, selbst ein Spiel im Stile von Portal
 entwickeln zu können, besteht der Schwerpunkt dieser Arbeit darin das 
 jVR-Framework um die Funktion zu erweitern, Portale nach Belieben zu erschaffen
 und zu platzieren. Portale können dann wie Kameras oder Objekte in Szenen
 verwendet werden.
-
-Portale lassen sich vielseitig einsetzen. Sie können zum Beispiel dazu genutzt
-werden große Entfernungen in kürzester Zeit zu überbrücken. 
 
 \chapter{Aufgabenstellung}
 
@@ -94,7 +103,7 @@ Gegenstück auch entsprechend der Erwartung physikalisch korrekt austreten.
 Als Ansatz dient das Portal-Rendering-Verfahren, welches in der Computergrafik
 dafür benutzt wird geschlossene Räume, die in verschiedene Segmente aufgeteilt
 sind untereinander zu verbinden und je nach Sichtbarkeit zu rendern. Dabei
-werden Lichteinfall sowie Schatteneinfall, sowie die Position der Kamera
+werden Lichteinfall und Schatteneinfall, sowie die Position der Kamera
 berücksichtigt.
 
 Durch die Erweiterung des jVR-Frameworks, welches speziell mit dem Gedanken
@@ -170,9 +179,9 @@ verbessert bzw. erweitert werden können.
 Das folgende Kapitel soll einen Überblick darüber geben, was Portal Culling ist
 und wie es in der 3D-Echtzeitgrafik Anwendung findet. Zudem werden andere
 Algorithmen vorgestellt, die die Performanz in 3D-Anwendungen steigern. Im
-weiteren Verlauf wird das jVR-Framework genauer betrachtet wichtige Funltionen
-diskutiert. Die Standards, die in dem Framework verwendet werden, werden
-ebenfalls vorgestellt.
+weiteren Verlauf wird das jVR-Framework genauer betrachtet und wichtige
+Funktionen diskutiert. Die Standards, die in dem Framework verwendet werden,
+werden ebenfalls vorgestellt.
 
 \section{Portal Culling}
 
@@ -195,7 +204,7 @@ verschiedenen Zellen zu rendern bzw. nicht zu rendern je nach Sichtbarkeit des
 jeweiligen Objektes. Wird z.B. ein Objekt durch eine Wand verdeckt, besteht
 keine Notwendigkeit das Objekt zu rendern und es wird zudem Rechenzeit
 gespart. Durch den Einsatz dieses Verfahrens können bis zu 50 Prozent der
-benötigten Ressourcen zum Rendern eingespart werden.
+benötigten Ressourcen zum Rendern eingespart werden. %TODO: belegen
 
 % \begin{figure}[h]
 % \begin{center}
@@ -223,34 +232,35 @@ Sichtbereichs vom Rendern ausgeschlossen. Diese Vorgehensweise kann rekursiv
 fortgesetzt werden, falls sich innerhalb des betrachteten Raumes ein weiteres
 Portal befindet.
 
-Um Portal Culling zu betreiben muss ein gewisser Aufwand von Vorberechnungen
-erledigt werden. Nach \cite{portals} muss eine Szene in folgenden Schritten
+Um Portal Culling zu betreiben muss ein gewisses Maß von Vorberechnungen
+gemacht werden. Nach \cite{portals} muss eine Szene in folgenden Schritten
 gerendert werden um ein optimales Ergebnis zu erreichen.
 
 \begin{enumerate}
   \item Als erstes muss die Zelle \emph{V} bestimmt werden, in der sich der
-  Viewer bzw. die Betrachterkamera befindet.
-  \item Des weiteren soll eine 2-dimensionale \emph{Bounding Box} \emph{P}
-  erzeugt werden, die in Maßen dem rechteckigen Bildschirm entspricht.
-  \item Danach wird die Geometrie der Zelle \emph{V} gerendert. Dabei wird View
-  Frustum Culling angewendet. Das Frustum, das vom Betrachter ausgeht wird aus
-  dem Rechteck \emph{P} gebildet, in diesem Falle ist das der ganze Bildschirm.
+  Betrachter bzw. die Betrachterkamera befindet.
+  \item Des Weiteren soll eine 2-dimensionale \emph{Bounding Box} \emph{P}
+  erzeugt werden, die in ihren Maßen dem rechteckigen Bildschirm entspricht.
+  \item Danach wird die Geometrie der Zelle \emph{V} gerendert. Dabei wird das
+  Verfahren des View Frustum Culling angewendet. Das Frustum\footnote{Körper
+  dessen Inhalt auf den Bildschirm projeziert wird}, das vom Betrachter ausgeht
+  wird aus dem Rechteck \emph{P} gebildet, in diesem Falle ist das der ganze Bildschirm.
   \item Alle Portale der benachbarten Zellen von \emph{V} werden rekursiv
   durchlaufen. Für jedes Portal der aktuellen Zelle, in der sich der Betrachter
   befindet wird das Portal auf den Bildschirm projeziert. Daraufhin wird eine
   2-dimensionale, an den Achsen ausgerichtete \emph{Bounding Box} (BB)
   erzeugt. Dann wird die Schnittmenge zwischen der BB und \emph{P} ermittelt.
   \item Für jede Schnittmenge gilt: Ist die Schnittmenge leer, ist die
-  benachbarte Zelle, die über das Portal verbunden ist aus dem aktuellen
+  benachbarte Zelle, die über das Portal verbunden ist, aus dem aktuellen
   Betrachterstandpunkt nicht sichtbar. Daher kann die Zelle aus dem
   Rendervorgang ausgeschlossen werden. Ist die Schnittmenge wiederum nicht leer,
   wird der Inhalt der Zelle an Hand des Frustums, welches vom Betrachter
-  ausgeht und aus der Schnittmenge gecullt.
+  ausgeht, und aus der Schnittmenge gecullt.
   \item War die Schnittmenge nicht leer, kann es möglich sein, dass die Nachbarn
   der benachbarten Zelle ebenfalls sichtbar für den Betrachter sind. Dabei wird
-  der dritte Schritt wiederholt, diesmal mit der Schnittmenge als \emph{P}.
-  Jedes Objekt, welches gerendert wurde sollte markiert werden, um es kein 2tes
-  Mal zu rendern.
+  der dritte Schritt wiederholt. Diesmal ist die Schnittmenge \emph{P}.
+  Jedes Objekt, welches gerendert wurde, sollte markiert werden. Das hat den
+  Grund es kein 2tes Mal rendern zu müssen.
 \end{enumerate}
 
 \subsection{Portale als Spiegel}
@@ -267,7 +277,7 @@ auf den Spiegel projeziert.
 
 Dies wird dadurch erreicht, indem man die Kamera $C$ in das
 Koordinatensystem der Spiegelebene überträgt. Besitzt die Ebene eine
-Transformation $M$, wird die Kamera über $M^{-1}$ das
+Transformation $M$, wird die Kamera über $M^{-1}$ in das
 Objektkoordinatensystem der Ebene transformiert. Mit der Skalierung
 $S(1,1,-1)$ wird die Kamera gespiegelt (vergleiche auch \cite[S. 33]{jvrMast}).
 
@@ -281,11 +291,11 @@ Clippingebenen gemacht. Die Clippingebene verwirft alle Fragmente die sich
 hinter Spiegel befinden und daher nicht gespiegelt werden können.
 
 Spiegel werden häufig in Szenen eingesetzt, die eingerichtete Wohnungen oder
-Räumlich-keiten repräsentieren sollen. Dadurch bekommt der Betrachter einen
-Eindruck davon, wie der Spiegel innerhalb des Raumes wirkt.
+andere Räume innerhalb eines Hauses repräsentieren sollen. Dadurch bekommt der
+Betrachter einen Eindruck davon, wie der Spiegel innerhalb des Raumes wirkt.
 
 In Computerspielen dienen Spiegel oft als Stilmittel, um z.B. die eigene
-Spielfigur betrachten zu können (z.b. First-Person Shooter). Oder um
+Spielfigur betrachten zu können (z.b. in First-Person Shootern). Oder um
 atmosphärische Spannung zu erzeugen, wenn z.B. eine geistähnliche Gestalt im
 Spiegel erscheint.
 
@@ -296,49 +306,51 @@ um den Eindruck von Verschleiß zu erwecken.
 
 \subsection{Portale als Teleporter}
 
-Zudem lassen sich Portale dazu nutzen sich innerhalb der Umgebung zu
+Portale lassen sich vor allem dazu nutzen, sich innerhalb der Umgebung zu
 teleportieren. Das bedeutet, dass man sich von einem Ort zu einem anderen
 Ort in kürzester Zeit bewegt, obwohl diese sehr weit von einander entfernt
 liegen. Dazu werden 2 oder auch nur ein Portal erzeugt und der Ausgang des einen
-Portals stellt den Frustum des anderen Portals dar. Dabei wird eine Kamera
-benutzt die genau den entgegengesetzten Sichtbereich des ersten Portals rendert,
-wobei aber der Sichtbereich auf das zweite Portal gerendert wird. Bei
-Durchtreten der beiden Portale wird die Position des Betrachters dementsprechend
-verändert.
+Portals stellt das Frustum des anderen Portals dar. 
+
+Dabei wird eine Kamera benutzt die genau den entgegengesetzten Sichtbereich des
+ersten Portals rendert, wobei aber der Sichtbereich auf das zweite Portal
+gerendert wird. Bei Durchtreten der beiden Portale wird die Position des
+Betrachters dementsprechend verändert.
 
 Möglich ist es zudem ein Portal als Einbahnstraße zu benutzen, wodurch der
 Betrachter nicht mehr in der Lage ist an die Stelle des durchtretenden Portals
 ohne Probleme zurückzukehren. Dies bedeutet, dass der Betrachter zwar von
 Stelle 1 nach Stelle 2 teleportiert wird, wenn er das Portal durchtritt, aber
 nicht mehr von Stelle 2 an die Stelle 1 gelangen kann, da sich dort kein Portal
-befindet. Man erreicht dies, indem man die Szene an der Stelle durch das
-Portal rendert, an der der Spieler austreten soll. Daher wird an diese
-Stelle mit dem Verhältnis zur Betrachterkamera die Szene gerendert und auf
-der Portaloberfläche gerendert. Diese Herangehensweise lässt sich oft in
-Computerspielen wiederfinden, um z.B. ein Labyrinth zu erzeugen oder den Spieler
-kurz zu desorientieren.
+befindet. 
+
+Man erreicht dies, indem man die Szene an der Stelle durch das Portal rendert,
+an der der Spieler austreten soll. Daher wird an diese Stelle mit dem Verhältnis
+zur Betrachterkamera die Szene gerendert und auf der Portaloberfläche gerendert.
+Diese Herangehensweise lässt sich oft in Computerspielen wiederfinden, um z.B.
+ein Labyrinth zu erzeugen oder den Spieler kurz zu desorientieren.
 
 \subsection{Frustum Culling}
 
 Frustum Culling ist ein Verfahren in der Computergrafik um die Performanz beim
-Rendern von Szenen zu steigern. Bei diesem Verfahren werden unnötige Objekte vom
-Renderprozess ausgeschlossen.
+Rendern von Szenen zu steigern. Bei diesem Verfahren werden für den Betrachter
+unsichtbare Objekte vom Renderprozess ausgeschlossen.
 
 Beim Frustum Culling wird ein Sichtbereich aufgespannt, das so genannte Frustum.
 Es wird überprüft welche Objekte sich innerhalb des Frustums befinden und welche
 nicht. Befindet sich ein Objekt innerhalb, wird es gerendert. Ist dies nicht der
-Fall wird es verworfen.
+Fall, wird es verworfen.
 
 Es werden geometrische Primitive um ein Objekt gezeichnet, um festzustellen, ob
-es sich innerhalb des Frustums befindet. Diese Primitive nennt man Bounding
-Boxes (BB). Da die BB größer ist als das eigentliche Objekt, kann es dazu
+es sich innerhalb des Frustums befindet. Diese Primitive nennt man \emph{Bounding
+Boxes} (BB). Da die BB größer ist als das eigentliche Objekt, kann es dazu
 führen, dass ein Objekt zwar nicht mehr zu sehen ist aber noch mit seiner BB den
 Frustum berührt und daher noch gerendert wird.
 
 \subsection{Occlusion Culling}
 
-Ein weiteres Verfahren um die Performanz zu optimieren ist das Occlusin Culling.
-Ähnlich dem Frustum Culling werden Objekte bestimmt, die nicht in den
+Ein weiteres Verfahren um die Performanz zu optimieren ist das Occlusion
+Culling. Ähnlich dem Frustum Culling werden Objekte bestimmt, die nicht in den
 Renderprozess gehören, da nicht sichtbar.
 
 Anders als beim Frustum Culling werden Objekte nicht außerhalb des Frustums
@@ -361,17 +373,18 @@ dann zu wiederholen, falls man den Bereich der Zelle verlässt.
 \section{Techniken des jVR-Framework}
 % TODO: besser formulieren, jVR wurde nicht von mir ausgewählt, ist Teil der
 % Arbeit
-Wie schon vorangehend erwähnt, spielt der Einsatz des jVR-Frameworks eine
-zentrale Rolle dieser Arbeit. Dies lässt sich zum einen dadurch begründen, dass
-das Framework schon ein grundlegendes Maß an wichtigen Funktionen bietet, die
-nötig sind um 3D-Echtzeit-Anwendungen zu erstellen und zum anderen, da es um
-weitere nützliche Funktionen erweitert werden kann um Performance bzw.
-Produktivität zu steigern.
+Der Einsatz des jVR-Frameworks spielt eine zentrale Rolle dieser Arbeit. In
+diesem Teil der Arbeit werden die wichtigsten Konzepte vorgestellt, die in dem
+Framework verwendet werden.
 
 Das jVR-Framework ist im Rahmen einer Masterarbeit entstanden. Das Framework
 soll den Studenten eine Plattform liefern mit denen sie komplexe
 3D-Programme erzeugen können. Außerdem soll es den Studenten ein besseres
 Verständnis über die Funktionen von 3D-Engines vermitteln.
+
+\subsection{Shaderunterstützung}
+
+%TODO: Shaderunterstützung
 
 \subsection{Szenegraph}
 
@@ -387,13 +400,15 @@ Intervallen manipuliert.
 hierarchischer Beziehung zueinander stehen. Werden mehrere Objekte in einem
 Gruppenknoten zusammengefasst entsteht eine hierarchische Beziehung. Dabei kann
 der ganze Gruppenknoten transformiert werden, mitsamt den enthaltenen Objekten
-oder aber jeder einzelne Objektknoten innerhalb des Gruppenknoten.
+oder aber jeder einzelne Objektknoten innerhalb des Gruppenknotens.
 
 \subsubsection{Szeneknoten}
 
+%TODO: etwas ausführlicher
+
 Das jVR-Framework unterscheidet zwischen mehreren Knotentypen. Es gibt zum einen
 den schon erwähnten \texttt{GroupNode}. Dieser Knoten kann als einziger
-Kinderkoten enthalten. Zusätzlich gibt es noch den \texttt{LightNode}. Dieser
+Kinderknoten enthalten. Zusätzlich gibt es noch den \texttt{LightNode}. Dieser
 repräsentiert die verschiedenen Lichtquellen und wird von 3 Standardlichtquellen
 abgeleitet. Diese 3 Lichtquellen sind \texttt{PointLightNode},
 \texttt{DirectionalLightNode} und \texttt{SpotLightNode}.
@@ -403,14 +418,14 @@ Anders hingegen die \texttt{SpotLightNode}, die Licht nur innerhalb eines
 gerichteten Kegels ausstrahlt. Die letzte Lichtquelle, die
 \texttt{DirectionalLightNode} strahlt Licht parallel in eine bestimmte Richtung.
 
-Die Position des Betrachters wird in der Szene über eine Kamera dargestellt. Der
+Der Betrachter einer Szene wird über eine Kamera dargestellt. Der
 passende Knotentyp ist die \texttt{CameraNode}. Hinzu kommt die
 \texttt{VRCameraNode}, die für den Einsatz in VR-Systemen gedacht ist.
 
-Um geometrische Objekte in einer Szene abzubilden, wird die \texttt{ShapeNode}
-genutzt. Einer \texttt{ShapeNode} lassen sich eine Geometrie und ein passendes
-Material zuordnen. \texttt{ShapeNodes} lassen sich im Szenegraphen
-wiederverwenden. Dazu wird die \texttt{ShapeNode} an verschiedene
+Um geometrische Objekte in einer Szene abbilden zu können, wird die
+\texttt{ShapeNode} genutzt. Einer \texttt{ShapeNode} lassen sich eine Geometrie
+und ein passendes Material zuordnen. \texttt{ShapeNodes} lassen sich im
+Szenegraphen wiederverwenden. Dazu wird die \texttt{ShapeNode} an verschiedene
 \texttt{GroupNodes} gehängt, die unterschiedlich transformiert werden.
 
 Der letzte Knotentyp, über den das jVR-Framework verfügt, ist die
@@ -423,8 +438,8 @@ Das jVR-Framework verfügt über mehrere Möglichkeiten Knoten innerhalb einer
 Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden,
 vergleiche dazu auch \cite{compOL}.
 
-\begin{align}
-\textbf{Translation:} &
+\begin{equation}
+\textbf{Translation:}
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
 \alpha}&\phantom{-\sin \alpha}\\[-2.5ex] 
@@ -432,7 +447,9 @@ vergleiche dazu auch \cite{compOL}.
 0 & 1 & 0 & {t}_{y} \\
 0 & 0 & 1 & {t}_{z} \\
 0 & 0 & 0 & 1
-\end{pmatrix} \\
+\end{pmatrix}
+\end{equation}
+\begin{align}
 \textbf{Skalierung:} &
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
@@ -441,9 +458,7 @@ vergleiche dazu auch \cite{compOL}.
 0 & {s}_{y} & 0 & 0 \\
 0 & 0 & {s}_{z} & 0 \\
 0 & 0 & 0 & 0
-\end{pmatrix}
-\end{align}
-\begin{align}
+\end{pmatrix} \\
 \textbf{Rotation um X-Achse:} &
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
@@ -475,13 +490,13 @@ vergleiche dazu auch \cite{compOL}.
 
 \subsubsection{Traversierung}
 
-Um eine baumförmige Datenstruktur wie den Szenegraph zu durchlaufen wird
+Um eine baumförmige Datenstruktur wie den Szenegraph zu durchlaufen, wird
 Gebrauch von der Traversierung gemacht. Dabei werden die einzelnen Knoten der
 Szene verarbeitet. Traversierung macht vor allem dann Sinn, wenn z.B.
 Szeneknoten mit bestimmten Eigenschaften gesucht werden müssen. 
 
 Zum Rendern muss der Szenegraph ebenfalls durchlaufen werden. Angefangen wird
-dabei beim Wurzelknoten. Jeder Szeneknoten der an der Wurzel hängt wird in
+dabei beim Wurzelknoten. Jeder Szeneknoten der an der Wurzel hängt wird in die 
 Welttransformation überführt. Dies geschieht, indem alle Transformationen vom
 Wurzelknoten bis zum Szeneknoten multipliziert werden.
 
@@ -493,9 +508,9 @@ verwendet werden. Das bietet den Vorteil, den Szenegraph nicht nochmals zu
 traversieren, falls ein Objekt mehrmals gerendert werden muss.
 
 Nachdem die Drawlisten erstellt wurden, werden sie in der Pipeline gespeichert
-und ja nach Bedarf genutzt werden. Das heißt, dass Objekte nach bestimmten
-Materialeigenschaften gefiltert und gerendert werden können, siehe \cite[S.
-47-48]{jvrMast}.
+und können je nach Bedarf genutzt werden. Das heißt, dass Objekte nach
+bestimmten Materialeigenschaften gefiltert und gerendert werden können, siehe
+\cite[S. 47-48]{jvrMast}.
 
 \subsection{Pipelinekonzept}
 
@@ -515,9 +530,9 @@ des Blending-Verfahrens aufaddiert, (vergleiche auch \cite[S. 46]{jvrMast}).
 
 Um beim jVR-Framework mehrere Szenen in einem Bild zusammenlegen zu können, wird
 das \emph{FrameBuffer Object}, kurz FBO verwendet. Mit dem \emph{FrameBuffer
-Object} kann direkt in eine Textur gerendert werden. Das bietet den Vorteil das
-eine Szene erst erzeugt wird und in die Textur geschrieben wird und danach noch
-mit Grafikoperationen verändert wird.
+Object} kann direkt in eine Textur gerendert werden. Das bietet den Vorteil,
+dass eine Szene erst erzeugt wird und in die Textur geschrieben wird. Danach
+kann die erzeugte Textur mit weiteren Grafikoperationen verändert wird.
 
 Eine weitere Möglichkeit ist die Szene in ein \emph{FrameBuffer Object} zu
 rendern und die erzeugte Textur auf eine vorhandene Geometrie zu projezieren.
@@ -533,18 +548,20 @@ Depth-of-Field ist ein solcher Effekt, der mit der Hilfe des
 \emph{FrameBuffer Objects} realisiert wird. Dabei wird ein Z-Buffer-Test von
 der Szene gemacht und in die Textur geschrieben. Die erhaltenen Informationen
 stellen den Abstand der Pixel zum Betrachter dar. Je weiter ein Pixel vom
-Betrachter weg steht, desto stärker wird dieser weichgezeichnet.
+Betrachter weg steht, desto stärker wird dieser weichgezeichnet. Dies erzeugt
+den Eindruck, dass Objekte, die weiter weg vom Betrachter stehen, unschärfer
+erscheinen.
 
 \subsection{Virtual Reality}
 
-Zusätzlich bietet das jVR-Framework noch die Möglichkeit eine Art virtueller
+Das jVR-Framework bietet zusätzlich die Möglichkeit eine Art virtueller
 Realität zu erzeugen. Dabei werden stereoskopische Bilder erzeugt, die durch
 eine entsprechende Brille einen räumlichen Effekt simulieren. Dies wird
 durch die Funktion des Multithreading geschafft.
 
-Multithreading bedeutet mehrere Prozesse bzw. Aufgaben von der Engine
-gleichzeitig durchführen zu lassen. Im Falle vom jVR-Framework lassen sich
-mehrere Szenen gleichzeitig rendern. Es lassen sich zudem mehrere Anzeigegeräte
+Multithreading bedeutet, dass mehrere Prozesse bzw. Grafikoperationen von der
+Engine gleichzeitig durchgeführt werden. Im Falle vom jVR-Framework lassen
+sich mehrere Szenen gleichzeitig rendern. Es lassen sich zudem mehrere Anzeigegeräte
 ansteuern. Dabei werden die zu erzeugenden Teilbilder parallel gerendert.
 
 Um stereoskopische Bilder zu erzeugen werden 2 voneinander versetzte Kameras
@@ -559,7 +576,13 @@ Programm verarbeitet. Je nach Neigung bzw. Drehung des Kopfes wird die
 betrachtete Szene angepasst, was dem Betrachter die Illusion vermittelt sich
 tatsächlich in der Szene zu bewegen.
 
+\subsubsection{Holodeck}
+
+%TODO: Holodeck
+
 \section{Verwendete Standards im jVR-Framework}
+
+%TODO: Standards des jVR-Framework Einleitung
 
 \subsection{OpenGL}
 
@@ -735,8 +758,8 @@ einem Großteil der Verbreitung beigetragen hat.
 \chapter{Entwurf des Portal Cullings}
 
 Alle zuvor diskutierten Themen stellen die Schwerpunkte der Arbeit dar. Die
-Integration einer Portalfunktion in das jVR-Framework ist dabei als
-Hauptschwerpunkt zu sehen.
+Erweiterung des jVR-Framework ist dabei als Schwerpunkt zu sehen. Es sollen
+nicht nur Portale genutzt werden, sondern auch selbst platziert werden können.
 
 Der Entwurf soll noch einmal die wichtigsten Konzepte wiedergeben. Zum einen
 werden die verschiedenen Arten von Portalen beschrieben und erläutert. Hinzu
@@ -752,8 +775,9 @@ der hintere Bereich des Raumes betrachten. All diese Bestandteile eines normalen
 Raumes haben die Gemeinsamkeit, sich als Portal wiedergeben zu lassen.
 
 Jeder dieser Portaltypen erhält seine eigene virtuelle Kamera, die die Szene aus
-verschiedenen Blickwinkeln rendert und auf das jeweilige Portal projeziert wird.
-Damit ist jeder von diesen Typen von der Klasse Portal abgeleitet.
+verschiedenen Blickwinkeln rendert und auf die jeweilige Portalfläche projeziert
+wird. Dass bedeutet, dass jeder von den aufgeführten Portaltypen eine
+gemeinsame Oberklasse besitzen und von dieser abgeleitet werden.
 
 \subsection{Türen}
 
