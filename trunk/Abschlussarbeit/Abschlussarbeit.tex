@@ -6,6 +6,7 @@
 \usepackage[ngerman]{babel}
 \usepackage[colorlinks=false,pdfborder={0 0 0}]{hyperref}
 \usepackage{cite}
+\usepackage{booktabs}
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{mathtools}
@@ -385,6 +386,29 @@ Verständnis über die Funktionen von 3D-Engines vermitteln.
 \subsection{Shaderunterstützung}
 
 %TODO: Shaderunterstützung
+Ein Grund für die Entwicklung des jVR-Frameworks war es den Studierenden der BHT
+Berlin eine Umgebung zu liefern, mit der sich problemlos Shaderbasierte
+Anwendungen entwickeln lassen. Shader werden im Abschnitt \emph{GLSL} näher
+betrachtet. Die zuvor verfügbaren Engines boten zwar eine Unterstützung für
+Shader an, waren aber nicht in Java entwickelt.
+
+Da der Schwerpunkt im Studium an der BHT auf der Programmiersprache Java liegt,
+sollte die Engine mittels Java programmiert werden können. Somit wurde das
+jVR-Framework mit dem Gedanken entwickelt, Shader schreiben und verwenden zu
+können.
+
+Shader können im jVR-Framework aus 3 verschiedenen Typen bestehen. Der
+Fragment-Shader, der Vertex-Shader und der Geometry-Shader. Nötig für eine
+funktionierende Shaderanwendung sind aber nur der Fragement- und Vertex-Shader.
+
+Im jVR-Framework besitzt jedes geometrische Objekt eine \texttt{ShapeNode}.
+Dieser \texttt{ShapeNode} kann ein Material zugeordnet werden. Eines dieser
+Materialien ist das \texttt{ShaderMaterial}. Einem \texttt{ShaderMaterial}
+können mehrere Shaderkontexte zugeordnet werden.
+
+Die Shaderkontexte beinhaltet ein Shaderprogramm, zum Beispiel einen
+Fragement- sowie einen Vertex-Shader. Die Shaderprogramme können mittels
+Uniformvariablen angesprochen und in ihrem Verhalten verändert werden.
 
 \subsection{Szenegraph}
 
@@ -404,33 +428,49 @@ oder aber jeder einzelne Objektknoten innerhalb des Gruppenknotens.
 
 \subsubsection{Szeneknoten}
 
-%TODO: etwas ausführlicher
+Das jVR-Framework unterscheidet zwischen mehreren Knotentypen. Die
+Gemeinsamkeit aller Knoten ist, dass sie von der abstrakten Oberklasse
+\texttt{SceneNode} abgeleitet werden. 
 
-Das jVR-Framework unterscheidet zwischen mehreren Knotentypen. Es gibt zum einen
-den schon erwähnten \texttt{GroupNode}. Dieser Knoten kann als einziger
-Kinderknoten enthalten. Zusätzlich gibt es noch den \texttt{LightNode}. Dieser
-repräsentiert die verschiedenen Lichtquellen und wird von 3 Standardlichtquellen
-abgeleitet. Diese 3 Lichtquellen sind \texttt{PointLightNode},
-\texttt{DirectionalLightNode} und \texttt{SpotLightNode}.
+Es gibt zum einen den schon erwähnten \texttt{GroupNode}. Dieser Knoten
+kann als einziger Kinderknoten enthalten. Das bedeutet, der \texttt{GroupNode}
+kann zum einen Blattknoten, zum Beispiel ein \texttt{ShapeNode} oder aber
+einen weiteren \texttt{GroupNode} enthalten. Dadurch entsteht eine hierarchische
+Ordnung zwischen den Knoten
 
-Die \texttt{PointLightNode} strahlt Licht in alle Richtungen gleichzeitig.
-Anders hingegen die \texttt{SpotLightNode}, die Licht nur innerhalb eines
-gerichteten Kegels ausstrahlt. Die letzte Lichtquelle, die
-\texttt{DirectionalLightNode} strahlt Licht parallel in eine bestimmte Richtung.
+Zusätzlich gibt es den \texttt{LightNode}. Dieser repräsentiert die
+verschiedenen Lichtquellen und wird von 3 Standardlichtquellen abgeleitet. Diese
+3 Standardlichtquellen sind die \texttt{PointLightNode},
+die \texttt{DirectionalLightNode} und die \texttt{SpotLightNode}.
 
-Der Betrachter einer Szene wird über eine Kamera dargestellt. Der
-passende Knotentyp ist die \texttt{CameraNode}. Hinzu kommt die
-\texttt{VRCameraNode}, die für den Einsatz in VR-Systemen gedacht ist.
+Die \texttt{PointLightNode} strahlt Licht in alle Richtungen gleichzeitig. Sie
+eignet sich vor allem dazu geschlossene Räume auszuleuchten. Anders hingegen die
+\texttt{SpotLightNode}, die Licht nur innerhalb eines gerichteten Kegels
+ausstrahlt. Mit ihr lassen sich zum Beispiel Taschenlampen oder
+Straßenlaternen simulieren. Die letzte Lichtquelle stellt die
+\texttt{DirectionalLightNode} dar. Sie strahlt Licht parallel in eine bestimmte
+Richtung. Mit dieser Lichtquelle lässt sich gut das Sonnenlicht abbilden.
+
+Damit eine Szene betrachtet und auf den Bildschirm projeziert werden kann wird
+eine Kamera benötigt. Der passende Knotentyp ist die \texttt{CameraNode}. Hinzu
+kommt die \texttt{VRCameraNode}, die für den Einsatz in VR-Systemen gedacht ist.
 
 Um geometrische Objekte in einer Szene abbilden zu können, wird die
 \texttt{ShapeNode} genutzt. Einer \texttt{ShapeNode} lassen sich eine Geometrie
 und ein passendes Material zuordnen. \texttt{ShapeNodes} lassen sich im
 Szenegraphen wiederverwenden. Dazu wird die \texttt{ShapeNode} an verschiedene
-\texttt{GroupNodes} gehängt, die unterschiedlich transformiert werden.
+\texttt{GroupNodes} gehängt, die unterschiedlich transformiert werden. 
+
+Als Beispiel sei ein Tisch mit 4 Beinen. Man benötigt nur die Tischplatte und
+ein Tischbein in Form einer \texttt{ShapeNode}. Das Tischbein wird in 4
+verschiedene \texttt{GroupNodes} gepackt und mittels Transformation unter der
+Tischplatte angeordnet.
 
 Der letzte Knotentyp, über den das jVR-Framework verfügt, ist die
-\texttt{ClipPlaneNode}. Sie dient dazu, eine Szene in 2 Halbräume zu unterteilen
-und einen der beiden Räume auszublenden.
+\texttt{ClipPlaneNode}. Mit ihr lassen sich Vertices komplett ausblenden. Wenn
+eine \texttt{ClipPlaneNode} auf die Szene gepackt wird, wird die Szene in 2
+Halbräume unterteilt. Die Vertices die sich auf der Rückseite der Ebene befinden
+werden ausgeblendet.
 
 \subsubsection{Transformationen}
 
@@ -438,8 +478,8 @@ Das jVR-Framework verfügt über mehrere Möglichkeiten Knoten innerhalb einer
 Szene zu transformieren. Es werden 5 Arten der Transformation unterschieden,
 vergleiche dazu auch \cite{compOL}.
 
-\begin{equation}
-\textbf{Translation:}
+\begin{align}
+\textbf{Translation:} &
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
 \alpha}&\phantom{-\sin \alpha}\\[-2.5ex] 
@@ -447,9 +487,7 @@ vergleiche dazu auch \cite{compOL}.
 0 & 1 & 0 & {t}_{y} \\
 0 & 0 & 1 & {t}_{z} \\
 0 & 0 & 0 & 1
-\end{pmatrix}
-\end{equation}
-\begin{align}
+\end{pmatrix} \\
 \textbf{Skalierung:} &
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
@@ -458,7 +496,9 @@ vergleiche dazu auch \cite{compOL}.
 0 & {s}_{y} & 0 & 0 \\
 0 & 0 & {s}_{z} & 0 \\
 0 & 0 & 0 & 0
-\end{pmatrix} \\
+\end{pmatrix}
+\end{align}
+\begin{align}
 \textbf{Rotation um X-Achse:} &
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
@@ -578,11 +618,55 @@ tatsächlich in der Szene zu bewegen.
 
 \subsubsection{Holodeck}
 
-%TODO: Holodeck
+Das Holodeck ist eine Einrichtung der BHT, in der eine virtuelle Realität
+simuliert werden kann. Es ist die bevorzugte Plattform für das jVR-Framework und
+mit deren Hilfe entwickelte Anwendungen. Das jVR-Framework wurde mit dem
+Gedanken entwickelt, die Technologien, die im Holodeck angeboten werden effektiv
+nutzen zu können.
+
+Das Holodeck besitzt eine große Projektionsleinwand. Die Leinwand wird von 2
+Beamern mittels Rückprojektion bestrahlt. Das bedeutet, die beiden Beamer
+strahlen zunächste das Bild gegen eine große Spiegelfläche und diese projeziert
+das Bild letztendlich gegen die Leinwand. Dieses Verfahren wird auch zirkulare
+Polarisation genannt.
+
+%TODO: Bild von Projektion
+
+Der Grund für den Einsatz für 2 Beamern ist es stereoskopische Bilder zu
+erzeugen. Diese können mit einer Shutterbrille betrachtet werden. An der
+Shutterbrille sind mehrere Trackingpunkte befestigt.
+
+Zum Tracking wird im Holodeck das Qualisys-Motion Capture System verwendet. Es
+kann mittels einer Kamera die Trackingpunkte orten. Die Bewegungen der Punkte
+werden analysiert und auf die Szene übertragen.
+
+Um sich in der Szene zu bewegen, wird die Wii-Mote zusammen mit dem Nunchuk von
+Nintendo benutzt. An ihr sind ebenfalls Trackingballs befestigt. In Tabelle
+\ref{tab:spec} sind nochmal alle technischen Daten des Holodecks im Überblick.
+
+\begin{table}
+\centering
+\begin{tabular}{ll}
+\toprule
+Projektoren: & 2 x DELL 7609WU (DLP) @ 1920 x 1200 \\
+Leinwand: & Stewart Screen Wall (3,73m x 2,33m) \\
+Headtracking: & Qualisys-Motion Capture System @ 1280 x 1024 \\
+Input: & Nintendo Wii-Mote und Nintendo Nunchuk \\
+CPU: & Intel QX9650 @ 3,0 GHz \\
+RAM: & 4GB DDR3 \\
+GPU: & 2 x NVIDIA Geforce 8800GT \\
+\bottomrule
+\end{tabular}
+\caption{Technische Daten des Holodecks}
+\label{tab:spec}
+\end{table}
 
 \section{Verwendete Standards im jVR-Framework}
 
-%TODO: Standards des jVR-Framework Einleitung
+Das jVR-Framework setzt sich aus mehreren externen Bibliotheken und Standards
+zusammen. In diesem Abschnitt werden die einzelnen Standards betrachtet, die in
+jVR Anwendung finden. Zudem wird ein Überblick gegeben, in welcher Form die
+Standards ins jVR-Framwork integriert wurden.
 
 \subsection{OpenGL}
 
@@ -789,7 +873,7 @@ wird, wird zudem ein virtuelle Kamera mitinstanziert um die Szene durch diese
 gerendert werden kann.
 
 Türen eignen sich auch um Culling durchzuführen. Wenn der Betrachter durch die
-sieht, wird das Frustum auf den sichtbaren Umriss der Tür reduziert. Alle
+Tür sieht, wird das Frustum auf den sichtbaren Umriss der Tür reduziert. Alle
 Gegenstände, dessen Bounding Box innerhalb des View Frustums liegen werden
 mitgerendert.
 
