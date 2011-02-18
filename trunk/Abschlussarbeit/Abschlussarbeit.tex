@@ -276,21 +276,6 @@ gespiegelten Position des Betrachters eine Kamera. Diese rendert dann die Szene
 durch den Spiegel. Danach wird die gerenderte Szene aus Sicht der Spiegelkamera
 auf den Spiegel projeziert.
 
-Dies wird dadurch erreicht, indem man die Kamera $C$ in das
-Koordinatensystem der Spiegelebene überträgt. Besitzt die Ebene eine
-Transformation $M$, wird die Kamera über $M^{-1}$ in das
-Objektkoordinatensystem der Ebene transformiert. Mit der Skalierung
-$S(1,1,-1)$ wird die Kamera gespiegelt (vergleiche auch \cite[S. 33]{jvrMast}).
-
-\begin{equation}
-{C}_{mirror} := M * S * M^{-1} * C
-\end{equation}
-
-Bei diesem Verfahren werden aber auch Geometrien dargestellt, die eigentlich
-hinter dem Spiegel liegen. Um dies vorzubeugen wird der Gebrauch von
-Clippingebenen gemacht. Die Clippingebene verwirft alle Fragmente die sich
-hinter Spiegel befinden und daher nicht gespiegelt werden können.
-
 Spiegel werden häufig in Szenen eingesetzt, die eingerichtete Wohnungen oder
 andere Räume innerhalb eines Hauses repräsentieren sollen. Dadurch bekommt der
 Betrachter einen Eindruck davon, wie der Spiegel innerhalb des Raumes wirkt.
@@ -841,57 +826,90 @@ einem Großteil der Verbreitung beigetragen hat.
 
 \chapter{Entwurf des Portal Cullings}
 
-Alle zuvor diskutierten Themen stellen die Schwerpunkte der Arbeit dar. Die
-Erweiterung des jVR-Framework ist dabei als Schwerpunkt zu sehen. Es sollen
-nicht nur Portale genutzt werden, sondern auch selbst platziert werden können.
+Der Schwerpunkt der Arbeit stellt die Erweiterung des jVR-Frameworks dar. Die
+Erweiterung soll es möglich machen, Portale innerhalb einer Szene verwenden zu
+können. Die Portale sollen ähnlich wie andere Szeneknoten erschaffen und
+transformiert werden können.
 
-Der Entwurf soll noch einmal die wichtigsten Konzepte wiedergeben. Zum einen
-werden die verschiedenen Arten von Portalen beschrieben und erläutert. Hinzu
-kommen die Verwendungen von virtuellen Kameras und deren Rolle beim erstellen
-von Portalen.
+Der Entwurf soll noch einmal die wichtigsten Konzepte wiedergeben, die für das
+Erschaffen von Portalen notwendig sind. Es werden die verschiedenen
+Arten von Portalen und deren besonderen Eigenschaften beschrieben und
+erläutert. Weiterhin wird die Verwendung von virtuellen Kameras betrachtet und
+welche Rolle sie beim erstellen von Portalen spielen.
 
 \section{Portaltypen}
 
-In Szenen gibt es mehrere Möglichkeiten in andere Räume zu schauen. Zum einen
-kann der Betrachter direkt aus einem Fenster gucken oder sieht direkt durch die
-offene Tür in den nächsten Raum. Zudem lässt sich durch den Blick in den Spiegel
-der hintere Bereich des Raumes betrachten. All diese Bestandteile eines normalen
-Raumes haben die Gemeinsamkeit, sich als Portal wiedergeben zu lassen.
+Es gibt verschiedene Arten von Portalen, die unterschieden werden müssen. Zum
+einen gibt es Portale die betreten bzw. durchtreten werden können. Andere
+Portale hingegen lassen den Betrachter die Szene aus einem anderen Blickwinkel
+betrachten. Daher gibt es 3 besondere Arten von Portalen, die bei der
+Implementierung berücksichtigt werden.
 
-Jeder dieser Portaltypen erhält seine eigene virtuelle Kamera, die die Szene aus
-verschiedenen Blickwinkeln rendert und auf die jeweilige Portalfläche projeziert
-wird. Dass bedeutet, dass jeder von den aufgeführten Portaltypen eine
-gemeinsame Oberklasse besitzen und von dieser abgeleitet werden.
+Die 3 Typen in denen sich die Portale unterteilen sind zum einen die Tür. Sie
+kann durchtreten werden. Über sie lassen sich ohne Probleme andere Räume
+betreten. Der zweite Typ von Portalen ist der Spiegel. Er gibt die Szene
+gespiegelt wieder, wodurch der Betrachter in der Lage ist die Umgebung hinter
+ihm zu sehen. 
 
-\subsection{Türen}
+Der letzte Portaltyp, der behandelt wird ist der Teleporter. Durch
+kann man die Szene betrachten. Dabei sieht man den Ausgang des Teleporters, der
+an einer völlig anderen Stelle in der Szene platziert sein kann. Wenn der
+Teleporter betreten wird, tritt man aus dessen Ausgang aus und befindet sich an
+der Stelle, die zuvor durch den Teleporter gesehen wurde.
 
-Türen bieten die Besonderheit durchtreten werden zu können. Somit bieten sich
-Türen als einziger Portaltyp an mehrere Räume miteinander zu verbinden. Türen
-werden entweder direkt in einer Szene platziert und werden mit einem sich von
-der Umgebung abhebenden Umriss versehen. Wenn eine Tür in die Szene platziert
-wird, wird zudem ein virtuelle Kamera mitinstanziert um die Szene durch diese
-gerendert werden kann.
-
-Türen eignen sich auch um Culling durchzuführen. Wenn der Betrachter durch die
-Tür sieht, wird das Frustum auf den sichtbaren Umriss der Tür reduziert. Alle
-Gegenstände, dessen Bounding Box innerhalb des View Frustums liegen werden
-mitgerendert.
-
-Da die Tür als Trenner der Räume (auch als Zellen bezeichnet) dient, kann
-festgelegt werden welche 2 Räume miteinander verbunden sind. Dabei kann
-ermittelt werden, welche Räume überhaupt nötig zum Rendern sind.
+Jeder dieser Portaltypen kann von der Höhe und der Breite her verändert werden.
+Weiterhin besitzen der Teleporter und der Spiegel eine virtuelle Kamera. Der
+Nutzen der virtuellen Kamera wird im Abschnitt \emph{Virtuelle Kameras} näher
+erläutert. Als Grundlage der vorgestellten Portaltypen steht eine
+Oberklasse, von der alle Portale abgeleitet werden, die Klasse \texttt{Portal}. 
 
 \subsection{Spiegel}
 
-Ein besonderer Portaltyp ist der Spiegel. Er kann genau wie das Fenster nicht
-durchtreten werden. Außerdem dient er nicht dazu Räum miteinander zu verbinden.
-Der Spiegel bietet die Funktion den Sichtbereich des jeweiligen Betrachters aus
-Sicht des Spiegel zu reflektieren und zu projezieren. 
+Der Spiegel ist ein Portal, welches nicht durchschritten werden kann. Er dient
+vielmehr dazu die Umgebung auf seiner Oberfläche in gespiegelter Form zu
+projezieren. Um den Spiegel als solchen darstellen zu können wird zunächst eine
+Ebene benötigt. Auf dieser Ebene wird die gespiegelte Szene abgebildet.
 
-Dabei dient die Spiegeloberfläche als Reflexionsebene an der der Standpunkt des
-Betrachters gespiegelt wird und in Form einer virtuellen Kamera wiedergegeben
-wird. Diese virtuelle Kamera rendert mit negiertem Seitenverhältnis die Szene
-aus Sicht der Spiegelfläche und negativer Skalierung.
+Um die Szene richtig auf der Oberfläche darzustellen, muss sie zuvor in ein
+\emph{FrameBuffer Object} gerendert werden. Dem Spiegel wird ein virtuelle
+Kamera zugeordnet. Diese wird von der Pipeline aufgerufen und rendert
+dementsprechend die Szene in das \emph{FBO}.
+
+Die Szene muss vor dem Renderprozess von der Kamera aus der richtigen
+Perspektive betrachtet werden. Dies wird dadurch erreicht, indem man die
+Transformation der Betrachterkamera $C$ in das Koordinatensystem der
+Spiegelebene überträgt. Besitzt die Ebene eine Transformation $M$, wird die
+Kameratransformation über die inverse Transformation $M^{-1}$ in das
+Objektkoordinatensystem der Ebene übertragen.
+
+Um die Szene auch wirklich zu spiegeln, erhält die virtuelle Kamera zunächst ein
+negatives Bildseitenverhältnis, z.B. -4:3. Zusätzlich wird die Kamera mit einer
+negativen Skalierung transformiert. Die Transformation $S(1,1,-1)$ stellt die
+Skalierung dar, mit der die Kamera transformiert wird (vergleiche auch \cite[S.
+33]{jvrMast}).
+
+Die Gleichung \ref{eq:mirTrans} verdeutlicht nocheinmal die Transformationen,
+die auf die virtuelle Kamera angewendet werden müssen, um diese als
+Spiegelkamera nutzen zu können.
+
+\begin{equation}
+{C}_{mirror} := M * S * M^{-1} * C
+\label{eq:mirTrans}
+\end{equation}
+
+Da in diesem Verfahren eine virtuelle Kamera benutzt wird, bewegt sich diese je
+nach Position des Betrachters. Dadurch kann es passieren, dass Geometrien, die
+eigentlich hinter dem Spiegel stehen, mitgerendert werden. Um dies zu verhindern
+wird der Gebrauch von Clippingebenen gemacht. Man positioniert eine
+Clippingebene an der Stelle des Spiegels und verwirft dabei alle Fragmente die
+sich dahinter befinden und daher nicht gespiegelt werden können.
+
+Spiegelnde Ebenen finden zum Beispiel dann eine Verwendung, wenn glatte
+Oberflächen simuliert werden sollen. Ein Beispiel für eine spiegelnde Oberfläche
+ist das Wasser. Wasser spiegelt nicht komplett, sondern ist zum Teil noch
+durchsichtig. Der Effekt der Transparenz kann über Modifizieren des Shaders
+erreicht werden. Die erzeugte Textur, die beim Rendern entsteht wird dann
+durchsichtig gemacht.
 
 \subsection{Teleporter}
 
@@ -912,6 +930,24 @@ festgelegten Ausgangs transformiert. Zudem werden die transformierten
 \texttt{SceneNodes} nicht in ihrer Orientierung oder Bewegungsrichtung
 beeinflusst. Durchtritt ein Betrachter den \texttt{Teleporter} blickt immernoch
 in die gleiche Richtung, die ihm die Ausgangsprojektion suggeriert hat.
+
+\subsection{Türen}
+
+Türen bieten die Besonderheit durchtreten werden zu können. Somit bieten sich
+Türen als einziger Portaltyp an mehrere Räume miteinander zu verbinden. Türen
+werden entweder direkt in einer Szene platziert und werden mit einem sich von
+der Umgebung abhebenden Umriss versehen. Wenn eine Tür in die Szene platziert
+wird, wird zudem ein virtuelle Kamera mitinstanziert um die Szene durch diese
+gerendert werden kann.
+
+Türen eignen sich auch um Culling durchzuführen. Wenn der Betrachter durch die
+Tür sieht, wird das Frustum auf den sichtbaren Umriss der Tür reduziert. Alle
+Gegenstände, dessen Bounding Box innerhalb des View Frustums liegen werden
+mitgerendert.
+
+Da die Tür als Trenner der Räume (auch als Zellen bezeichnet) dient, kann
+festgelegt werden welche 2 Räume miteinander verbunden sind. Dabei kann
+ermittelt werden, welche Räume überhaupt nötig zum Rendern sind.
 
 \section{Virtuelle Kameras}
 
