@@ -1,6 +1,6 @@
-\documentclass[11pt]{scrreprt}
+\documentclass[12pt]{scrreprt}
 \parindent 0pt
-\parskip 11pt
+\parskip 12pt
 
 \usepackage[latin1]{inputenc}
 \usepackage[ngerman]{babel}
@@ -57,7 +57,7 @@ somit effektiver programmiert werden kann.
 
 Grafik-Engines unterstützen von vornherein wichtige Konzepte, die bei der
 heutigen Spieleentwicklung angewendet werden. Eines dieser Konzepte ist die
-Shaderunterstützung, mit der sich zum Beispiel Oberflächeneigenschaften
+Shaderunterstütz-ung, mit der sich zum Beispiel Oberflächeneigenschaften
 simulieren oder auch optische Effekte, wie Wasserspiegelungen erzeugen lassen. 
 Moderne Engines bieten zudem Komponenten wie Kameras, Szenegraphen und
 Multithreaded-Rendering. Die verbreitetsten Engines sind die Unreal Engine von
@@ -913,90 +913,151 @@ durchsichtig gemacht.
 
 \subsection{Teleporter}
 
-Der Teleporter ist eine Abwandlung der Tür. Im Gegensatz zur Tür, verbindet der
-Teleporter keine Räume miteinander. Der Teleporter dient als eine Art
-Schnellreisesystem. Er verbindet 2 Türen miteinander, die im Raum sehr weit weg
-voneinander entfernt liegen. Sie werden über den \texttt{PortalConnector}
-verbunden.
+Ein weiterer Portaltyp, der umgesetzt werden soll, ist der Teleporter. Der
+Teleporter ist ein Portal welches betreten bzw. durchtreten werden kann. Das
+bedeutet, schreitet der Betrachter durch den Teleporter, kommt an einer anderen
+Stelle der Szene wieder heraus.
 
-Wie der Spiegel erhält jeder Teleporter eine virtuelle Kamera. Diese Kamera
-werden relativ zur Position der Kamera des Betrachters zum Teleporter auf der
-Gegenseite ausgerichtet. Je nach Bewegung des Betrachters bewegt sich auch die
-virtuelle Kamera.
+Jeder Teleporter benötigt einen Ausgang um genutzt werden zu können. Der Ausgang
+wird durch einen zweiten Teleporter repräsentiert. Dieser kann beliebig in der
+Szene platziert sein. Um ihn eindeutig dem Eingangsteleporter zuzuordnen, wird
+die virtuelle Kamera des einen Teleporters dem anderen Teleporter übergeben und
+umgekehrt.
 
-Teleporter prüfen, ob eine \texttt{SceneNode} nahe genug steht um teleportiert
-zu werden. Ist dies der Fall, wird die \texttt{SceneNode} an die Position des
-festgelegten Ausgangs transformiert. Zudem werden die transformierten
-\texttt{SceneNodes} nicht in ihrer Orientierung oder Bewegungsrichtung
-beeinflusst. Durchtritt ein Betrachter den \texttt{Teleporter} blickt immernoch
-in die gleiche Richtung, die ihm die Ausgangsprojektion suggeriert hat.
+Wenn der Teleporter einen Ausgang zugeordnet bekommen hat, kann durch den
+Teleporter die Szene betrachtet werden. Man sieht die Szene durch den Teleport
+aus der Perspektive des Ausgangs. Das heißt, würde man sich direkt hinter den
+Ausgang des Teleporters stellen und sich in dessen Richtung drehen, sieht man
+die Szene so, wie sie im Teleporter zu sehen sein würde. 
+
+Die virtuelle Kamera des Teleporters wird an die Stelle des zugeordneten
+Ausgangs platziert. Diese Kamera wird relativ zur Position der Kamera des
+Betrachters zum Teleporter auf der Gegenseite ausgerichtet. Je nach Bewegung des
+Betrachters bewegt sich auch die virtuelle Kamera.
+
+Die interessanteste Eigenschaft eines Teleporters ist die Fähigkeit der
+Teleportation. Ein Teleporter muss prüfen, ob sich eine \texttt{SceneNode} in
+einem gewissen Abstand befindet. Ist der Abstand gering genug kann die
+\texttt{SceneNode} teleportiert werden. Beim Teleportieren wird die
+\texttt{SceneNode} an die Position des festgelegten Ausgangs transformiert.
+
+Um den Abstand des Betrachters bzw. eines Objekts in Form einer
+\texttt{SceneNode} zu bestimmen, gibt es 2 Möglichkeiten. Die erste Möglichkeit
+besteht darin, den Mittelpunkt eines Objekts bzw. der Kamera zu nehmen und dann
+den Abstand zur Ebene des Teleporters auszurechnen. Dazu nimmt man die
+Hessesche Normalform, siehe Gleichung \ref{eq:popldist}.
+
+\begin{equation}
+\textbf{HNF: }
+\frac{{n}_{1}{x}_{1} + {n}_{2}{x}_{2} + {n}_{3}{x}_{3}}{\sqrt{{n}_{1}^2 +
+{n}_{2}^2 + {n}_{3}^2}} = d
+\label{eq:popldist}
+\end{equation}
+
+Eine andere Möglichkeit den Abstand zu bestimmen ist über die \emph{Bounding
+Box} des Portals. Dabei wird der Mittelpunkt des Objekts bzw. der Kamera ins
+Objektkoordinatensystem des Portals übertragen. Danach wird getestet, ob sich
+der Punkt innerhalb der BB befindet. Da die Ebene flach ist, sind der maximale
+und minimale Z-Wert der BB 0. Es reicht den maximalen Wert zu erhöhen um eine
+3dimensionale BB zu erzeugen. Sobald der Mittelpunkt innerhalb liegt, wird das
+Objekt bzw. die Kamera teleportiert.
 
 \subsection{Türen}
 
-Türen bieten die Besonderheit durchtreten werden zu können. Somit bieten sich
-Türen als einziger Portaltyp an mehrere Räume miteinander zu verbinden. Türen
-werden entweder direkt in einer Szene platziert und werden mit einem sich von
-der Umgebung abhebenden Umriss versehen. Wenn eine Tür in die Szene platziert
-wird, wird zudem ein virtuelle Kamera mitinstanziert um die Szene durch diese
-gerendert werden kann.
+Der letzte umzusetzende Portaltyp ist die Tür. Sie kann ebenfalls durchtreten
+werden. Eine Tür ist ein Durchgang der mehrere Räume miteinander verbindet.
+Diese Räume können beliebig angeordnet sein. Die Größe der Tür lässt sich
+bestimmen, wodurch die Tür entweder ein kleines Loch sein kann oder aber einen
+ganzen Durchgang schafft.
 
-Türen eignen sich auch um Culling durchzuführen. Wenn der Betrachter durch die
-Tür sieht, wird das Frustum auf den sichtbaren Umriss der Tür reduziert. Alle
-Gegenstände, dessen Bounding Box innerhalb des View Frustums liegen werden
-mitgerendert.
+Türen eignen sich besonders dafür, um Portal Culling durchzuführen. Wie jedes
+Portal besitzt auch die Tür eine \emph{Bounding Box}. Die \emph{Bounding Box}
+umfasst die gesamte Tür. Anhand der BB der Tür kann bestimmt werden, welche
+Bereiche im Raum für den Betrachter sichtbar sind und welche nicht.
 
-Da die Tür als Trenner der Räume (auch als Zellen bezeichnet) dient, kann
-festgelegt werden welche 2 Räume miteinander verbunden sind. Dabei kann
-ermittelt werden, welche Räume überhaupt nötig zum Rendern sind.
+Dazu wird von dem Betrachter ausgehend ein Frustum aufgespannt. Wenn das Frustum
+auf die \emph{Bounding Box} der Tür trifft, wird die Schnittmenge aus dem
+Frustum des Betrachters und aus der BB der Tür gebildet. Daraus wird ein neues
+Frustum gebildet. Dieses Frustum prüft im benachbarten Raum, welche Objekte bzw.
+dessen \emph{Bounding Boxes} sich innerhalb befinden. Alle Objekte außerhalb des
+Frustums werden nicht gerendert.
+
+Weiterhin können ganze Räume ausgeschlossen werden vom Renderprozess. Dies
+geschieht wenn der Betrachter gerade nicht auf eine Tür blickt. Dabei befindet
+sich die \emph{Bounding Box} der Tür nicht im \emph{View Frustum} des
+Betrachters. Ist dies der Fall wird die Tür, genau wie die benachbarten Räume,
+nicht vom Renderverfahren berücksichtigt.
+
+Eine Tür wird innerhalb einer Wand platziert. Man wählt dafür eine Wand aus, in
+der die Tür platziert werden soll. Danach wird die Wand neu zusammengesetzt. Das
+bedeutet, es werden einzelne Wandstücke erzeugt, die sich genau um die Tür herum
+anordnen. Dadurch entsteht ein Durchgang zu einem anderen Raum. 
+
+Da Türen 2 Räume (auch als Zellen bezeichnet) miteinander verbinden können, kann
+festgelegt werden welche 2 Räume miteinander verbunden sind. Zum einen wird
+der Tür der aktuelle Raum übergeben, den sie mit einem neuen Raum verbinden
+soll. Dazu wird der daraufhin erzeugte Raum als \emph{Nachbar} ebenfalls
+der Tür übergeben. Dadurch kann ermittelt werden, welche Räume über eine
+bestimmte Tür verbunden sind.
+
+Mit verschiedenen Arten von Türen lassen sich interessante Szenen bauen, die
+innerhalb eines riesigen Gebäudes spielen. Dabei muss auf die größe des Gebäudes
+keine Rücksicht genommen werden, da die nicht sichtbaren Teile des Gebäudes
+nicht gerendert werden, und somit keine Rechenleistung beanspruchen.
 
 \section{Virtuelle Kameras}
 
 Die virtuellen Kameras sind ein wichtiger Bestandteil der Portale. Für jede
-virtuelle Kamera wird ein \texttt{FrameBufferObjekt} angelegt. Das
+virtuelle Kamera wird ein \texttt{FrameBufferObject} angelegt. Das
 \texttt{FrameBufferObject} ist die Repräsentation der Szene aus Sicht der
 virtuellen Kamera. Wird die Szene aus Sicht der Betrachterkamera gerendert,
 werden alle erzeugten \texttt{FrameBufferObjects} auf das jeweilige Portal
 projeziert.
+
+Um das \texttt{FrameBuffer Object} nutzen zu können muss über die Pipeline erst
+eines erzeugt werden. Ist dies geschehen, wird auf die virtuelle Kamera
+geschaltet, um die Szene darüber zu rendern. Dann der Pipeline wiederum
+mitgeteilt, die gerenderte Szene in das FBO zu rendern und nicht auf den
+Bildschirm zu projezieren. Im weiteren Schritt bekommt der Shader, der ein Teil
+des Materials der Portale ist, das FBO als Textur übergeben und bildet diese
+dann auf dem jeweiligen Portal ab.
 
 Es gibt 2 Portaltypen, die eine virtuelle Kamera besitzen. Zum einen
 \texttt{Teleporter} und zum anderen \texttt{Mirror}. Diese beiden Portaltypen
 benötigen die virtuelle Kamera um die Szene aus einer gewissen Position zu
 rendern im Anschluss auf dem jeweiligen Typen anzuzeigen.
 
-Beim \texttt{Teleporter} rendert die virtuelle Kamera die Szene aus Sicht des
-zugeordneten Ausgangs. Dabei wird die Kamera an die Stelle des Ausgangs
-transformiert und bekommt zudem die Kameratransformation des Betrachters mit
-übergeben. Dies lässt den Betrachter durch den \texttt{Teleporter} blicken und
-bei Änderung des Blickwinkels wird auch der Blickwinkel der virtuellen Kamera
-mitverändert.
-
-Ähnlich funktioniert die virtuelle Kamera bei \texttt{Mirror}. Die virtuelle
-Kamera ist an der Stelle des Spiegels transformiert. Ebenfalls wird die
-Transformation der Betrachterkamera berücksichtigt. Bewegt sich die
-Betrachterkamera beispielsweise nach rechts, bewegt sich die virtuelle Kamera
-aus Sicht des Betrachters nach links. Da das Seitenverhältnis der virtuellen
-Kamera negiert ist, wird Eindruck eines Spiegels erzeugt.
-
 \section{Portallisten}
 
 Um alle Portale innerhalb einer Szene rendern zu können, kommen die Portallisten
-zum Einsatz. Wenn ein Portal erzeugt wird, wird es gleich darauf der
-\texttt{PortalList} hinzugefügt. Sie ruft für jedes Portal die jeweilige
-Render-Funktion auf erzeugt dementsprechend das aktuelle Portal.
+zum Einsatz. Sie sammeln die Portale innerhalb einer Liste. Wenn ein Portal
+erzeugt wird, wird es gleich daraufhin der \texttt{PortalList} hinzugefügt. Sie
+ruft für jedes Portal die jeweilige Render-Funktion auf erzeugt dementsprechend
+das aktuelle Portal.
 
-Zusätzlich verwalten die Portallisten die hinzugefügten Portale und
-aktualisieren die Transformationen der virtuellen Kameras. Dabei wird der
-Portalliste die Kameratransformation der Betrachterkamera übergeben und
-weiterverarbeitet. Dies bietet den Vorteil nicht jedes Portal einzeln verwalten
-zu müssen.
+Die Portallisten verwalten die hinzugefügten Portale. Sie rufen für jeden neuen
+Frame die Methode auf um die Transformation der virtuellen Kamera zu
+aktualisieren. Dabei wird der Portalliste die Kameratransformation der
+Betrachterkamera übergeben und weiterverarbeitet. Dies bietet den Vorteil nicht
+jedes Portal einzeln aufrufen und verwalten zu müssen.
+
+Teleporter sind zwar mit der \texttt{PortalList} kompatibel, müssen aber
+trotzdem gesondert behandelt werden. Da Teleporter zusätzlich mit physikalischen
+Objekten umgehen können, muss eine zusätzlich Methode verwendet werden, die die
+verschiedenen Objekte nacheinander testen und bei Bedarf transformiert. Zu
+diesem Zweck wird die \texttt{TeleportList} verwendet, eine abgeleitete Form der
+\texttt{PortalList}.
 
 \section{Zellen}
 
-Zellen stellen in sich abgeschlossene Räume dar. Sie sind \texttt{GroupNodes}
-und können daher weitere Szeneknoten enthalten. Zellen können über Türen
-miteinander verbunden werden. Jede Zelle wird durch 4 Wände definiert, wobei die
-Breite, Länge und Höhe einer Zelle variieren kann. Innerhalb einer Zelle
-befindet sich zudem \texttt{PointLightNode}, um innerhalb positionierte Objekte
+Zellen stellen in sich abgeschlossene Räume dar. Sie erben von der Klasse 
+\texttt{GroupNodes} und können daher weitere Szeneknoten enthalten. Zellen
+lassen sich über Türen miteinander verbinden. Jede Zelle wird durch 4
+Wände, eine Decke und einen Boden definiert, wobei die Breite, Länge und Höhe
+einer Zelle variieren kann.
+
+Innerhalb einer Zelle befindet sich zudem eine \texttt{PointLightNode}, um den
+inneren Bereich der Zelle richtig ausleuchten und darin positionierte Objekte
 richtig darstellen zu können. Eine Zelle lässt sich farblich anpassen, oder aber
 mit einer Textur versehen.
 
@@ -1047,11 +1108,12 @@ abgeleitet wird.
 Da es mehrere Typen von Portalen gibt, bietet es sich an eine Oberklasse zu
 implementieren von der alle konkreten Portaltypen abgeleitet werden können.
 Das Entwurfsmuster, welches als Grundlage dient ist das sogenannte
-Kompositionsmuster. Ähnlich der Szeneknoten im jVR-Framework, die alle von der
-Oberklasse \texttt{SceneNode} abgeleitet sind, werden die
-Portal-Unterklassen von der Oberklasse \texttt{Portal} abgeleitet. Sie selbst
-erbt von der Klasse \texttt{GroupNode} und kann daher mehrere Kindknoten
-beinhalten.
+Kompositionsmuster. 
+
+Ähnlich der Szeneknoten im jVR-Framework, die alle von der Oberklasse
+\texttt{SceneNode} abgeleitet sind, werden die Portal-Unterklassen von der
+Oberklasse \texttt{Portal} abgeleitet. Sie selbst erbt von der Klasse
+\texttt{GroupNode} und kann daher mehrere Kindknoten beinhalten.
 
 \begin{figure}[h]
 \includegraphics[width=\linewidth]{img/uml_portal}
@@ -1094,36 +1156,83 @@ Die Klasse \texttt{Teleporter} ist in der Lage den Betrachter von einer Position
 zur anderen zu bewegen. Dazu sind 2 \texttt{Teleporter} notwendig. Für das
 Teleportieren wird die Methode \texttt{teleport} verwendet. Ihr wird eine
 \texttt{SceneNode} übergeben, sowie ein \texttt{double}-Wert, der die
-Bewegungsgeschwindigkeit der Kamera repräsentiert.
+Bewegungsgeschwindigkeit der Kamera bzw. des Objekts repräsentiert.
+
+In der \texttt{init}-Methode wird das \emph{FrameBuffer Object} erzeugt. Die
+Methode sorgt dafür, dass die virtuelle Kamera in die Textur des jeweiligen
+Teleporters schreibt. Dazu wird jedem Teleporter ein eindeutiger Name
+zugewiesen, damit die verschiedenen \emph{FBOs} dem passenden Teleporter
+zugeordnet werden können.
+
+Jeder Teleporter besitzt eine Variable vom Typ \texttt{Portal} mit dem Namen
+\texttt{portalExit}. Diese Variable wird initialisiert, wenn 2 Teleporter
+miteinander verbunden werden. Sie wird dazu benötigt, um auf die nötigen
+Transformationen des Teleporterausgangs zugreifen zu können.
 
 Um den Betrachter teleportieren zu können, wird zunächst die
-\texttt{update}-Methode aufgerufen. Die übergebene \texttt{CameraNode} wird in
-das Objektkoordinatensystem des Portals überführt. Danach wird die
-Transformation gespeichert und wiederum mit der Transformation des
-\texttt{portalExit} multipliziert. Als letzten Schritt wird die Transformation
-um 180° auf der y-Achse gedreht. Die daraus resultierende Transformation wird
-auf die virtuellen Kamera angewendet. Die \texttt{update}-Methode ruft zudem die
-Methode \texttt{getPickPoint} auf.
+\texttt{update}-Methode aufgerufen. Diese Methode wird aufgerufen, sobald ein
+neuer Frame gezeichnet werden muss. Die übergebene \texttt{CameraNode} wird in
+das Objektkoordinatensystem des Portals überführt, siehe auch Gleichung
+\ref{eq:obj}. 
+
+Danach wird die Transformation gespeichert und wiederum mit der Transformation
+des \texttt{portalExit} multipliziert. Als letzten Schritt wird die
+Transformation um 180° auf der y-Achse gedreht. Die daraus resultierende
+Transformation wird auf die virtuellen Kamera angewendet. Die
+\texttt{update}-Methode ruft zudem die Methode \texttt{getPickPoint} auf.
 
 Die Methode \texttt{getPickPoint} bekommt als Argument eine \texttt{SceneNode}
 und deren Bewegungsgeschwindigkeit übergeben. Sie prüft, ob sich der
 Szeneknoten innerhalb der definierten \emph{Bounding Box} befindet. Ist dies der
-Fall wird darauf die \texttt{teleport}-Methode aufgerufen. Dies geschieht, indem
-der Szeneknoten ins Koordinatensystem des Portals transformiert wird.
-Daraufhin wird aus der Transformation der Translations-Vektor gewonnen und mit
-den minimalen swoie maximalen Werten der \emph{Bounding Box} verglichen.
+Fall wird darauf die \texttt{teleport}-Methode aufgerufen. 
 
-Die \texttt{teleport}-Methode nimmt die \texttt{SceneNode} und transformiert sie
-ins Objektkoordinatensystem. Aus der gewonnenen Transformation werden die
-Transformation für die Translation und die Rotation extrahiert. Danach wir die
-Transformation des \texttt{portalExit} mit der Rotationstransformation
-verrechnet. Dies wird gemacht, das der Szeneknoten mit der gleichen Rotation aus
-dem Teleporterausgang austritt, wie er den Teleportereingang betreten hat.
+Dies geschieht, indem der Szeneknoten ins Koordinatensystem des Portals
+transformiert wird. Daraufhin wird aus der Transformation der
+Translations-Vektor gewonnen und mit den minimalen sowie maximalen Werten der
+\emph{Bounding Box} verglichen.
 
-Danach wird der Knoten noch mit einem Offset in die z-Richtung transformiert um
-vor dem Portal und dessen \emph{Bounding Box} zu landen und nicht darin. Wäre
-dies der Fall würde der Szeneknoten bei Austritt umgehend wieder teleportiert
-werden.
+In der \texttt{teleport}-Methode wird die \texttt{SceneNode} ins
+Objektkoordinatensystem transformiert. Dazu muss die inverse Transformation
+des aktuellen Teleporters genommen werden und mit der Transformation der
+\texttt{SceneNode} verrechnet werden.
+
+\begin{equation}
+{T}_{} := {T}_{Teleporter}^{-1} * {T}_{SceneNode}
+\label{eq:obj}
+\end{equation}
+
+Aus der gewonnenen Transformation $T$ werden die Translations- 
+und die Rotationstransformation extrahiert. Danach wird die Transformation des
+\texttt{portalExit} mit der Rotationstransformation verrechnet, siehe auch
+Gleichung \ref{eq:exit}. Dies wird gemacht, sodass der Szeneknoten mit der
+gleichen Rotation aus dem Teleporterausgang austritt, mit der den
+Teleportereingang betreten hat.
+
+\begin{equation}
+{T}_{Temp} := {T}_{Exit} * {T}_{Rotation}
+\label{eq:exit}
+\end{equation}
+
+Danach wird der Knoten mit einem Offset in die z-Richtung transformiert. Dies
+hat den Grund, dass der Szeneknoten vor dem Portal und dessen \emph{Bounding
+Box} zu landen soll und nicht darin. Wäre dies der Fall würde der Szeneknoten
+bei Austritt umgehend wieder teleportiert werden.
+
+\begin{equation}
+{T}_{Temp} := {T}_{Temp} * {T}_{\mathit{Offset}}
+\label{eq:zOff}
+\end{equation}
+
+Um zu verhindern, dass der Knoten am Ende nicht auf der falschen Seite des
+Teleporterausgangs austritt, wird Knoten zusätzlich um 180° an der y-Achse
+gedreht. Würde dieser Schritt ausgelassen werden, würde der Szeneknoten hinter
+dem Ausgang des Portals landen und nicht an der Stelle, die durch das Portal zu
+sehen ist.
+
+\begin{equation}
+{T}_{Temp} := {T}_{Temp} * {T}_{RotY180Deg}
+\label{eq:rot180}
+\end{equation}
 
 Die extrahierte Translationstransformation bestimmt den genauen Eintrittspunkt
 des Teleporter und wird ebenfalls mit der Transformation verrechnet. Dies
@@ -1131,32 +1240,32 @@ bedeutet, tritt der Knoten im oberen rechten Bereich des Teleporters ein, wird
 der Knoten an genau dieser Stelle auch beim Ausgang austreten. Dies verleiht dem
 Teleport einen weicheren Übergang.
 
-Um zu verhindern, dass der Knoten am Ende nicht auf der falschen Seite des
-Teleporterausgangs austritt, wird Knoten zusätzlich um 180° an der y-Achse
-gedreht.
-
-Der Vorgang wird nochmals im Gleichung \ref{eq:trans} veranschaulicht. Dabei ist
-$N$ die Transformation des Teleporterausgangs, $R$ ist die extrahierte
-Rotationstransformation und $T$ die extrahierte Translationstransformation.
-$S_{node}$ stellt die Transformation des Szeneknotens beim Teleporteraustritt
-dar.
-
-% TODO überarbeiten, nicht richtig!!!!
 \begin{equation}
-S_{node} = R * T * N
+{T}_{Temp} := {T}_{Temp} * {T}_{Translation}
 \label{eq:trans}
 \end{equation}
+
+Zum Schluss wird die Transformation dem zu teleportierenden Szeneknoten
+übergeben. Somit wurde der Szeneknoten erfolgreich teleportiert.
 
 \subsubsection{PortalConnector}
 
 Um die Teleporter miteinander zu verbinden wird die Helferklasse
-\texttt{PortalConnector} aufgerufen. Sie stellt die statische Methode
-\texttt{connect} zur Verfügung. Ihr werden 2 Teleporter übergeben, die verbunden
-werden sollen.
+\texttt{PortalConnector} aufgerufen. Sie bietet nur statische Methoden zur
+Verfügung und muss daher nicht instanziiert werden. Über die statische
+Methode \texttt{connect} werden 2 Teleporter miteinander verbunden. Dazu werden
+2 Teleporter-Objekte übergeben, die verbunden werden sollen.
 
 Die Verbindung zwischen den Teleportern wird hergestellt, indem den jeweiligen
 Teleporter die virtuelle Kamera des anderen Teleporters übergeben wird. Jeder
-Teleporter besitzt eine Klassenvariable \texttt{portalExit} vom Typ CameraNode.
+Teleporter besitzt eine Klassenvariable \texttt{portalExit} vom Typ
+\texttt{Portal}. Über diese Variable lässt sich die Methode \texttt{getCamera}
+aufrufen, die die virtuelle Kamera des jeweiligen Teleporters zurückgibt.
+
+Dadurch lassen sich in den jeweiligen \texttt{Teleportern} die virtuellen
+Kameras des zugeordneten Gegenstücks aufrufen und konfigurieren. Bei Bedarf kann
+zum Bespiel die Kameratransformation ändern, oder aber das Seitenverhältnis
+anpassen.
 
 \subsubsection{Physik}
 
@@ -1170,18 +1279,77 @@ und physikalischen Eigenschaften innerhalb der Szene.
 \texttt{Teleporter} kann ebenfalls physikalische Objekte teleportieren. Dazu
 müssen diese in einer \texttt{GroupNode} gesammelt werden. Die
 \texttt{GroupNode} mit den Physikobjekten wird den Teleportern über die
-\texttt{update}-Methode übergeben. Die Szeneknoten in der \texttt{GroupNode}
-werden genau wie die Kamera transformiert und treten danach aus dem
-Portalausgang aus. Jeder einzelne Szeneknoten wird überprüft, ob er sich
-innerhalb der \emph{Bounding Box} des Teleporters befindet. Die Transformation
-wird erst dann angewendet, wenn dies der Fall ist.
+\texttt{update}-Methode übergeben. 
+
+Die Szeneknoten in der \texttt{GroupNode} werden genau wie die Kamera
+transformiert und treten danach aus dem Portalausgang aus. Jeder einzelne
+Szeneknoten wird überprüft, ob er sich innerhalb der \emph{Bounding Box} des
+Teleporters befindet. Die Transformation wird erst dann angewendet, wenn dies
+der Fall ist.
+
+Man muss bei dem Umgang mit Physik beachten, dass die \texttt{SceneNode} von der
+\texttt{teleport}-Methode allein teleportiert wird. Das bedeutet, der
+\texttt{RigidBody}, der zur \texttt{SceneNode} zugeordnet ist, nicht
+transformiert wird. Um dieses Problem zu umgehen, muss die Transformation des
+\texttt{RigidBody} mit dem der \texttt{SceneNode} angepasst werden.
 
 \subsection{Mirror-Klasse}
 
-Die \texttt{Mirror}-Klasse ist die Repräsentation eines Spiegel. Sie kann die
-Szene reflektieren. 
+Die \texttt{Mirror}-Klasse ist die Repräsentation eines Spiegels. Sie kann die
+Szene reflektieren. Der Konstruktor der Mirror-Klasse initialisiert das
+Material, mit der die Spiegelreflexion erfolgt. Dieses Material besteht aus
+einem Shaderprogramm, welches die erzeugte Textur umkehrt. Die virtuelle Kamera
+wird über die Methode \texttt{getCamera} aufgerufen und das Seitenverhältnis
+wird über \texttt{setAspectRatio} auf den Wert -4:3 geändert.
+
+Genau wie der \texttt{Teleporter}, besitzt die \texttt{Mirror}-Klasse eine
+Methode \texttt{update}. Ihr wird ein \texttt{CameraNode}-Objekt von der
+Betrachterkamera übergeben. Dies hat den Grund, dass die Spiegelung sich je nach
+Betrachterposition ändert.
+
+Zuerst wird die Transformation der Kamera mit der inversen Transformation des
+\texttt{Mirror}-Objekts multipliziert. Nachdem die Kameratransformation in das
+Objektkoordinatensystem überführt wurde, wird die neue Transformation mit einer
+negativen Skalierung auf $z$ transformiert.
+
+In der \texttt{Mirror}-Klasse ist ein statischer Konstruktor definiert. Dieser
+Konstruktor lädt das benötigte Shaderprogramm in die globale Variable
+\texttt{shaderProg}. Diese wird dann im \texttt{Mirror}-Konstruktor dem
+ShaderMaterial übergeben. Der statische Konstruktor bietet den Vorteil die
+Variable für alle \texttt{Mirror}-Objekte einmalig zu initialisieren, da sich
+der Shader zwischen den einzelnen Objekten nicht unterscheidet.
 
 \subsection{PortalList}
+
+Um alle Portale verwalten zu können wird die \texttt{PortalList}-Klasse genutzt.
+Sie enthält eine \texttt{ArrayList} mit dem generischen Typ \texttt{Portal}. Da
+es sich bei der \texttt{PortalList} nur um eine Hilfsklasse handelt, muss von
+ihr keine Instanz erzeugt werden. Alle angebotenen Methoden werden statisch
+aufgerufen.
+
+Die \texttt{add}-Methode fügt die Portale der Liste hinzu. In jedem Konstruktor
+eines Portals wird diese Methode aufgerufen. Somit wird ein Portal nach der
+Initialisierung sofort der \texttt{PortalList} hinzugefügt. Das bietet den
+Vorteil die Portale nicht manuell hinzufügen zu müssen, da die Portale die zur
+Szene hinzugefügt werden sowieso gerendert werden sollen.
+
+Über die \texttt{remove}-Methode lassen sich einzelne Portale wieder aus der
+Liste entfernen. Dies kann zum Beispiel dann hilfreich sein, wenn während der
+Laufzeit ein Portal aus der Szene entfernt wird, kann daraufhin die Methode
+aufgerufen werden. Dadurch muss das Portal nicht unnötig gerendert werden.
+
+Die \texttt{PortalList} verfügt eine Methode \texttt{render}. Diese wird
+aufgerufen wenn die Pipeline erzeugt und konfiguriert wurde. Dies hat den Grund,
+dass erst die Szene mit leeren Portalen gerendert werden muss. Nachdem die
+Portale gerendert wurden, wird für jedes Portal die \texttt{render}-Methode
+aufgerufen, die jedem Portal sein \emph{FrameBuffer Object} zuordnet und
+letztendlich auf dessen Oberfläche rendert.
+
+Die \texttt{update}-Methode der \texttt{PortalList} wird innerhalb der
+Endlosschleife der Anwendung aufgerufen. Das heißt, sie wird für jeden neu
+erzeugten Frame aufgerufen. Je nach Portaltyp wird die Transformation der 
+virtuelle Kamera aktualisiert und neu gesetzt. Der \texttt{update}-Methode wird
+eine \texttt{CameraNode} und eine \texttt{float}-Variable übergeben.
 
 \subsection{Beispiel einer Portalanwendung}
 
@@ -1247,6 +1415,8 @@ public static void main(String[] args){
 \subsubsection{Wall-Klasse}
 
 \section{Optimierungen}
+
+\section{Verwendete Entwicklungswerkzeuge}
 
 \chapter{Ergebnisse und Bewertung}
 
