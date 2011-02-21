@@ -6,6 +6,7 @@
 \usepackage[ngerman]{babel}
 \usepackage[colorlinks=false,pdfborder={0 0 0}]{hyperref}
 \usepackage{cite}
+\usepackage{fancyhdr}
 \usepackage{booktabs}
 \usepackage{color}
 \usepackage{graphicx}
@@ -199,6 +200,13 @@ Portal Culling ist ein Verfahren, um die Leistung in 3D-Echtzeitberechnungen zu
 steigern. In diesem Verfahren werden bestimmte Objekte ausgewählt, die
 letztendlich gerendert werden und damit für den Betrachter sichtbar werden.
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=325pt]{img/portalsplate1}
+\caption{Test 1234}
+\label{fig:portal1}
+\end{figure}
+
 Beim Portal Culling stellt man sich einen Bereich vor, der aus mehreren Zellen
 besteht. Eine Zelle setzt sich aus mehreren Wänden zusammen und kann an weitere
 Zellen angrenzen. Diese Zellen verbinden einander durch Türen bzw. Fenster, so
@@ -215,13 +223,6 @@ jeweiligen Objektes. Wird z.B. ein Objekt durch eine Wand verdeckt, besteht
 keine Notwendigkeit das Objekt zu rendern und es wird zudem Rechenzeit
 gespart. Durch den Einsatz dieses Verfahrens können bis zu 50 Prozent der
 benötigten Ressourcen zum Rendern eingespart werden. %TODO: belegen
-
-% \begin{figure}[h]
-% \begin{center}
-% \includegraphics[height=50mm]{img/portalsplate1}
-% \end{center}
-% \caption{Test 1234}
-% \end{figure}
 
 Zellen können auch ganz vom Renderprozess ausgeschlossen werden. Dies geschieht,
 wenn das Portal, das zur nächsten Zelle führt außerhalb des Sichtbereiches
@@ -624,7 +625,13 @@ strahlen zunächste das Bild gegen eine große Spiegelfläche und diese projeziert
 das Bild letztendlich gegen die Leinwand. Dieses Verfahren wird auch zirkulare
 Polarisation genannt.
 
-%TODO: Bild von Projektion
+\begin{figure}[ht]
+\centering
+\includegraphics[width=400pt]{img/projektor}
+\caption{Beispiel für die Projektionsart im Holodeck. Das Holodeck benutzt das
+Prinzip der zirkulären Polarisation}
+\label{fig:}
+\end{figure}
 
 Der Grund für den Einsatz für 2 Beamern ist es stereoskopische Bilder zu
 erzeugen. Diese können mit einer Shutterbrille betrachtet werden. An der
@@ -654,6 +661,7 @@ GPU: & 2 x NVIDIA Geforce 8800GT \\
 \caption{Technische Daten des Holodecks}
 \label{tab:spec}
 \end{table}
+\newpage
 
 \section{Verwendete Standards im jVR-Framework}
 
@@ -780,10 +788,13 @@ Funktionen der Profile GL2 und GL3. Das Profil hat die Eigenschaft GL3 konform
 zu sein. Es können daher GL3-Anwendungen entwickelt werden, die aber auch auf
 Systemen lauffähig sind, die nur OpenGL 2 unterstützen.
 
-% \begin{figure}[ht]
-% 	\includegraphics[width=\linewidth]{img/glprofiles.png}
-% 	\caption{Test 123}
-% \end{figure}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\linewidth]{img/joglprofile}
+\caption{Die verschiedenen Profile, die von JOGL bereitgestellt
+werden.}
+\label{fig:jogprof}
+\end{figure}
 
 \subsection{jBullet}
 
@@ -1091,6 +1102,13 @@ sich nicht mit Paketen von jVR. Das Oberpaket \texttt{portals} enthält alle
 weiteren Unterpakete, sowie die verschiedenen Typen von Portalen, die im Laufe
 der Implementierung entstanden sind.
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=400pt]{img/packages}
+\caption{Die Paketstruktur der Portalimplementierung}
+\label{fig:pack}
+\end{figure}
+
 Das Paket \texttt{culling} besteht aus den Klassen die für Portal Culling von
 Bedeutung sind. Mit ihnen können Zellen erzeugt werden, also Räume die
 untereinander verbunden sind. Zudem lassen sich verschiedene Arten von Wänden
@@ -1116,8 +1134,6 @@ abgeleitet wird.
 
 Da es mehrere Typen von Portalen gibt, bietet es sich an eine Oberklasse zu
 implementieren von der alle konkreten Portaltypen abgeleitet werden können.
-Das Entwurfsmuster, welches als Grundlage dient ist das sogenannte
-Kompositionsmuster. 
 
 Ähnlich der Szeneknoten im jVR-Framework, die alle von der Oberklasse
 \texttt{SceneNode} abgeleitet sind, werden die Portal-Unterklassen von der
@@ -1126,8 +1142,7 @@ Oberklasse \texttt{Portal} abgeleitet. Sie selbst erbt von der Klasse
 
 \begin{figure}[h]
 \includegraphics[width=\linewidth]{img/uml_portal}
-\caption{Der Implementierung der Portale liegt das Kompositionsmuster als
-Grundlage vor. \texttt{Portal} erbt von \texttt{GroupNode} und kann somit
+\caption{\texttt{Portal} erbt von \texttt{GroupNode} und kann somit
 weitere Kindknoten enthalten. \texttt{Portal} fungiert als Oberklasse aller
 anderen Portalklassen}
 \label{fig:port_uml}
