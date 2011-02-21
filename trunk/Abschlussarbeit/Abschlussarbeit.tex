@@ -1404,11 +1404,59 @@ public static void main(String[] args){
 }
 \end{lstlisting}
 
-\section{Portal Culling}
+\section{Umsetzung des Cullings}
+
+Das Culling wurde mit mehreren Klassen umgesetzt. Zum einen wurde die
+\texttt{Door}-Klasse realisiert, die für die Tür in einem Raum steht und sich
+beliebig in Breite und Höhe verändern lässt. Zum anderen die
+\texttt{Cell}-Klasse, die für einen Raum steht und die über die
+\texttt{Door}-Klasse mit weiteren Räumen verbunden werden kann.
 
 \subsection{Door-Klasse}
 
+Die \texttt{Door}-Klasse repräsentiert die Tür, durch die ein Raum betreten oder
+betrachtet werden kann. Sie wird mit einem eindeutigen Name in Form eines
+\texttt{Strings} und mit einer Breite sowie einer Höhe definiert. Wie alle
+Portaltypen erbt sie von der Oberklasse \texttt{Portal}.
+
+Im Konstruktor der Klasse wird die \texttt{ShapeNode} mit der Höhe und der
+Breite skaliert, um die richtigen Maße für die Tür einzustellen. Zudem wird die
+\texttt{SceneNode} des Portals aus der Tür entfernt. Das hat den Grund, die
+\texttt{SceneNode} nicht in der Szene darstellen zu müssen.
+
+Die Tür ist in diesem Fall eine freie Fläche, sie soll nicht sichtbar sein,
+sondern der Betrachter soll durch die in einen anderen Raum blicken können. Die
+\emph{Bounding Box} der Tür ist wichtig, da über sie die maximalen und minimalen
+$x$, $y$ und $z$ Werte bestimmt und verwendet werden können. Diese werden für
+das bilden des neuen Frustums benötigt, wenn der Betrachter durch die Tür
+blicken sollte.
+
+Der Tür werden mehrere Räume vom Typ \texttt{Cell} zugeordnet. Zum einen die
+aktuelle Zelle, der eine Tür hinzugefügt werden soll. Dies geschieht über die
+\texttt{setCell}-Methode. Zum anderen die Nachbarzelle, die angefügt wird sobald
+die Tür in der Zelle platziert wurde. Über die Methode \texttt{setNeighbor}
+lässt sich die Nachbarzelle festlegen.
+
 \subsection{Cell-Klasse}
+
+Die Räume, die beim Culling benötigt werden, werden auch als Zellen bezeichnet.
+Sie werden in der Implementierung von der Klasse \texttt{Cell} repräsentiert.
+Eine Zelle setzt sich aus 6 Wänden zusammen. Alle Wände der Zelle sind vom Typ
+\texttt{Wall}. Die Zelle lässt sich in Länge, Breite und Höhe über die Variablen
+\texttt{length}, \texttt{width} und \texttt{height} verändern. Zudem lässt sich
+noch eine Farbe festlegen, in der die Zelle erscheinen soll.
+
+Die \texttt{Cell}-Klasse besitzt wie alle \texttt{SceneNodes} eine
+\emph{Bounding Box}. Über die \emph{Bounding Box} der Zelle lässt sich
+ermitteln, ob sich der Betrachter innerhalb der Zelle befindet oder nicht. Dies
+geschieht über die \texttt{contains}-Methode. Ihr wird ein
+\texttt{SceneNode}-Objekt übergeben. Das \texttt{SceneNode}-Objekt wird mittels
+der inversen Transformation der Zelle in das Objektkoordinatensystem übertragen.
+Dadurch lässt sich die Position der \texttt{SceneNode} innerhalb der Zelle
+ermitteln. Ist diese innerhalb der Zelle wird \texttt{true} zurückgegeben und
+ist sie außerhalb \texttt{false}.
+
+Die verschiedenen Wände 
 
 \subsubsection{CellList}
 
