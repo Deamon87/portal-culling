@@ -12,9 +12,18 @@
 \usepackage{mathtools}
 \usepackage{listings}
 \usepackage{scrhack}
+\usepackage{fancyhdr}
 \DeclareGraphicsExtensions{.eps}
 \definecolor{darkgreen}{rgb}{0,0.5,0}
 \definecolor{darkred}{rgb}{0.5,0,0}
+
+\setlength{\headheight}{15.2pt}
+\pagestyle{fancy}
+
+\lhead{\leftmark}
+\rhead{\thepage}
+
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
 
 \begin{document}
 \lstset{language=Java,
