@@ -82,7 +82,7 @@ public class MyPhysicsTest extends PortalTestBase {
             }
         }
         
-        boxes.setTransform(Transform.translate(-10, 0, 0));
+        //boxes.setTransform(Transform.translate(-10, 0, 0));
 		
         root.addChildNode(boxes);
         
@@ -147,7 +147,12 @@ public class MyPhysicsTest extends PortalTestBase {
 			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
 			
 			PortalList.update(cam, moveSpeed);
-			TeleporterList.check(spheres);
+			
+			if(TeleporterList.check(spheres))
+			{
+				MyMotionState moSta = new MyMotionState(spheres);
+				sphereBody.setMotionState(moSta);
+			}
 		}
 	}
 	
