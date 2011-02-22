@@ -6,6 +6,7 @@
 \usepackage[ngerman]{babel}
 \usepackage[colorlinks=false,pdfborder={0 0 0}]{hyperref}
 \usepackage{cite}
+\usepackage{perpage}
 \usepackage{fancyhdr}
 \usepackage{booktabs}
 \usepackage{color}
@@ -14,6 +15,7 @@
 \usepackage{listings}
 \usepackage{scrhack}
 \usepackage{fancyhdr}
+\MakePerPage{footnote}
 \DeclareGraphicsExtensions{.eps}
 \definecolor{darkgreen}{rgb}{0,0.5,0}
 \definecolor{darkred}{rgb}{0.5,0,0}
@@ -130,6 +132,7 @@ Beispielszenen erstellt, in denen das Portal-Rendering und Lösungen
 verschiedener Problemfälle, die bei dem vorgestellten Rendering-Verfahren
 auftreten können vorgestellt werden.
 
+\newpage
 \section{Motivation}
 
 Im Rahmen des Masterkurses \emph{Computer Graphics and Effects} an der Beuth
@@ -274,6 +277,13 @@ gerendert werden um ein optimales Ergebnis zu erreichen.
   Grund es kein 2tes Mal rendern zu müssen.
 \end{enumerate}
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=325pt]{img/portalsplate2}
+\caption{}
+\label{fig:portal2}
+\end{figure}
+
 \subsection{Portale als Spiegel}
 
 Ein weiterer Verwendungszweck von Portal Culling ist die Erzeugung von Spiegeln.
@@ -342,6 +352,13 @@ es sich innerhalb des Frustums befindet. Diese Primitive nennt man \emph{Boundin
 Boxes} (BB). Da die BB größer ist als das eigentliche Objekt, kann es dazu
 führen, dass ein Objekt zwar nicht mehr zu sehen ist aber noch mit seiner BB den
 Frustum berührt und daher noch gerendert wird.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=300pt]{img/frustum_culling}
+\caption{}
+\label{fig:frustum}
+\end{figure}
 
 \subsection{Occlusion Culling}
 
@@ -467,6 +484,7 @@ eine \texttt{ClipPlaneNode} auf die Szene gepackt wird, wird die Szene in 2
 Halbräume unterteilt. Die Vertices die sich auf der Rückseite der Ebene befinden
 werden ausgeblendet.
 
+\newpage
 \subsubsection{Transformationen}
 
 Das jVR-Framework verfügt über mehrere Möglichkeiten Knoten innerhalb einer
@@ -491,9 +509,7 @@ vergleiche dazu auch \cite{compOL}.
 0 & {s}_{y} & 0 & 0 \\
 0 & 0 & {s}_{z} & 0 \\
 0 & 0 & 0 & 0
-\end{pmatrix}
-\end{align}
-\begin{align}
+\end{pmatrix} \\
 \textbf{Rotation um X-Achse:} &
 \begin{pmatrix}
 \phantom{-\sin \alpha}&\phantom{-\sin \alpha}&\phantom{-\sin
@@ -611,6 +627,7 @@ Programm verarbeitet. Je nach Neigung bzw. Drehung des Kopfes wird die
 betrachtete Szene angepasst, was dem Betrachter die Illusion vermittelt sich
 tatsächlich in der Szene zu bewegen.
 
+\newpage
 \subsubsection{Holodeck}
 
 Das Holodeck ist eine Einrichtung der BHT, in der eine virtuelle Realität
@@ -625,17 +642,17 @@ strahlen zunächste das Bild gegen eine große Spiegelfläche und diese projeziert
 das Bild letztendlich gegen die Leinwand. Dieses Verfahren wird auch zirkulare
 Polarisation genannt.
 
-\begin{figure}[ht]
+Der Grund für den Einsatz für 2 Beamern ist es stereoskopische Bilder zu
+erzeugen. Diese können mit einer Shutterbrille betrachtet werden. An der
+Shutterbrille sind mehrere Trackingpunkte befestigt.
+
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=400pt]{img/projektor}
 \caption{Beispiel für die Projektionsart im Holodeck. Das Holodeck benutzt das
 Prinzip der zirkulären Polarisation}
-\label{fig:}
+\label{fig:proj}
 \end{figure}
-
-Der Grund für den Einsatz für 2 Beamern ist es stereoskopische Bilder zu
-erzeugen. Diese können mit einer Shutterbrille betrachtet werden. An der
-Shutterbrille sind mehrere Trackingpunkte befestigt.
 
 Zum Tracking wird im Holodeck das Qualisys-Motion Capture System verwendet. Es
 kann mittels einer Kamera die Trackingpunkte orten. Die Bewegungen der Punkte
@@ -645,7 +662,7 @@ Um sich in der Szene zu bewegen, wird die Wii-Mote zusammen mit dem Nunchuk von
 Nintendo benutzt. An ihr sind ebenfalls Trackingballs befestigt. In Tabelle
 \ref{tab:spec} sind nochmal alle technischen Daten des Holodecks im Überblick.
 
-\begin{table}
+\begin{table}[ht]
 \centering
 \begin{tabular}{ll}
 \toprule
@@ -661,8 +678,8 @@ GPU: & 2 x NVIDIA Geforce 8800GT \\
 \caption{Technische Daten des Holodecks}
 \label{tab:spec}
 \end{table}
-\newpage
 
+\newpage
 \section{Verwendete Standards im jVR-Framework}
 
 Das jVR-Framework setzt sich aus mehreren externen Bibliotheken und Standards
@@ -788,13 +805,22 @@ Funktionen der Profile GL2 und GL3. Das Profil hat die Eigenschaft GL3 konform
 zu sein. Es können daher GL3-Anwendungen entwickelt werden, die aber auch auf
 Systemen lauffähig sind, die nur OpenGL 2 unterstützen.
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\linewidth]{img/joglprofile}
-\caption{Die verschiedenen Profile, die von JOGL bereitgestellt
-werden.}
-\label{fig:jogprof}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=\linewidth]{}
+% \caption{Die verschiedenen Profile, die von JOGL bereitgestellt
+% werden.\protect\footnotemark}
+% \label{fig:jogprof}
+% \end{figure}
+% \footnotetext{Quelle: }
+
+\begin{center}
+    \includegraphics[width=\linewidth]{img/joglprofile}
+    \captionof{figure}[Beschreibung]{Die verschiedenen Profile, die von JOGL
+    bereitgestellt werden.\footnotemark}
+\end{center}
+\footnotetext{Quelle: \url{http://jogamp.org/jogl/doc/bouml/html-svg/} [Stand:
+21.02.2011]}
 
 \subsection{jBullet}
 
@@ -895,6 +921,13 @@ Um die Szene richtig auf der Oberfläche darzustellen, muss sie zuvor in ein
 Kamera zugeordnet. Diese wird von der Pipeline aufgerufen und rendert
 dementsprechend die Szene in das \emph{FBO}.
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=300pt]{img/spiegel_projektion}
+\caption{}
+\label{fig:mirror}
+\end{figure}
+
 Die Szene muss vor dem Renderprozess von der Kamera aus der richtigen
 Perspektive betrachtet werden. Dies wird dadurch erreicht, indem man die
 Transformation der Betrachterkamera $C$ in das Koordinatensystem der
@@ -931,6 +964,14 @@ durchsichtig. Der Effekt der Transparenz kann über Modifizieren des Shaders
 erreicht werden. Die erzeugte Textur, die beim Rendern entsteht wird dann
 durchsichtig gemacht.
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=325pt]{img/jvr_szene}
+\caption{}
+\label{fig:jvrScene}
+\end{figure}
+
+\newpage
 \subsection{Teleporter}
 
 Ein weiterer Portaltyp, der umgesetzt werden soll, ist der Teleporter. Der
@@ -955,6 +996,14 @@ Ausgangs platziert. Diese Kamera wird relativ zur Position der Kamera des
 Betrachters zum Teleporter auf der Gegenseite ausgerichtet. Je nach Bewegung des
 Betrachters bewegt sich auch die virtuelle Kamera.
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{img/portal_projection}
+\caption{}
+\label{fig:port_proj}
+\end{figure}
+
+\newpage
 Die interessanteste Eigenschaft eines Teleporters ist die Fähigkeit der
 Teleportation. Ein Teleporter muss prüfen, ob sich eine \texttt{SceneNode} in
 einem gewissen Abstand befindet. Ist der Abstand gering genug kann die
@@ -978,7 +1027,7 @@ Eine andere Möglichkeit den Abstand zu bestimmen ist über die \emph{Bounding
 Box} des Portals. Dabei wird der Mittelpunkt des Objekts bzw. der Kamera ins
 Objektkoordinatensystem des Portals übertragen. Danach wird getestet, ob sich
 der Punkt innerhalb der BB befindet. Da die Ebene flach ist, sind der maximale
-und minimale Z-Wert der BB 0. Es reicht den maximalen Wert zu erhöhen um eine
+und minimale Z-Wert der BB. Es reicht den maximalen Wert zu erhöhen um eine
 3dimensionale BB zu erzeugen. Sobald der Mittelpunkt innerhalb liegt, wird das
 Objekt bzw. die Kamera teleportiert.
 
@@ -1008,6 +1057,13 @@ sich die \emph{Bounding Box} der Tür nicht im \emph{View Frustum} des
 Betrachters. Ist dies der Fall wird die Tür, genau wie die benachbarten Räume,
 nicht vom Renderverfahren berücksichtigt.
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=325pt]{img/culling_schema}
+\caption{}
+\label{fig:por_cul}
+\end{figure}
+
 Eine Tür wird innerhalb einer Wand platziert. Man wählt dafür eine Wand aus, in
 der die Tür platziert werden soll. Danach wird die Wand neu zusammengesetzt. Das
 bedeutet, es werden einzelne Wandstücke erzeugt, die sich genau um die Tür herum
@@ -1025,6 +1081,7 @@ innerhalb eines riesigen Gebäudes spielen. Dabei muss auf die größe des Gebäudes
 keine Rücksicht genommen werden, da die nicht sichtbaren Teile des Gebäudes
 nicht gerendert werden, und somit keine Rechenleistung beanspruchen.
 
+\newpage
 \section{Virtuelle Kameras}
 
 Die virtuellen Kameras sind ein wichtiger Bestandteil der Portale. Für jede
@@ -1140,8 +1197,9 @@ implementieren von der alle konkreten Portaltypen abgeleitet werden können.
 Oberklasse \texttt{Portal} abgeleitet. Sie selbst erbt von der Klasse
 \texttt{GroupNode} und kann daher mehrere Kindknoten beinhalten.
 
-\begin{figure}[h]
-\includegraphics[width=\linewidth]{img/uml_portal}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=350pt]{img/uml_portal}
 \caption{\texttt{Portal} erbt von \texttt{GroupNode} und kann somit
 weitere Kindknoten enthalten. \texttt{Portal} fungiert als Oberklasse aller
 anderen Portalklassen}
@@ -1167,6 +1225,7 @@ Jedes Objekt vom Typ \texttt{Portal} besitzt eine virtuelle Kamera vom Typ
 \texttt{CameraNode}. Dies ist vor allem in den Klassen \texttt{Teleporter} und
 \texttt{Mirror} von Bedeutung, da diese für das Rendering der benötigt wird.
 
+\newpage
 Weiterhin stellt die \texttt{Portal}-Klasse 2 abstrakte Methoden bereit. Zum
 einen die \texttt{update}-Methode. Sie wird jedes Mal aufgerufen, wenn ein neuer
 Frame gezeichnet wird und dient zum Beispiel dazu die Kameraposition zu
@@ -1291,6 +1350,7 @@ Kameras des zugeordneten Gegenstücks aufrufen und konfigurieren. Bei Bedarf kann
 zum Bespiel die Kameratransformation ändern, oder aber das Seitenverhältnis
 anpassen.
 
+\newpage
 \subsubsection{Physik}
 
 Um mit physikalischen Objekten umgehen zu können, wird die jBullet-Bibliothek
@@ -1375,6 +1435,7 @@ erzeugten Frame aufgerufen. Je nach Portaltyp wird die Transformation der
 virtuelle Kamera aktualisiert und neu gesetzt. Der \texttt{update}-Methode wird
 eine \texttt{CameraNode} und eine \texttt{float}-Variable übergeben.
 
+\newpage
 \subsection{Beispiel einer Portalanwendung}
 
 \begin{lstlisting}[captionpos=b,caption={Struktur einer Portalanwendung},label=lst:exa] 
@@ -1397,7 +1458,6 @@ public static void main(String[] args){
 	
 	// connect both teleporter
 	PortalConnector.connect(portal1, portal2);
-	
 	// some pipelinecommands ...
 	
 	// let the list render the scene into the portals
@@ -1411,19 +1471,12 @@ public static void main(String[] args){
 	
 	// render loop
 	while(v.isRunning())
-	{
-		long start = System.currentTimeMillis();
-		
+	{		
 		// render next frame
 		v.display();
 		
-		// move speed of the camera
-		double moveSpeed = (
-			System.currentTimeMillis()	
-			- start) * 0.005f;
-		
-		// upate scene rendered in the portals
-		PortalList.update(camera, moveSpeed);
+		// update scene rendered in the portals
+		PortalList.update(cam, moveSpeed);
 	}
 }
 \end{lstlisting}
