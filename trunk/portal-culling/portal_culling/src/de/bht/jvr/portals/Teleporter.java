@@ -62,7 +62,7 @@ public class Teleporter extends Portal {
 		
 		this.init();
 	}
-
+	
 	public void init() {
 		getPipeline().setUniform("jvr_UseClipPlane0", new UniformBool(false));
 		getPipeline().setUniform("jvr_UseClipPlane1", new UniformBool(false));
@@ -94,7 +94,7 @@ public class Teleporter extends Portal {
 		&& vec.z() < this.getBBox().getMax().z() && vec.z() > this.getBBox().getMin().z() - moveSpeed)
 		{
 			this.teleport(node, moveSpeed);
-			System.out.println("port");
+			//System.out.println("port");
 			return true;
 		}
 		
