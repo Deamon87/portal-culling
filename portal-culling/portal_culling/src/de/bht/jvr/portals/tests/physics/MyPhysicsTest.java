@@ -142,7 +142,6 @@ public class MyPhysicsTest extends PortalTestBase {
 			this.move(delta, 0.005f);
 			shoot();
 			physics.update(delta);
-			//System.out.println(CellList.checkCell(cam));
 			
 			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
 			
@@ -155,60 +154,6 @@ public class MyPhysicsTest extends PortalTestBase {
 			}
 		}
 	}
-	
-	protected void move(double renderDuration, double speed)
-    {
-        move(renderDuration*speed);
-    }
-    
-    protected void move(double renderDuration)
-    {
-        synchronized (pressedKeys)
-        {
-            if (mouseDragged || !pressedKeys.isEmpty())
-            {
-                for (SceneNode cam: this.cams)
-                {
-                    for (Character key: pressedKeys)
-                    {
-                        switch (key)
-                        {
-                        case 'W':
-                        	ry=0;
-                        	cam.setTransform(cam.getTransform().mul(Transform.translate(0, 0, (float)-renderDuration)));
-                            break;
-                        case 'S':
-                        	ry=0;
-                        	cam.setTransform(cam.getTransform().mul(Transform.translate(0, 0, (float)renderDuration)));
-                            break;
-                        case 'A':
-                        	ry=0;
-                        	cam.setTransform(cam.getTransform().mul(Transform.translate((float)-renderDuration, 0, 0)));
-                            break;
-                        case 'D':
-                        	ry=0;
-                        	cam.setTransform(cam.getTransform().mul(Transform.translate((float)renderDuration, 0, 0)));
-                            break;      
-                        case 'R':
-                        	ry=0;
-                        	cam.setTransform(cam.getTransform().mul(Transform.translate(0, (float)renderDuration, 0)));
-                        	break;
-                        case 'F':
-                        	ry=0;
-                        	cam.setTransform(cam.getTransform().mul(Transform.translate(0, (float)-renderDuration, 0)));
-                        	break;
-                        case 'Q':
-                            System.exit(0);
-                            break;
-                        }
-                    }
-                    
-                    cam.setTransform(cam.getTransform().mul(Transform.rotateYDeg(ry)));
-                    //cam.setTransform(cam.getTransform().mul(Transform.rotateXDeg(rx)));       
-                }
-            }
-        }
-    }
     
     private void shoot(){
     	synchronized (pressedKeys)
@@ -222,7 +167,6 @@ public class MyPhysicsTest extends PortalTestBase {
                         switch (key)
                         {
 					    case 'E':
-					    	System.out.println("shoot");
 					    	Vector3 vel = cam.getTransform().getMatrix().rotationMatrix().mul(new Vector3(0.0f, 0.0f, -30.0f));
 					    	spheres.removeChildNode(sphereShape);
 					    	spheres.addChildNode(sphereShape);
