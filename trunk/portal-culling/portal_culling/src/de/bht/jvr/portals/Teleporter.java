@@ -85,7 +85,7 @@ public class Teleporter extends Portal {
 		this.getPickPoint(node, moveSpeed);
 	}
 	
-	public void getPickPoint(SceneNode node, double moveSpeed) {
+	public boolean getPickPoint(SceneNode node, double moveSpeed) {
 		Transform trans = this.getTransform().invert().mul(node.getTransform());
 		Vector3 vec = trans.getMatrix().translation();
 		
@@ -95,7 +95,10 @@ public class Teleporter extends Portal {
 		{
 			this.teleport(node, moveSpeed);
 			System.out.println("port");
-		}		
+			return true;
+		}
+		
+		return false;
 	}
 	
 	private void teleport(SceneNode node, double moveSpeed) {
@@ -117,6 +120,12 @@ public class Teleporter extends Portal {
 		getPipeline().bindColorBuffer("jvr_PortalTexture", this.getName() + "FBO", 0);
 		getPipeline().drawGeometry("AMBIENT", this.getName() + "Mat");
 	}
+
+	public void checkPhysics() {
+		
+	}
+	
+	
 	
 //	private double distance(Vector3 vec1, Vector3 vec2) {
 //		double one = Math.pow(vec2.x() - vec1.x(), 2);

@@ -146,7 +146,7 @@ public class MyPhysics
 
         // a motion state is a link between the graphic and the physics
         MyMotionState myMotionState = new MyMotionState(node);
-
+        
         RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(mass, myMotionState, colShape, localInertia);
         RigidBody body = new RigidBody(rbInfo);
         dynamicsWorld.addRigidBody(body);
@@ -265,6 +265,7 @@ public class MyPhysics
         // Create Dynamic Objects
         Transform startTransform = new Transform();
         startTransform.setIdentity();
+        //startTransform.origin.set(new Vector3f(0, 0, 0));
 
         float mass = 1f;
 
@@ -281,9 +282,11 @@ public class MyPhysics
         // a motion state is a link between the graphic and the physics
         MyMotionState myMotionState = new MyMotionState(node);
 
+        //myMotionState.setWorldTransform(startTransform);
+        
         RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(mass, myMotionState, colShape, localInertia);
         RigidBody body = new RigidBody(rbInfo);
-
+        //System.out.println(body.getWorldTransform(startTransform).toString());
         return body;
     }
     
