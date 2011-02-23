@@ -1,4 +1,4 @@
-\documentclass[12pt]{scrreprt}
+\documentclass[12pt,twoside=semi]{scrreprt}
 \parindent 0pt
 \parskip 12pt
 
@@ -23,8 +23,10 @@
 \setlength{\headheight}{15.2pt}
 \pagestyle{fancy}
 
-\lhead{\leftmark}
-\rhead{\thepage}
+\fancyhf{}
+
+\lhead[\thepage]{\leftmark}
+\rhead[\leftmark]{\thepage}
 
 \renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
 
@@ -49,7 +51,7 @@ Industriezweig, der sich in den letzten Jahren rasant entwickelt hat, ist die
 Videospielindustrie.
 
 In kürzester Zeit haben sich aus pixelbasierten 2D-Grafiken komplexe 3D-Welten
-entwickelt, die kaum von realen Bilder zu unterscheiden sind. Möglich wird all
+entwickelt, die kaum von realen Bildern zu unterscheiden sind. Möglich wird all
 dies durch immer leistungsfähigere Hardware, die von Jahr zu Jahr immer mehr
 Performance im Bereich der 3D-Echtzeitberechnung bringt.
 
@@ -60,12 +62,12 @@ OpenGL. OpenGL ist ein wichtiger Bestandteil dieser Arbeit und wird im späteren
 Verlauf der Arbeit näher betrachtet.
 
 Mit Hilfe dieser Grafikbibliotheken lassen sich, mit relativ wenig Aufwand
-Anwendungen mit 3D-Inhalten programmieren. Da die APIs der Bibliotheken in
+Anwendungen mit 3D-Inhalten programmieren. Da die APIs der Bibliotheken
 viele Befehle besitzen, die low-level Grafikbefehle unterstützen steigt der
 Aufwand bei größeren Projekten erheblich. Heutzutage werden 3D-Anwendungen, wie
 zum Beispiel Spiele nicht von Grund auf neu entwickelt. In diesem Fall werden 
 Grafik-Engines eingesetzt, die eine höhere Abstraktionsschicht besitzen und
-somit effektiver programmiert werden kann.
+somit effektiver programmiert werden können.
 
 Grafik-Engines unterstützen von vornherein wichtige Konzepte, die bei der
 heutigen Spieleentwicklung angewendet werden. Eines dieser Konzepte ist die
@@ -80,7 +82,7 @@ Im Mittelpunkt dieser Arbeit steht das jVR-Framework. Es stellt eine 3D-Engine
 dar, die komplett auf Java aufgebaut ist. Als Grafikbibliothek wird OpenGL 
 verwendet. Um OpenGL in Java nutzen zu können, wird die Wrapper-Bibliothek
 JOGL verwendet. Ein Besonderheit des jVR-Frameworks ist die Möglichkeit, Virtual
-Reality Systeme zu entwerfen. Dies bedeutet es können 3D-Szenen erzeugt werden
+Reality Systeme zu entwerfen. Das bedeutet es können 3D-Szenen erzeugt werden
 die einen räumlichen Effekt haben. Die Beuth Hochschule für Technik besitzt ein
 Holodeck, wo mehrere Anwendungen demonstriert werden, die mit jVR entwickelt
 wurden.
@@ -89,7 +91,7 @@ Ein weiteres Konzept in der Spieleentwicklung ist das sogenannte Portal Culling
 bzw. Portal Rendering. Dieses Konzept beschreibt eine Szene durch ein
 Portal. Das bedeutet, man kann durch ein Portal treten und befindet
 sich im Nachhinein an einem Ort der vorher mehrere 100m weit weg war. Besonders
-populär wurde diese Art des Renderings mit der Veröffent-lichung des Spiels
+populär wurde diese Art des Renderings mit der Veröffentlichung des Spiels
 Portal von Valve Corporation. Darin wird der Spieler in die Lage versetzt Portal
 von Hand zu erschaffen und so Orte zu erreichen, die zuvor unerreichbar schienen.
 
@@ -177,8 +179,7 @@ betrachtet, mit denen die Portale erstellt werden.
 Das Kapitel der Praktischen Umsetzung befasst sich mit der eigentlichen
 Implementierung. Dort werden Klassen und Funktionalitäten näher erklärt. Es
 werden die verschiedenen Techniken betrachtet mit denen die Portale realisiert
-wurden. Außerdem werden die verwendeten DesignPattern begründet und
-dargelegt.
+wurden.
 
 Das vorletzte Kapitel gibt einen Überblick über die Ergebnisse. Es
 wird untersucht, in wie fern die Anforderungen der Arbeit erfüllt wurden. Zudem
@@ -194,8 +195,8 @@ Das folgende Kapitel soll einen Überblick darüber geben, was Portal Culling ist
 und wie es in der 3D-Echtzeitgrafik Anwendung findet. Zudem werden andere
 Algorithmen vorgestellt, die die Performanz in 3D-Anwendungen steigern. Im
 weiteren Verlauf wird das jVR-Framework genauer betrachtet und wichtige
-Funktionen diskutiert. Die Standards, die in dem Framework verwendet werden,
-werden ebenfalls vorgestellt.
+Funktionen diskutiert. Im weiteren Verlauf werden die Standards betrachtet, die
+im jVR-Framework ihre Anwendung finden.
 
 \section{Portal Culling}
 
@@ -212,8 +213,8 @@ letztendlich gerendert werden und damit für den Betrachter sichtbar werden.
 
 Beim Portal Culling stellt man sich einen Bereich vor, der aus mehreren Zellen
 besteht. Eine Zelle setzt sich aus mehreren Wänden zusammen und kann an weitere
-Zellen angrenzen. Diese Zellen verbinden einander durch Türen bzw. Fenster, so
-genannte Portale. Portale sind in der Regel durchsichtig und können in den
+Zellen angrenzen. Diese Zellen verbinden einander durch Türen bzw. Fenster,
+sogenannte Portale. Portale sind in der Regel durchsichtig und können in den
 meisten Fällen auch betreten werden.
 
 Dadurch lassen sich große Szenen erstellen, die innerhalb eines Gebäudes oder
@@ -221,7 +222,7 @@ eines Tunnelsystems spielen. Die Komplexität lässt sich beliebig skalieren, da
 sich beliebig viele Zellen miteinander verbinden lassen.
 
 Der Sinn des Portal Cullings besteht darin, Objekte innerhalb der
-verschiedenen Zellen zu rendern bzw. nicht zu rendern je nach Sichtbarkeit des
+verschiedenen Zellen zu rendern bzw. nicht zu rendern, je nach Sichtbarkeit des
 jeweiligen Objektes. Wird z.B. ein Objekt durch eine Wand verdeckt, besteht
 keine Notwendigkeit das Objekt zu rendern und es wird zudem Rechenzeit
 gespart. Durch den Einsatz dieses Verfahrens können bis zu 50 Prozent der
@@ -262,8 +263,9 @@ gerendert werden um ein optimales Ergebnis zu erreichen.
   \item Alle Portale der benachbarten Zellen von \emph{V} werden rekursiv
   durchlaufen. Für jedes Portal der aktuellen Zelle, in der sich der Betrachter
   befindet wird das Portal auf den Bildschirm projeziert. Daraufhin wird eine
-  2-dimensionale, an den Achsen ausgerichtete \emph{Bounding Box} (BB)
-  erzeugt. Dann wird die Schnittmenge zwischen der BB und \emph{P} ermittelt.
+  2-dimensionale, an den x-Achsen und y-Achsen des Bildschirms ausgerichtete
+  \emph{Bounding Box} (BB) erzeugt. Dann wird die Schnittmenge zwischen der BB
+  und \emph{P} ermittelt.
   \item Für jede Schnittmenge gilt: Ist die Schnittmenge leer, ist die
   benachbarte Zelle, die über das Portal verbunden ist, aus dem aktuellen
   Betrachterstandpunkt nicht sichtbar. Daher kann die Zelle aus dem
@@ -332,9 +334,10 @@ befindet.
 
 Man erreicht dies, indem man die Szene an der Stelle durch das Portal rendert,
 an der der Spieler austreten soll. Daher wird an diese Stelle mit dem Verhältnis
-zur Betrachterkamera die Szene gerendert und auf der Portaloberfläche gerendert.
-Diese Herangehensweise lässt sich oft in Computerspielen wiederfinden, um z.B.
-ein Labyrinth zu erzeugen oder den Spieler kurz zu desorientieren.
+zur Betrachterkamera die Szene gerendert und auf der Portaloberfläche
+abgebildet. Diese Herangehensweise lässt sich oft in Computerspielen
+wiederfinden, um z.B. ein Labyrinth zu erzeugen oder den Spieler kurz zu
+desorientieren.
 
 \subsection{Frustum Culling}
 
@@ -369,7 +372,7 @@ Renderprozess gehören, da nicht sichtbar.
 Anders als beim Frustum Culling werden Objekte nicht außerhalb des Frustums
 verworfen. Beim Occlusion Culling wird bestimmt, ob ein Objekt von einem anderen
 Objekt verdeckt und damit für den Betrachter nicht sichtbar ist. Diese
-verdeckenden Objekte werden als Occluder bezeichnet.
+verdeckenden Objekte werden als \emph{Occluder} bezeichnet.
 
 Es gibt 2 Ansätze Occlusion Culling durchzuführen. Einmal gibt es den
 punktbasierten Ansatz. In diesem wird die Szene aus Sicht des Betrachters bzw.
@@ -583,7 +586,7 @@ Um beim jVR-Framework mehrere Szenen in einem Bild zusammenlegen zu können, wird
 das \emph{FrameBuffer Object}, kurz FBO verwendet. Mit dem \emph{FrameBuffer
 Object} kann direkt in eine Textur gerendert werden. Das bietet den Vorteil,
 dass eine Szene erst erzeugt wird und in die Textur geschrieben wird. Danach
-kann die erzeugte Textur mit weiteren Grafikoperationen verändert wird.
+kann die erzeugte Textur mit weiteren Grafikoperationen verändert werden.
 
 Eine weitere Möglichkeit ist die Szene in ein \emph{FrameBuffer Object} zu
 rendern und die erzeugte Textur auf eine vorhandene Geometrie zu projezieren.
@@ -632,9 +635,9 @@ tatsächlich in der Szene zu bewegen.
 
 Das Holodeck ist eine Einrichtung der BHT, in der eine virtuelle Realität
 simuliert werden kann. Es ist die bevorzugte Plattform für das jVR-Framework und
-mit deren Hilfe entwickelte Anwendungen. Das jVR-Framework wurde mit dem
-Gedanken entwickelt, die Technologien, die im Holodeck angeboten werden effektiv
-nutzen zu können.
+mit deren Hilfe entwickelte Anwendungen getestet werden können. Das
+jVR-Framework wurde mit dem Gedanken entwickelt, die Technologien, die im
+Holodeck angeboten werden effektiv nutzen zu können.
 
 Das Holodeck besitzt eine große Projektionsleinwand. Die Leinwand wird von 2
 Beamern mittels Rückprojektion bestrahlt. Das bedeutet, die beiden Beamer
@@ -689,9 +692,9 @@ Standards ins jVR-Framwork integriert wurden.
 
 \subsection{OpenGL}
 
-Für die 3D-Beschleunigung wird die Grafikbibliothek OpenGL verwendet. \emph{Open
-Graphics Library}, kurz OpenGL ist ein offener Grafikstandard, der zur
-2D- und 3D-Echtzeit-berechnung verwendet wird.
+Für die 3D-Beschleunigung im jVR-Framework wird die Grafikbibliothek OpenGL
+verwendet. \emph{Open Graphics Library}, kurz OpenGL ist ein offener
+Grafikstandard, der zur 2D- und 3D-Echtzeit-berechnung verwendet wird.
 
 OpenGL geht aus der von Silicon Graphics Inc. (SGI) entwickelten IRIS GL API
 hervor. Ab 1992 wurde OpenGL vom OpenGL ARB (Architecture Review Board)
@@ -721,26 +724,26 @@ Pipeline aus der Spezifikation zu entfernen. Mit der Veröffentlichung von OpenGL
 3.1 ist die Fixed Function Pipeline komplett aus der Spezifikation verschwunden.
 Die Befehle lassen sich aber weiterhin über OpenGL-Extensions nutzen.
 
-\begin{figure}[ht]
+Die Abbildung \ref{fig:og32} zeigt die OpenGL Pipeline. Zuerst werden die Attribute
+der Vertices an den Vertex-Shader übergeben. Dieser reicht die verarbeiteten Daten
+weiter an den Geometry-Shader. Nachdem die Geometrien erzeugt bzw. verarbeitet
+wurden, wird das Clipping vorgenommen. Wenn dieser Schritt beendet ist, wird
+die erhaltene Szene auf den Bildschirm gemappt. Das bedeutet die Szene wird aus
+Sicht der Kamera gerendert und danach über den Rasterizer in die festgelegte
+Auflösung überführt.
+
+\begin{figure}[htbp]
  	\includegraphics[width=\linewidth]{img/pipeline}
 	\caption{OpenGL 3.2 Rendering-Pipeline}
 	\label{fig:og32}
 \end{figure}
 
-Die Abbildung \ref{fig:og32} zeigt die OpenGL Pipeline. Zuerst werden die Attribute
-der Vertices an den Vertex-Shader übergeben. Dieser reicht die verarbeiteten Daten
-weiter an den Geometry-Shader. Nachdem die Geometrien erzeugt bzw. verarbeitet
-wurden wird das Clipping vorgenommen. Nachdem dieser Schritt beendet ist, wird
-die erhaltene Szene auf den Bildschirm gemappt. Das bedeutet die Szene wird aus
-Sicht der Kamera gerendert und danach über den Rasterizer in die festgelegte
-Auflösung überführt.
-
 Die rasterisierte Szene wird dem Fragment-Shader übergeben, der weitere
 Verarbeitungsschritte vornimmt. Zum Beispiel werden die Sichtbarkeit der
 einzelnen Pixel getestet (Z-Buffer). Zum Schluss werden alle erzeugten Fragmente
-zusammengelegt und den FrameBuffer geschrieben. Der FrameBuffer wird entweder
-von der Pipeline als Textur weiterverwendet oder in einer Fensterumgebung auf
-dem Bildschirm ausgegeben.
+zusammengelegt und den \emph{FrameBuffer} geschrieben. Der \emph{FrameBuffer}
+wird entweder von der Pipeline als Textur weiterverwendet oder in einer
+Fensterumgebung auf dem Bildschirm ausgegeben.
 
 \emph{OpenGL Embedded Systems}, kurz OpenGL ES ist eine spezielle
 Zusammenstellung der OpenGL API für mobile Geräte. Dadurch lassen sich
@@ -805,15 +808,6 @@ Funktionen der Profile GL2 und GL3. Das Profil hat die Eigenschaft GL3 konform
 zu sein. Es können daher GL3-Anwendungen entwickelt werden, die aber auch auf
 Systemen lauffähig sind, die nur OpenGL 2 unterstützen.
 
-% \begin{figure}[htbp]
-% \centering
-% \includegraphics[width=\linewidth]{}
-% \caption{Die verschiedenen Profile, die von JOGL bereitgestellt
-% werden.\protect\footnotemark}
-% \label{fig:jogprof}
-% \end{figure}
-% \footnotetext{Quelle: }
-
 \begin{center}
     \includegraphics[width=\linewidth]{img/joglprofile}
     \captionof{figure}[Beschreibung]{Die verschiedenen Profile, die von JOGL
@@ -829,7 +823,7 @@ jBullet gemacht. jBullet ist eine Bibliothek, die die Möglichkeit bietet
 Kollisionen zwischen Objekten zu erkennen und geometrische Objekte mit
 physikalischen Eigenschaften zu versehen.
 
-Es kann ein physikalische Umgebung beschrieben werden, die betimmten
+Es kann ein physikalische Umgebung beschrieben werden, die bestimmten
 physikalische Gesetzen folgt. Zum Beispiel kann die Stärke der Gravitation und
 das Gewicht der Körper festgelegt werden. Dadurch lassen sich Szenen entwickeln,
 die entweder eine realistische Physik bieten, wie sie auf der Erde vorhanden ist
@@ -853,7 +847,7 @@ sich auch in diesen Programmen physikalisch korrekte Szenen simulieren.
 \subsection{COLLADA}
 
 Ein wichtiger Bestandteil des jVR-Frameworks stellt die Benutzung des
-3D-Austausch-formats COLLADA dar. Dieses Format ist basiert auf der
+3D-Austausch-formats COLLADA dar. Dieses Format basiert auf der
 Auszeichnungssprache XML. Es dient dazu wichtige Daten zwischen verschiedenen
 3D-Programmen zu verwalten. Weiterhin ist es als offener Standard definiert.
 
@@ -877,8 +871,8 @@ Erweiterung soll es möglich machen, Portale innerhalb einer Szene verwenden zu
 können. Die Portale sollen ähnlich wie andere Szeneknoten erschaffen und
 transformiert werden können.
 
-Der Entwurf soll noch einmal die wichtigsten Konzepte wiedergeben, die für das
-Erschaffen von Portalen notwendig sind. Es werden die verschiedenen
+Der Entwurf soll noch einmal die wichtigsten Konzepte zusammenfassen, die für
+das Erschaffen von Portalen notwendig sind. Es werden die verschiedenen
 Arten von Portalen und deren besonderen Eigenschaften beschrieben und
 erläutert. Weiterhin wird die Verwendung von virtuellen Kameras betrachtet und
 welche Rolle sie beim erstellen von Portalen spielen.
@@ -897,7 +891,7 @@ betreten. Der zweite Typ von Portalen ist der Spiegel. Er gibt die Szene
 gespiegelt wieder, wodurch der Betrachter in der Lage ist die Umgebung hinter
 ihm zu sehen. 
 
-Der letzte Portaltyp, der behandelt wird ist der Teleporter. Durch
+Der letzte Portaltyp, der behandelt wird ist der Teleporter. Durch ihn
 kann man die Szene betrachten. Dabei sieht man den Ausgang des Teleporters, der
 an einer völlig anderen Stelle in der Szene platziert sein kann. Wenn der
 Teleporter betreten wird, tritt man aus dessen Ausgang aus und befindet sich an
@@ -976,8 +970,8 @@ durchsichtig gemacht.
 
 Ein weiterer Portaltyp, der umgesetzt werden soll, ist der Teleporter. Der
 Teleporter ist ein Portal welches betreten bzw. durchtreten werden kann. Das
-bedeutet, schreitet der Betrachter durch den Teleporter, kommt an einer anderen
-Stelle der Szene wieder heraus.
+bedeutet, schreitet der Betrachter durch den Teleporter, kommt er an einer
+anderen Stelle der Szene wieder heraus.
 
 Jeder Teleporter benötigt einen Ausgang um genutzt werden zu können. Der Ausgang
 wird durch einen zweiten Teleporter repräsentiert. Dieser kann beliebig in der
@@ -985,7 +979,7 @@ Szene platziert sein. Um ihn eindeutig dem Eingangsteleporter zuzuordnen, wird
 die virtuelle Kamera des einen Teleporters dem anderen Teleporter übergeben und
 umgekehrt.
 
-Wenn der Teleporter einen Ausgang zugeordnet bekommen hat, kann durch den
+Wenn dem Teleporter ein Ausgang zugeordnet worden ist, kann durch den
 Teleporter die Szene betrachtet werden. Man sieht die Szene durch den Teleport
 aus der Perspektive des Ausgangs. Das heißt, würde man sich direkt hinter den
 Ausgang des Teleporters stellen und sich in dessen Richtung drehen, sieht man
@@ -1027,9 +1021,9 @@ Eine andere Möglichkeit den Abstand zu bestimmen ist über die \emph{Bounding
 Box} des Portals. Dabei wird der Mittelpunkt des Objekts bzw. der Kamera ins
 Objektkoordinatensystem des Portals übertragen. Danach wird getestet, ob sich
 der Punkt innerhalb der BB befindet. Da die Ebene flach ist, sind der maximale
-und minimale Z-Wert der BB. Es reicht den maximalen Wert zu erhöhen um eine
-3dimensionale BB zu erzeugen. Sobald der Mittelpunkt innerhalb liegt, wird das
-Objekt bzw. die Kamera teleportiert.
+und minimale Z-Wert der BB gleich 0. Es reicht den maximalen Z-Wert zu erhöhen
+um eine 3dimensionale BB zu erzeugen. Sobald der Mittelpunkt innerhalb liegt,
+wird das Objekt bzw. die Kamera teleportiert.
 
 \subsection{Türen}
 
@@ -1093,7 +1087,7 @@ projeziert.
 
 Um das \texttt{FrameBuffer Object} nutzen zu können muss über die Pipeline erst
 eines erzeugt werden. Ist dies geschehen, wird auf die virtuelle Kamera
-geschaltet, um die Szene darüber zu rendern. Dann der Pipeline wiederum
+geschaltet, um die Szene darüber zu rendern. Dann wird der Pipeline wiederum
 mitgeteilt, die gerenderte Szene in das FBO zu rendern und nicht auf den
 Bildschirm zu projezieren. Im weiteren Schritt bekommt der Shader, der ein Teil
 des Materials der Portale ist, das FBO als Textur übergeben und bildet diese
@@ -1102,7 +1096,7 @@ dann auf dem jeweiligen Portal ab.
 Es gibt 2 Portaltypen, die eine virtuelle Kamera besitzen. Zum einen
 \texttt{Teleporter} und zum anderen \texttt{Mirror}. Diese beiden Portaltypen
 benötigen die virtuelle Kamera um die Szene aus einer gewissen Position zu
-rendern im Anschluss auf dem jeweiligen Typen anzuzeigen.
+rendern und im Anschluss auf dem jeweiligen Typen anzeigen zu können.
 
 \section{Portallisten}
 
@@ -1128,7 +1122,7 @@ diesem Zweck wird die \texttt{TeleportList} verwendet, eine abgeleitete Form der
 \section{Zellen}
 
 Zellen stellen in sich abgeschlossene Räume dar. Sie erben von der Klasse 
-\texttt{GroupNodes} und können daher weitere Szeneknoten enthalten. Zellen
+\texttt{GroupNode} und können daher weitere Szeneknoten enthalten. Zellen
 lassen sich über Türen miteinander verbinden. Jede Zelle wird durch 4
 Wände, eine Decke und einen Boden definiert, wobei die Breite, Länge und Höhe
 einer Zelle variieren kann.
@@ -1141,10 +1135,10 @@ mit einer Textur versehen.
 Eine Zelle stellt eine \texttt{GroupNode} dar. Daher lässt sie sich nach
 Belieben transformieren, zusammen mit allen enthaltenen Kindknoten. Zellen
 können somit beliebig platziert werden und daraufhin mit einer benachbarten
-Zelle über eine Tür verbunden werden. Die Information ob 2 Zellen benachbart
+Zelle über eine Tür verbunden werden. Die Information, ob 2 Zellen benachbart
 sind oder nicht wird in der Tür gespeichert.
 
-\chapter{Praktische Umsetzung}
+\chapter{Umsetzung der Portale}
 
 Dieses Kapitel befasst sich mit der Implementierung der Erweiterung für das
 jVR-Framework. Im ersten Teil werden die Portal-Klassen und ihre verschiedenen
@@ -1166,7 +1160,7 @@ der Implementierung entstanden sind.
 \label{fig:pack}
 \end{figure}
 
-Das Paket \texttt{culling} besteht aus den Klassen die für Portal Culling von
+Das Paket \texttt{culling} besteht aus den Klassen, die für Portal Culling von
 Bedeutung sind. Mit ihnen können Zellen erzeugt werden, also Räume die
 untereinander verbunden sind. Zudem lassen sich verschiedene Arten von Wänden
 erzeugen, über die Klasse \texttt{Wall}.
@@ -1223,7 +1217,8 @@ Listing \ref{lst:exa}.
 
 Jedes Objekt vom Typ \texttt{Portal} besitzt eine virtuelle Kamera vom Typ
 \texttt{CameraNode}. Dies ist vor allem in den Klassen \texttt{Teleporter} und
-\texttt{Mirror} von Bedeutung, da diese für das Rendering der benötigt wird.
+\texttt{Mirror} von Bedeutung, da diese für das Rendering der Szene benötigt
+wird.
 
 \newpage
 Weiterhin stellt die \texttt{Portal}-Klasse 2 abstrakte Methoden bereit. Zum
@@ -1288,7 +1283,7 @@ Aus der gewonnenen Transformation $T$ werden die Translations-
 und die Rotationstransformation extrahiert. Danach wird die Transformation des
 \texttt{portalExit} mit der Rotationstransformation verrechnet, siehe auch
 Gleichung \ref{eq:exit}. Dies wird gemacht, sodass der Szeneknoten mit der
-gleichen Rotation aus dem Teleporterausgang austritt, mit der den
+gleichen Rotation aus dem Teleporterausgang austritt, mit der er den
 Teleportereingang betreten hat.
 
 \begin{equation}
@@ -1298,7 +1293,7 @@ Teleportereingang betreten hat.
 
 Danach wird der Knoten mit einem Offset in die z-Richtung transformiert. Dies
 hat den Grund, dass der Szeneknoten vor dem Portal und dessen \emph{Bounding
-Box} zu landen soll und nicht darin. Wäre dies der Fall würde der Szeneknoten
+Box} landen soll und nicht darin. Wäre dies der Fall würde der Szeneknoten
 bei Austritt umgehend wieder teleportiert werden.
 
 \begin{equation}
@@ -1334,10 +1329,14 @@ Zum Schluss wird die Transformation dem zu teleportierenden Szeneknoten
 \subsubsection{PortalConnector}
 
 Um die Teleporter miteinander zu verbinden wird die Helferklasse
-\texttt{PortalConnector} aufgerufen. Sie bietet nur statische Methoden zur
-Verfügung und muss daher nicht instanziiert werden. Über die statische
-Methode \texttt{connect} werden 2 Teleporter miteinander verbunden. Dazu werden
-2 Teleporter-Objekte übergeben, die verbunden werden sollen.
+\texttt{PortalConnector} aufgerufen. Sie stellt nur eine statische Methode zur
+Verfügung und muss daher nicht instanziiert werden. Über die Methode
+\texttt{connect} werden 2 Teleporter miteinander verbunden. Dazu werden 2
+Teleporter-Objekte übergeben, die verbunden werden sollen.
+
+\begin{center}
+\texttt{PortalConnector.connect(teleporter1, teleporter2)}
+\end{center}
 
 Die Verbindung zwischen den Teleportern wird hergestellt, indem den jeweiligen
 Teleporter die virtuelle Kamera des anderen Teleporters übergeben wird. Jeder
@@ -1347,8 +1346,8 @@ aufrufen, die die virtuelle Kamera des jeweiligen Teleporters zurückgibt.
 
 Dadurch lassen sich in den jeweiligen \texttt{Teleportern} die virtuellen
 Kameras des zugeordneten Gegenstücks aufrufen und konfigurieren. Bei Bedarf kann
-zum Bespiel die Kameratransformation ändern, oder aber das Seitenverhältnis
-anpassen.
+zum Bespiel die Kameratransformation verändert, oder aber das Seitenverhältnis
+angepasst werden.
 
 \newpage
 \subsubsection{Physik}
@@ -1419,8 +1418,8 @@ Szene hinzugefügt werden sowieso gerendert werden sollen.
 
 Über die \texttt{remove}-Methode lassen sich einzelne Portale wieder aus der
 Liste entfernen. Dies kann zum Beispiel dann hilfreich sein, wenn während der
-Laufzeit ein Portal aus der Szene entfernt wird, kann daraufhin die Methode
-aufgerufen werden. Dadurch muss das Portal nicht unnötig gerendert werden.
+Laufzeit ein Portal aus der Szene entfernt wird. Daraufhin kann die
+Methode aufgerufen werden. Dadurch muss das Portal nicht unnötig gerendert werden.
 
 Die \texttt{PortalList} verfügt eine Methode \texttt{render}. Diese wird
 aufgerufen wenn die Pipeline erzeugt und konfiguriert wurde. Dies hat den Grund,
@@ -1502,16 +1501,16 @@ Breite skaliert, um die richtigen Maße für die Tür einzustellen. Zudem wird die
 \texttt{SceneNode} nicht in der Szene darstellen zu müssen.
 
 Die Tür ist in diesem Fall eine freie Fläche, sie soll nicht sichtbar sein,
-sondern der Betrachter soll durch die in einen anderen Raum blicken können. Die
-\emph{Bounding Box} der Tür ist wichtig, da über sie die maximalen und minimalen
+sondern der Betrachter soll durch die Wand in einen anderen Raum blicken können.
+Die \emph{Bounding Box} der Tür ist wichtig, da über sie die maximalen und minimalen
 $x$, $y$ und $z$ Werte bestimmt und verwendet werden können. Diese werden für
 das bilden des neuen Frustums benötigt, wenn der Betrachter durch die Tür
 blicken sollte.
 
 Der Tür werden mehrere Räume vom Typ \texttt{Cell} zugeordnet. Zum einen die
 aktuelle Zelle, der eine Tür hinzugefügt werden soll. Dies geschieht über die
-\texttt{setCell}-Methode. Zum anderen die Nachbarzelle, die angefügt wird sobald
-die Tür in der Zelle platziert wurde. Über die Methode \texttt{setNeighbor}
+\texttt{setCell}-Methode. Zum anderen die Nachbarzelle, die angefügt wird,
+sobald die Tür in der Zelle platziert wurde. Über die Methode \texttt{setNeighbor}
 lässt sich die Nachbarzelle festlegen.
 
 \subsection{Cell-Klasse}
@@ -1533,19 +1532,129 @@ Dadurch lässt sich die Position der \texttt{SceneNode} innerhalb der Zelle
 ermitteln. Ist diese innerhalb der Zelle wird \texttt{true} zurückgegeben und
 ist sie außerhalb \texttt{false}.
 
-Die verschiedenen Wände 
+Die verschiedenen Wände werden im Konstruktor erzeugt und entsprechend
+transformiert. Es wird zwischen \texttt{northWall}, \texttt{westWall},
+\texttt{eastWall}, \texttt{southWall}, sowie \texttt{roof} und \texttt{floor}
+unterschieden.
 
+Um zu verdeutlichen wie die einzelnen Wände transformiert werden müssen, werden
+die verschiedenen Translationstransformationen noch einmal aufgeführt. Jede Wand
+wird mit einem 3dimensionalen Vektor an die entsprechende Stelle transformiert.
+Der Vektor $V$ wird über die Werte $x$, $y$ und $z$ definiert.
+
+%TODO: Bild von Zelle
+
+\newpage
 \subsubsection{CellList}
+
+Die \texttt{CellList} ist für die Verwaltung der verschiedenen Zellen gedacht.
+Jedes \texttt{Cell}-Objekt wird bei seiner Erzeugung zur \texttt{CellList}
+hinzugefügt. Dabei wird die \texttt{add}-Methode im Konstruktor des jeweiligen
+Objekts aufgerufen und das aktuelle Objekt wird übergeben.
+
+Die \texttt{CellList} prüft über die \texttt{checkCell}-Methode, in welcher
+Zelle sich der Betrachter gerade befindet. Dazu geht die Methode alle Zellen
+durch, die in der Liste registriert sind, und ruft dessen
+\texttt{contains}-Methode auf. Sie gibt als Ergebnis den Namen der Zelle zurück.
 
 \subsubsection{Wall-Klasse}
 
-\section{Optimierungen}
+Die \texttt{Wall}-Klasse repräsentiert alle Wände, die innerhalb der Klasse
+\texttt{Cell} positioniert werden. Sie besitzt die Attribute \texttt{width} und
+\texttt{height} vom Typ float, mit denen die Breite und die Höhe der Wand
+bestimmt werden können. Zudem lässt sich über das Attribut \texttt{color} die
+Farbe einer Wand festlegen.
 
+Die Methode \texttt{addDoor} ist dafür gedacht eine Tür in die Wand zu
+integrieren. Dies geschieht, indem die Wand, die eine Tür bekommen soll über ein
+Objekt der Klasse \texttt{Cell} aufgerufen wird. 
+
+\begin{center}
+\texttt{cell.getEastWall().addDoor(new Door())}
+\end{center}
+
+Dabei wird das gewählte \texttt{Wall}-Objekt wird aus dem \texttt{Cell}-Objekt
+entfernt, in diesem Fall die \texttt{eastWall}. Daraufhin wird ein neues
+\texttt{Cell}-Objekt erzeugt und so transformiert, dass es genau neben der
+aktuellen Zelle positioniert ist. Aus dem neu erstellten Objekt wird ebenfalls
+eine Wand entfernt, sodass nun ein großer Raum entsteht. Zwischen den beiden
+Zellen wird das \texttt{Door}-Objekt platziert. Dieses wird durch eine Wand mit
+einem Durchgang mit der Höhe und der Breite des zuvor definierten
+\texttt{Door}-Objektes repräsentiert.
+
+\newpage
 \section{Verwendete Entwicklungswerkzeuge}
+
+Für die Entwicklung mit dem jVR-Framework wurde die IDE Eclipse verwendet. Mit
+ihr wurde der Entwicklungsprozess deutlich beschleunigt und komfortabler
+gestaltet. Zusammen mit der IDE wurde das Versionverwaltungssystem Subversion
+verwendet. Das PlugIn Subclipse für Eclipse vereinfachte die Bedienung und ließ
+sich direkt in den Arbeitsablauf mit einbeziehen.
+
+Die Programmdokumentation wurde über das Programm JavaDoc erstellt. Damit ließ
+sich eine HTML-Struktur erzeugen, die die einzelnen Klassen und Methoden
+nocheinmal genau auflistet. Die Kommentare über den einzelnen Methoden bzw.
+Klassen werden ebenfalls übernommen und sorgen für ein besseres Verständnis über
+die Funktionsweise.
+
+Um das Verhalten der Portale besser einschätzen zu können, wurden verschiedene
+Testanwendungen geschrieben. Diese dienen dazu, die verschiedenen Eigenschaften
+der Portale zu untersuchen und bei Bedarf anzupassen. Da die Portale nur
+grafisch getestet werden können, wurde auf die Anwendung von Unittests
+verzichtet.
 
 \chapter{Ergebnisse und Bewertung}
 
+Dieses Kapitel soll nocheinmal die gemachten Ergebnisse zusammenfassen und
+zeigen, inwiefern die gestellten Anforderungen erfüllt wurden.
+
+\section{Verschiedene Portaltypen}
+
+Durch die Erweiterung des jVR-Frameworks, lassen sich verschiedene Arten von
+Portalen erzeugen. Diese 3 Portalarten sind der Teleporter, der Spiegel und die
+Tür. Alle 3 unterscheiden sich voneinander und lassen sich nun innerhalb der
+jVR-Umgebung nutzen.
+
+Jedes der aufgeführten Portale lässt sich ohne Weiteres transformieren. Daher
+ist das Verhalten der Portale nicht von anderen Szeneknoten zu unterscheiden.
+Die Instanziierung der einzelnen Portale ist ohne Probleme nötig und Bedarf
+keine Einarbeitung.
+
+Der Teleporter kann den Betrachter innerhalb der Szene von einem Ort zum anderen
+transformieren. Der Übergang der Transformation ist dabei fließend. Das
+bedeutet, man hat den Eindruck wirklich durch den Teleporter zu laufen. Die
+Verbindung zweier Teleporter ist einfach umzusetzen und lässt die Möglichkeit
+offen verschiedene Szenarien mit Teleportern umzusetzen.
+
+Mit dem Spiegel erhält das jVR-Framework eine weitere Gestaltungsmöglichkeit. Es
+können ohne weiteres spiegelnde Oberflächen in die Szene eingebaut und verwendet
+werden.
+
+Die letzte Möglichkeit Portale in die Szene einzubauen besteht mit der Tür. Sie
+kann nur im Zusammenhang mit Zellen verwendet werden. Dazu muss mindestens eine
+Zelle instanziiert werden und in der Szene platziert werden. Der Einbau einer
+Tür in eine Zelle ist ohne Schwierigkeiten möglich.
+
+\section{Physikalisches Verhalten}
+
+Das physikalische Verhalten zwischen den Teleportern ist teilweise realisiert
+worden. Es ist möglich den Teleportern ein Objekt zu übergeben und dieses dann
+auch transformieren zu lassen. Die physikalischen Eigenschaften des Objekts
+bleiben dabei erhalten und es tritt auch physikalisch korrekt aus dem
+Ausgangsteleporter aus. Die Kapselung der physikalischen Transformation konnte
+jedoch nicht mehr umgesetzt werden. Eine Testanwendung demonstriert den Einsatz
+von physikalischen Objekten im Zusammenhang mit 2 Teleportern. Die Verwendung
+von mehreren physikalischen Objekten ist nicht innerhalb der Bearbeitungszeit
+realisiert worden.
+
+\section{Culling}
+
+
 \chapter{Zusammenfassung und Ausblick}
+
+\section{Weiterentwicklung der Portale}
+
+\section{Fazit}
 
 \bibliography{lit}
 \bibliographystyle{apalike}
