@@ -1,4 +1,6 @@
-package de.bht.jvr.portals;
+package de.bht.jvr.portals.util;
+
+import de.bht.jvr.portals.Teleporter;
 
 public class PortalConnector {
 	

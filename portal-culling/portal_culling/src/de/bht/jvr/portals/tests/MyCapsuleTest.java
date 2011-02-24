@@ -12,8 +12,8 @@ import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
 import de.bht.jvr.portals.Mirror;
 import de.bht.jvr.portals.Portal;
-import de.bht.jvr.portals.PortalConnector;
 import de.bht.jvr.portals.Teleporter;
+import de.bht.jvr.portals.util.PortalConnector;
 import de.bht.jvr.portals.util.PortalList;
 import de.bht.jvr.portals.util.PortalTestBase;
 import de.bht.jvr.renderer.NewtRenderWindow;
@@ -82,7 +82,7 @@ public class MyCapsuleTest extends PortalTestBase {
         p.switchFrameBufferObject(null);
 		p.switchCamera(camera);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
-		//p.setBackFaceCulling(false);
+		p.setBackFaceCulling(false);
 		p.drawGeometry("AMBIENT", null);
 		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		
