@@ -3,6 +3,7 @@ package de.bht.jvr.portals;
 import java.awt.Color;
 import java.io.File;
 
+import de.bht.jvr.collada14.loader.ColladaLoader;
 import de.bht.jvr.core.CameraNode;
 import de.bht.jvr.core.ClipPlaneNode;
 import de.bht.jvr.core.Finder;
@@ -22,6 +23,7 @@ public class Teleporter extends Portal {
 	private static ShaderProgram shaderProg;
 	private Portal portalExit;
 	private ClipPlaneNode clipPlane;
+	private SceneNode frame;
 	
 	public void setPortalExit(Portal portalExit) {
 		this.portalExit = portalExit;
@@ -45,6 +47,10 @@ public class Teleporter extends Portal {
 		ShaderMaterial shaderMat = new ShaderMaterial("AMBIENT", shaderProg);
 		shaderMat.setMaterialClass(this.getName() + "Mat");
 		
+		frame = ColladaLoader.load(new File("meshes/plane.dae"));
+		ShapeNode frameShape = Finder.find(frame, ShapeNode.class, null);
+		frameShape.setTransform(Transform.scale(2.5f, 3.5f, 1.5f).mul(Transform.translate(0, 0, -0.01f)));
+		this.addChildNode(frame);
 		
 		ShapeNode shape = Finder.find(this, ShapeNode.class, null);
 		shape.setTransform(Transform.scale(2, 3, 1));
