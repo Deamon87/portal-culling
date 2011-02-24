@@ -225,8 +225,7 @@ Der Sinn des Portal Cullings besteht darin, Objekte innerhalb der
 verschiedenen Zellen zu rendern bzw. nicht zu rendern, je nach Sichtbarkeit des
 jeweiligen Objektes. Wird z.B. ein Objekt durch eine Wand verdeckt, besteht
 keine Notwendigkeit das Objekt zu rendern und es wird zudem Rechenzeit
-gespart. Durch den Einsatz dieses Verfahrens können bis zu 50 Prozent der
-benötigten Ressourcen zum Rendern eingespart werden. %TODO: belegen
+gespart.
 
 Zellen können auch ganz vom Renderprozess ausgeschlossen werden. Dies geschieht,
 wenn das Portal, das zur nächsten Zelle führt außerhalb des Sichtbereiches
@@ -257,9 +256,10 @@ gerendert werden um ein optimales Ergebnis zu erreichen.
   \item Des Weiteren soll eine 2-dimensionale \emph{Bounding Box} \emph{P}
   erzeugt werden, die in ihren Maßen dem rechteckigen Bildschirm entspricht.
   \item Danach wird die Geometrie der Zelle \emph{V} gerendert. Dabei wird das
-  Verfahren des View Frustum Culling angewendet. Das Frustum\footnote{Körper
-  dessen Inhalt auf den Bildschirm projeziert wird}, das vom Betrachter ausgeht
-  wird aus dem Rechteck \emph{P} gebildet, in diesem Falle ist das der ganze Bildschirm.
+  Verfahren des View Frustum Culling angewendet. Das
+  Frustum\footnote{Sichtbereich dessen Inhalt auf den Bildschirm projeziert
+  wird}, das vom Betrachter ausgeht wird aus dem Rechteck \emph{P} gebildet, in
+  diesem Falle ist das der ganze Bildschirm.
   \item Alle Portale der benachbarten Zellen von \emph{V} werden rekursiv
   durchlaufen. Für jedes Portal der aktuellen Zelle, in der sich der Betrachter
   befindet wird das Portal auf den Bildschirm projeziert. Daraufhin wird eine
@@ -270,8 +270,8 @@ gerendert werden um ein optimales Ergebnis zu erreichen.
   benachbarte Zelle, die über das Portal verbunden ist, aus dem aktuellen
   Betrachterstandpunkt nicht sichtbar. Daher kann die Zelle aus dem
   Rendervorgang ausgeschlossen werden. Ist die Schnittmenge wiederum nicht leer,
-  wird der Inhalt der Zelle an Hand des Frustums, welches vom Betrachter
-  ausgeht, und aus der Schnittmenge gecullt.
+  wird der Inhalt der Zelle an Hand des Frustums, das durch die Schnittmenge
+  aufgespannt wird, verglichen und alles außerhalb des Frustums wird verworfen.
   \item War die Schnittmenge nicht leer, kann es möglich sein, dass die Nachbarn
   der benachbarten Zelle ebenfalls sichtbar für den Betrachter sind. Dabei wird
   der dritte Schritt wiederholt. Diesmal ist die Schnittmenge \emph{P}.
@@ -384,11 +384,11 @@ Der zweite Methode stellt der zellenbasierte Ansatz dar. Bei dieser
 Vorgehensweise wird eine Zelle von einer bestimmten Größe definiert. Danach
 werden alle Objekte bestimmt die innerhalb dieser Zelle für den Betrachter nicht
 sichtbar sind, da verdeckt. Diese Methode bietet den Vorteil den Vorgang nur
-dann zu wiederholen, falls man den Bereich der Zelle verlässt.
+dann zu wiederholen, falls man den Bereich der Zelle verlässt, siehe dazu auch
+\cite{real_time}.
 
 \section{Techniken des jVR-Framework}
-% TODO: besser formulieren, jVR wurde nicht von mir ausgewählt, ist Teil der
-% Arbeit
+
 Der Einsatz des jVR-Frameworks spielt eine zentrale Rolle dieser Arbeit. In
 diesem Teil der Arbeit werden die wichtigsten Konzepte vorgestellt, die in dem
 Framework verwendet werden.
@@ -400,7 +400,6 @@ Verständnis über die Funktionen von 3D-Engines vermitteln.
 
 \subsection{Shaderunterstützung}
 
-%TODO: Shaderunterstützung
 Ein Grund für die Entwicklung des jVR-Frameworks war es den Studierenden der BHT
 Berlin eine Umgebung zu liefern, mit der sich problemlos Shaderbasierte
 Anwendungen entwickeln lassen. Shader werden im Abschnitt \emph{GLSL} näher
@@ -410,7 +409,7 @@ Shader an, waren aber nicht in Java entwickelt.
 Da der Schwerpunkt im Studium an der BHT auf der Programmiersprache Java liegt,
 sollte die Engine mittels Java programmiert werden können. Somit wurde das
 jVR-Framework mit dem Gedanken entwickelt, Shader schreiben und verwenden zu
-können.
+können, siehe dazu auch \cite[S. 55-56]{jvrMast}.
 
 Shader können im jVR-Framework aus 3 verschiedenen Typen bestehen. Der
 Fragment-Shader, der Vertex-Shader und der Geometry-Shader. Nötig für eine
@@ -421,19 +420,21 @@ Dieser \texttt{ShapeNode} kann ein Material zugeordnet werden. Eines dieser
 Materialien ist das \texttt{ShaderMaterial}. Einem \texttt{ShaderMaterial}
 können mehrere Shaderkontexte zugeordnet werden.
 
-Die Shaderkontexte beinhaltet ein Shaderprogramm, zum Beispiel einen
+Die Shaderkontexte beinhalten ein Shaderprogramm, zum Beispiel einen
 Fragement- sowie einen Vertex-Shader. Die Shaderprogramme können mittels
-Uniformvariablen angesprochen und in ihrem Verhalten verändert werden.
+Uniformvariablen angesprochen und in ihrem Verhalten verändert werden. Dies
+bietet den Vorteil Oberflächeneigenschaften während der Laufzeit ändern zu
+können.
 
 \subsection{Szenegraph}
 
 Um die Objekte innerhalb einer 2D bzw. 3D-Szene verwalten zu können, wird in dem
-jVR-Framework Verwendung von einem Szenegraphen gemacht. Ein Szenegraph
-ist eine baumförmige Datenstruktur. Objekte in einer Szene können zum einen
-geometrische Objekte oder Lichtquellen sein. Jedes Objekt in der Szene besitzt
-eine eigene Transformation. Es besteht außerdem die Möglichkeit Objekte einer
-Szene zu animieren. Dies geschieht, indem man die Transformationen in zeitlichen
-Intervallen manipuliert.
+jVR-Framework Verwendung von einem Szenegraphen gemacht, vergleiche dazu auch
+\cite[S. 42-43]{jvrMast}. Ein Szenegraph ist eine baumförmige Datenstruktur.
+Objekte in einer Szene können zum einen geometrische Objekte oder Lichtquellen
+sein. Jedes Objekt in der Szene besitzt eine eigene Transformation. Es besteht
+außerdem die Möglichkeit Objekte einer Szene zu animieren. Dies geschieht, indem
+man die Transformationen in zeitlichen Intervallen manipuliert.
 
 Über einen Szenengraph lassen sich außerdem Objekte animieren, die in
 hierarchischer Beziehung zueinander stehen. Werden mehrere Objekte in einem
@@ -653,7 +654,7 @@ Shutterbrille sind mehrere Trackingpunkte befestigt.
 \centering
 \includegraphics[width=400pt]{img/projektor}
 \caption{Beispiel für die Projektionsart im Holodeck. Das Holodeck benutzt das
-Prinzip der zirkulären Polarisation}
+Prinzip der zirkulären Polarisation. Quelle: \cite{holodeck}}
 \label{fig:proj}
 \end{figure}
 
@@ -717,12 +718,13 @@ OpenGL besaß bis zur Version 1.5 eine Fixed Function Pipeline mit der die
 Objekte gerendert werden mussten. Die Fixed Function Pipeline war für die
 Beleuchtung und Transformation der Vertices verantwortlich. Erst mit der Version
 2.0 ließ sich die Pipeline über die \emph{OpenGL Shading Language} zum Teil
-programmieren.
+programmieren, vergleiche dazu auch \cite{oglSpec20}.
 
 Seit OpenGL 3.0 wurde damit begonnen die meisten Befehle der Fixed Function
 Pipeline aus der Spezifikation zu entfernen. Mit der Veröffentlichung von OpenGL
-3.1 ist die Fixed Function Pipeline komplett aus der Spezifikation verschwunden.
-Die Befehle lassen sich aber weiterhin über OpenGL-Extensions nutzen.
+3.1 ist die Fixed Function Pipeline komplett aus der Spezifikation
+verschwunden, siehe auch \cite{oglSpec31}. Die Befehle lassen sich aber
+weiterhin über OpenGL-Extensions nutzen.
 
 Die Abbildung \ref{fig:og32} zeigt die OpenGL Pipeline. Zuerst werden die Attribute
 der Vertices an den Vertex-Shader übergeben. Dieser reicht die verarbeiteten Daten
@@ -751,10 +753,13 @@ Anwendungen auf mobilen Geräten realisieren. Durch die begrenzten Kapazitäten,
 wie Arbeitsspeicher und Rechenleistung der mobilen Hardware, ist diese Version
 der OpenGL API um einige Funktionen erleichtert worden.
 
-%TODO besser formulieren
 Ins jVR-Framework wurden viele häufig benutzten Grundfunktionen implementiert.
-Dies dient dazu um die Produktivität zu steigern. Dadurch kommt der Entwickler
-so gut wie nie in Kontakt mit reinen OpenGL-Befehlen.
+Man muss zum Beispiel nicht erst über mehrere Befehle eine Kamera erzeugen,
+sondern ruft einfach die Kameraklasse auf und erzeugt ein Objekt. Als anderes
+Beispiel sei das binden von Texturen an geometrische Objekte genannt. In jVR
+wird einfach ein Texturobjekt mit dem gewünschten Bild über eine Variable
+übergeben. Dies dient dazu um die Produktivität zu steigern. Dadurch kommt der
+Entwickler so gut wie nie in Kontakt mit reinen OpenGL-Befehlen.
 
 \subsection{GLSL}
 
@@ -775,10 +780,11 @@ Spezifikation und müssen zwingend implementiert werden. Durch Verwendung dieser
 Shader lassen sich Oberflächeneffekte oder auch Effekte, wie Motion Blur und
 Depth of Field erzeugen.
 
-Mit OpenGL 3.2 kommen die Geometry-Shader zur Kernspezifikation hinzu. Diese
-Shader ermöglichen es Geometrien direkt auf der Grafikkarte zu erzeugen und zu
-verarbeiten. OpenGL 4.0 erweitert die Spezifikation um den Gebrauch von
-Tesselation-Shadern. Diese Shader können dazu verwendet vorhandene Polygone in
+Mit OpenGL 3.2 kommen die Geometry-Shader zur Kernspezifikation hinzu, siehe
+auch \cite{oglSpec32}. Diese Shader ermöglichen es Geometrien direkt auf der
+Grafikkarte zu erzeugen und zu verarbeiten. OpenGL 4.0 erweitert die
+Spezifikation um den Gebrauch von Tesselation-Shadern, vergleiche
+\cite{oglSpec40}. Diese Shader können dazu verwendet vorhandene Polygone in
 weitere kleinere Polygone aufzuteilen und so die Oberfläche eines geometrischen
 Objekts zu verbessern.
 
@@ -794,9 +800,9 @@ X und Linux verfügbar.
 
 JOGL wurde von der Sun Microsystems Game Technology Group entwickelt. Es steht
 als Open Source zur Verfügung und wird unter der BSD Lizenz angeboten. Es stellt
-zudem eine Referenzimplementierung der Java Specification Request (JSR-231) dar.
-JOGL wird möglicherweise in einer späteren Java-Version zu den
-Standarbibliotheken mit aufgenommen.
+zudem eine Referenzimplementierung der Java Specification Request (JSR-231)
+dar, siehe auch \cite{jsr231}. JOGL wird möglicherweise in einer späteren Java-Version zu
+den Standarbibliotheken mit aufgenommen.
 
 In der Version 2 von JOGL wurden die GLProfile eingeführt. Diese ermöglichen es
 dem Entwickler sich für ein OpenGL-Version zu entscheiden. Dadurch kann
@@ -838,7 +844,8 @@ komplexen Berechnungen übernimmt die jBullet-Engine.
 Die jBullet-Engine ist eine Portierung der Bullet-Engine. Bullet wurde in C++
 entwickelt. Die Bullet-Engine ist eine weit verbreitete Physik-Engine, die
 selbst in vielen kommerziellen Projekten Anwendung findet. Sie wurde zum
-Beispiel in Filmen wie 2012, Shrek 4 und A-Team verwendet.
+Beispiel in Filmen wie 2012, Shrek 4 und A-Team verwendet, siehe auch
+\cite{bullet}.
 
 Viele der bekannten 3D-Authoring Programme lassen sich mit einem PlugIn
 erweitern, das alle Eigenschaften der Bullet-Engine integriert. Damit lassen
@@ -850,14 +857,15 @@ Ein wichtiger Bestandteil des jVR-Frameworks stellt die Benutzung des
 3D-Austausch-formats COLLADA dar. Dieses Format basiert auf der
 Auszeichnungssprache XML. Es dient dazu wichtige Daten zwischen verschiedenen
 3D-Programmen zu verwalten. Weiterhin ist es als offener Standard definiert.
+Für die Pflege und Weiterentwicklung ist die Khronos Group verantwortlich.
 
 Eine COLLADA-Datei setzt sich aus mehreren Bereichen zusammen. Zum einen werden
 die Geometrien beschrieben und zum anderen werden die verwendeten Texturen über
 Pfade angesteuert. Weitere Bereiche sind Lichter, Materialien und Kameras.
 
 Seit der Version 1.4 können auch physikalische Eigenschaften in COLLADA-Dateien
-hinterlegt werden. Dabei können Oberflächeneigenschaften wie Reibung definiert
-werden.
+hinterlegt werden. Dabei können Oberflächeneigenschaften wie Reibung oder Masse
+des Objekts definiert werden.
 
 Das COLLADA-Format wird von den meisten 3D-Authoring-Programmen
 unterstützt, darunter Blender, Autodesk Maya und Autodesk 3D Studio Max.
@@ -889,7 +897,7 @@ Die 3 Typen in denen sich die Portale unterteilen sind zum einen die Tür. Sie
 kann durchtreten werden. Über sie lassen sich ohne Probleme andere Räume
 betreten. Der zweite Typ von Portalen ist der Spiegel. Er gibt die Szene
 gespiegelt wieder, wodurch der Betrachter in der Lage ist die Umgebung hinter
-ihm zu sehen. 
+sich betrachten zu können. 
 
 Der letzte Portaltyp, der behandelt wird ist der Teleporter. Durch ihn
 kann man die Szene betrachten. Dabei sieht man den Ausgang des Teleporters, der
@@ -897,11 +905,11 @@ an einer völlig anderen Stelle in der Szene platziert sein kann. Wenn der
 Teleporter betreten wird, tritt man aus dessen Ausgang aus und befindet sich an
 der Stelle, die zuvor durch den Teleporter gesehen wurde.
 
-Jeder dieser Portaltypen kann von der Höhe und der Breite her verändert werden.
+Jeder Portaltyp kann von der Höhe und der Breite verändert werden.
 Weiterhin besitzen der Teleporter und der Spiegel eine virtuelle Kamera. Der
 Nutzen der virtuellen Kamera wird im Abschnitt \emph{Virtuelle Kameras} näher
-erläutert. Als Grundlage der vorgestellten Portaltypen steht eine
-Oberklasse, von der alle Portale abgeleitet werden, die Klasse \texttt{Portal}. 
+erläutert. Als Grundlage, der vorgestellten Portaltypen, steht die
+Oberklasse \texttt{Portal}, von der alle Portale abgeleitet werden. 
 
 \subsection{Spiegel}
 
@@ -955,8 +963,8 @@ Spiegelnde Ebenen finden zum Beispiel dann eine Verwendung, wenn glatte
 Oberflächen simuliert werden sollen. Ein Beispiel für eine spiegelnde Oberfläche
 ist das Wasser. Wasser spiegelt nicht komplett, sondern ist zum Teil noch
 durchsichtig. Der Effekt der Transparenz kann über Modifizieren des Shaders
-erreicht werden. Die erzeugte Textur, die beim Rendern entsteht wird dann
-durchsichtig gemacht.
+erreicht werden. Der erzeugten Textur, die beim Rendern entsteht, wird über
+einen Alphafarbwert eine Transparenz zugewiesen.
 
 \begin{figure}[htbp]
 \centering
@@ -1071,7 +1079,7 @@ der Tür übergeben. Dadurch kann ermittelt werden, welche Räume über eine
 bestimmte Tür verbunden sind.
 
 Mit verschiedenen Arten von Türen lassen sich interessante Szenen bauen, die
-innerhalb eines riesigen Gebäudes spielen. Dabei muss auf die größe des Gebäudes
+innerhalb eines riesigen Gebäudes spielen. Dabei muss auf die Größe des Gebäudes
 keine Rücksicht genommen werden, da die nicht sichtbaren Teile des Gebäudes
 nicht gerendert werden, und somit keine Rechenleistung beanspruchen.
 
@@ -1115,7 +1123,7 @@ jedes Portal einzeln aufrufen und verwalten zu müssen.
 Teleporter sind zwar mit der \texttt{PortalList} kompatibel, müssen aber
 trotzdem gesondert behandelt werden. Da Teleporter zusätzlich mit physikalischen
 Objekten umgehen können, muss eine zusätzlich Methode verwendet werden, die die
-verschiedenen Objekte nacheinander testen und bei Bedarf transformiert. Zu
+verschiedenen Objekte nacheinander testet und bei Bedarf transformiert. Zu
 diesem Zweck wird die \texttt{TeleportList} verwendet, eine abgeleitete Form der
 \texttt{PortalList}.
 
@@ -1140,10 +1148,10 @@ sind oder nicht wird in der Tür gespeichert.
 
 \chapter{Umsetzung der Portale}
 
-Dieses Kapitel befasst sich mit der Implementierung der Erweiterung für das
-jVR-Framework. Im ersten Teil werden die Portal-Klassen und ihre verschiedenen
-Methoden genauer betrachtet. Der zweite Teil stellt den Ansatz vor, mit dem das
-Portal Culling umgesetzt wurde.
+Dieses Kapitel befasst sich mit der Implementierung der Portalfunktioin, die als
+Erweiterung für das jVR-Framework konzipiert ist. Im ersten Teil werden die
+Portal-Klassen und ihre verschiedenen Methoden genauer betrachtet. Der zweite
+Teil stellt den Ansatz vor, mit dem das Portal Culling umgesetzt wurde.
 
 \section{Paketstruktur}
 
@@ -1208,7 +1216,7 @@ und in einer Szene platzieren.
 Die Klasse \texttt{Portal} ist eine abstrakte Oberklasse. Die Getter und Setter
 für Höhe und Breite eines Portals sind vordefiniert und müssen nicht noch einmal
 implementiert werden. Zudem benötigt ein \texttt{Portal} die Pipeline und einen
-Namen in Form eines Strings.
+Namen in Form eines Strings als Übergabeparameter.
 
 Die Pipeline wird benötigt, da die Szene zum Beispiel für den
 \texttt{Teleporter} erst in ein \emph{FrameBuffer Object} geschrieben werden
@@ -1380,14 +1388,14 @@ transformiert wird. Um dieses Problem zu umgehen, muss die Transformation des
 
 Die \texttt{Mirror}-Klasse ist die Repräsentation eines Spiegels. Sie kann die
 Szene reflektieren. Der Konstruktor der Mirror-Klasse initialisiert das
-Material, mit der die Spiegelreflexion erfolgt. Dieses Material besteht aus
-einem Shaderprogramm, welches die erzeugte Textur umkehrt. Die virtuelle Kamera
-wird über die Methode \texttt{getCamera} aufgerufen und das Seitenverhältnis
-wird über \texttt{setAspectRatio} auf den Wert -4:3 geändert.
+Material, mit dem die Spiegelreflexion erfolgt. Dieses Material besteht aus
+einem Shaderprogramm, welches die erzeugte Textur negativ skaliert. Die
+virtuelle Kamera wird über die Methode \texttt{getCamera} aufgerufen und das
+Seitenverhältnis wird über \texttt{setAspectRatio} auf den Wert -4:3 geändert.
 
-Genau wie der \texttt{Teleporter}, besitzt die \texttt{Mirror}-Klasse eine
+Ähnlich dem \texttt{Teleporter}, besitzt die \texttt{Mirror}-Klasse eine
 Methode \texttt{update}. Ihr wird ein \texttt{CameraNode}-Objekt von der
-Betrachterkamera übergeben. Dies hat den Grund, dass die Spiegelung sich je nach
+Betrachterkamera übergeben. Das hat den Grund, dass die Spiegelung sich je nach
 Betrachterposition ändert.
 
 Zuerst wird die Transformation der Kamera mit der inversen Transformation des
