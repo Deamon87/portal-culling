@@ -10,6 +10,7 @@ import de.bht.jvr.core.PointLightNode;
 import de.bht.jvr.core.SceneNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
+import de.bht.jvr.core.uniforms.UniformBool;
 import de.bht.jvr.portals.Mirror;
 import de.bht.jvr.portals.Portal;
 import de.bht.jvr.portals.Teleporter;
@@ -83,6 +84,7 @@ public class MyCapsuleTest extends PortalTestBase {
 		p.switchCamera(camera);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
 		p.setBackFaceCulling(false);
+		p.setUniform("jvr_UseClipPlane0", new UniformBool(false));
 		p.drawGeometry("AMBIENT", null);
 		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		

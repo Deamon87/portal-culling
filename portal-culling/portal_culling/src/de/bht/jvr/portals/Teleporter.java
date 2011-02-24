@@ -70,8 +70,8 @@ public class Teleporter extends Portal {
 	}
 	
 	public void init() {
-		getPipeline().setUniform("jvr_UseClipPlane0", new UniformBool(false));
-		getPipeline().setUniform("jvr_UseClipPlane1", new UniformBool(false));
+		getPipeline().setUniform("jvr_UseClipPlane0", new UniformBool(true));
+		//getPipeline().setUniform("jvr_UseClipPlane1", new UniformBool(false));
 		
 		getPipeline().createFrameBufferObject(this.getName() + "FBO", false, 1, 1, 0);
 		getPipeline().switchFrameBufferObject(this.getName() + "FBO");
@@ -81,6 +81,7 @@ public class Teleporter extends Portal {
 		//getPipeline().setUniform("jvr_UseClipPlane1", new UniformBool(true));
 		getPipeline().drawGeometry("AMBIENT", null);
 		getPipeline().doLightLoop(true, true).drawGeometry("LIGHTING", null);
+		getPipeline().setUniform("jvr_UseClipPlane0", new UniformBool(false));
 	}
 	
 	public void update(CameraNode node, double moveSpeed) {
@@ -100,7 +101,6 @@ public class Teleporter extends Portal {
 		&& vec.z() < this.getBBox().getMax().z() && vec.z() > this.getBBox().getMin().z() - moveSpeed)
 		{
 			this.teleport(node, moveSpeed);
-			//System.out.println("port");
 			return true;
 		}
 		
@@ -126,18 +126,4 @@ public class Teleporter extends Portal {
 		getPipeline().bindColorBuffer("jvr_PortalTexture", this.getName() + "FBO", 0);
 		getPipeline().drawGeometry("AMBIENT", this.getName() + "Mat");
 	}
-
-	public void checkPhysics() {
-		
-	}
-	
-	
-	
-//	private double distance(Vector3 vec1, Vector3 vec2) {
-//		double one = Math.pow(vec2.x() - vec1.x(), 2);
-//		double two = Math.pow(vec2.y() - vec1.y(), 2);
-//		double three = Math.pow(vec2.z() - vec1.z(), 2);
-//		double square = Math.sqrt(one + two + three);
-//		return square;
-//	}
 }
