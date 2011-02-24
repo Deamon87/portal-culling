@@ -20,13 +20,6 @@ public class TeleporterList {
 		
 		return teleport;
 	}
-	
-	public static void checkPhysics(){
-		for(Teleporter tele : teleporters)
-		{
-			tele.checkPhysics();
-		}
-	}
 
 	public static void add(Teleporter teleporter) {
 		teleporters.add(teleporter);
