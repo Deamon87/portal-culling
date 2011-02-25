@@ -1308,7 +1308,7 @@ Transformation um 180° auf der y-Achse gedreht. Die daraus resultierende
 Transformation wird auf die virtuellen Kamera angewendet. Die
 \texttt{update}-Methode ruft zudem die Methode \texttt{getPickPoint} auf.
 
-Die Methode \texttt{getPickPoint} bekommt als Argument eine \texttt{SceneNode}
+Der Methode \texttt{checkDist} wird als Argument eine \texttt{SceneNode}
 und deren Bewegungsgeschwindigkeit übergeben. Sie prüft, ob sich der
 Szeneknoten innerhalb der definierten \emph{Bounding Box} befindet. Ist dies der
 Fall wird darauf die \texttt{teleport}-Methode aufgerufen. 
