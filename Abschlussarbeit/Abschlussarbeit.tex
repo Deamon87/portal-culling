@@ -1,4 +1,4 @@
-\documentclass[12pt,twoside=semi]{scrreprt}
+\documentclass[12pt,twoside=semi,bibliography=totoc]{scrreprt}
 \parindent 0pt
 \parskip 12pt
 
@@ -30,7 +30,21 @@
 
 \renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
 
+\titlehead {\centering\includegraphics[width=100pt]{img/Beuth_Logo_single} \\
+			Beuth Hochschule für Technik\\
+			FB VI - Informatik und Medien \\
+			Fachgebiet Medieninformatik}
+\subject { Bachelorarbeit }
+\title { Portal-Culling für das jVR-Framework }
+\author { Christopher Sierigk \\
+		  Matrikelnummer: s744960}
+\date {Februar 2011 }
+\publishers { Betreuer: Prof. Dr. Henrik Tramberend \\
+ 			  Gutachter: Prof. Dr. Dragan Macos}
+
 \begin{document}
+\pagenumbering{arabic}
+\maketitle
 \lstset{language=Java,
 		basicstyle=\ttfamily,
 		numbers=left,
@@ -40,6 +54,8 @@
 		stringstyle=\color{blue}}
 
 \pagenumbering{Roman}
+
+
 \tableofcontents
 
 \chapter{Einleitung}
@@ -121,12 +137,11 @@ sind untereinander zu verbinden und je nach Sichtbarkeit zu rendern. Dabei
 werden Lichteinfall und Schatteneinfall, sowie die Position der Kamera
 berücksichtigt.
 
-Durch die Erweiterung des jVR-Frameworks, welches speziell mit dem Gedanken
-implementiert wurde um das Holodeck der BHT und stereoskopische
-Rendering-Verfahren zu benutzen um 3dimensionale Szenen erzeugen die mit einer
-3D-Brille betrachtet werden. Weitere Möglichkeiten bietet das
-Headtracking-Verfahren um die Gesichtsposition zu ermitteln und so die
-Perspektive dementsprechend anzupassen.
+Das jVR-Frameworks wurde speziell mit dem Gedanken implementiert, um das
+Holodeck der BHT und stereoskopische Rendering-Verfahren zu benutzen. Dadurch
+lassen sich 3dimensionale Szenen erzeugen, die mit einer 3D-Brille betrachtet
+werden können. Weitere Möglichkeiten bietet das Headtracking-Verfahren um die
+Gesichtsposition zu ermitteln und so die Perspektive dementsprechend anzupassen.
 
 Das Ergebnis der Aufgabe wird eine Beispielimplementierung sein, die zum Einen
 die Erschaffung von Portalen demonstriert. Des Weiteren werden verschiedene
@@ -204,13 +219,6 @@ Portal Culling ist ein Verfahren, um die Leistung in 3D-Echtzeitberechnungen zu
 steigern. In diesem Verfahren werden bestimmte Objekte ausgewählt, die
 letztendlich gerendert werden und damit für den Betrachter sichtbar werden.
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=325pt]{img/portalsplate1}
-\caption{Test 1234}
-\label{fig:portal1}
-\end{figure}
-
 Beim Portal Culling stellt man sich einen Bereich vor, der aus mehreren Zellen
 besteht. Eine Zelle setzt sich aus mehreren Wänden zusammen und kann an weitere
 Zellen angrenzen. Diese Zellen verbinden einander durch Türen bzw. Fenster,
@@ -246,7 +254,16 @@ Sichtbereichs vom Rendern ausgeschlossen. Diese Vorgehensweise kann rekursiv
 fortgesetzt werden, falls sich innerhalb des betrachteten Raumes ein weiteres
 Portal befindet.
 
-Um Portal Culling zu betreiben muss ein gewisses Maß von Vorberechnungen
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=325pt]{img/portalsplate2}
+\caption{Beim Portal Culling wird der Sichtbereich des Betrachters in mehrere
+kleine Sichtbereiche geteilt. Dies geschieht dann, wenn der Betrachter eine Tür
+bzw. einen Spiegel innerhalb seiner Sicht hat. Quelle: \cite{real_time}}
+\label{fig:portal1}
+\end{figure}
+
+Um Portal Culling zu betreiben, muss ein gewisses Maß an Vorberechnungen
 gemacht werden. Nach \cite{portals} muss eine Szene in folgenden Schritten
 gerendert werden um ein optimales Ergebnis zu erreichen.
 
@@ -279,10 +296,13 @@ gerendert werden um ein optimales Ergebnis zu erreichen.
   Grund es kein 2tes Mal rendern zu müssen.
 \end{enumerate}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=325pt]{img/portalsplate2}
-\caption{}
+\includegraphics[width=250pt]{img/portalsplate1}
+\caption{Dieses Bild zeigt die \emph{Bounding Boxes}, die sich um die einzelnen
+Türen bzw. dem Spiegel befinden. Anhand dieser BB lässt sich der Sichtbereich
+in weitere kleine Sichtbereiche unterteilen. Die Sichtbereiche werden auch als
+Frustum bezeichnet. Quelle: \cite{real_time}}
 \label{fig:portal2}
 \end{figure}
 
@@ -358,8 +378,10 @@ Frustum berührt und daher noch gerendert wird.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=300pt]{img/frustum_culling}
-\caption{}
+\includegraphics[width=250pt]{img/frustum_culling}
+\caption{Die Objekte innerhalb des Frustums werden gerendert. Die
+Objekte, die mit ihrer \emph{Bounding Box} das Frustum berühren werden
+ebenfalls gerendert. Alle außerhalb befindlichen Objekte werden verworfen.}
 \label{fig:frustum}
 \end{figure}
 
@@ -467,6 +489,16 @@ Straßenlaternen simulieren. Die letzte Lichtquelle stellt die
 \texttt{DirectionalLightNode} dar. Sie strahlt Licht parallel in eine bestimmte
 Richtung. Mit dieser Lichtquelle lässt sich gut das Sonnenlicht abbilden.
 
+\begin{figure}[htpb]
+\centering
+\includegraphics[width=250pt]{img/scenegraph}
+\caption{Ein Beispiel für einen Szenegraphen, wie er in jVR genutzt wird. Die
+Sphere wird 2mal in der Szene dargestellt. Das liegt daran, dass die
+\texttt{ShapeNode} der Sphere in 2 verschiedenen \texttt{GroupNodes} eingehängt
+ist und diese eine unterschiedliche Transformation besitzen.}
+\label{fig:scengr}
+\end{figure}
+
 Damit eine Szene betrachtet und auf den Bildschirm projeziert werden kann wird
 eine Kamera benötigt. Der passende Knotentyp ist die \texttt{CameraNode}. Hinzu
 kommt die \texttt{VRCameraNode}, die für den Einsatz in VR-Systemen gedacht ist.
@@ -475,7 +507,7 @@ Um geometrische Objekte in einer Szene abbilden zu können, wird die
 \texttt{ShapeNode} genutzt. Einer \texttt{ShapeNode} lassen sich eine Geometrie
 und ein passendes Material zuordnen. \texttt{ShapeNodes} lassen sich im
 Szenegraphen wiederverwenden. Dazu wird die \texttt{ShapeNode} an verschiedene
-\texttt{GroupNodes} gehängt, die unterschiedlich transformiert werden. 
+\texttt{GroupNodes} gehängt, die unterschiedlich transformiert werden.
 
 Als Beispiel sei ein Tisch mit 4 Beinen. Man benötigt nur die Tischplatte und
 ein Tischbein in Form einer \texttt{ShapeNode}. Das Tischbein wird in 4
@@ -488,7 +520,6 @@ eine \texttt{ClipPlaneNode} auf die Szene gepackt wird, wird die Szene in 2
 Halbräume unterteilt. Die Vertices die sich auf der Rückseite der Ebene befinden
 werden ausgeblendet.
 
-\newpage
 \subsubsection{Transformationen}
 
 Das jVR-Framework verfügt über mehrere Möglichkeiten Knoten innerhalb einer
@@ -631,7 +662,6 @@ Programm verarbeitet. Je nach Neigung bzw. Drehung des Kopfes wird die
 betrachtete Szene angepasst, was dem Betrachter die Illusion vermittelt sich
 tatsächlich in der Szene zu bewegen.
 
-\newpage
 \subsubsection{Holodeck}
 
 Das Holodeck ist eine Einrichtung der BHT, in der eine virtuelle Realität
@@ -646,17 +676,17 @@ strahlen zunächste das Bild gegen eine große Spiegelfläche und diese projeziert
 das Bild letztendlich gegen die Leinwand. Dieses Verfahren wird auch zirkulare
 Polarisation genannt.
 
-Der Grund für den Einsatz für 2 Beamern ist es stereoskopische Bilder zu
-erzeugen. Diese können mit einer Shutterbrille betrachtet werden. An der
-Shutterbrille sind mehrere Trackingpunkte befestigt.
-
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=400pt]{img/projektor}
+\includegraphics[width=375pt]{img/projektor}
 \caption{Beispiel für die Projektionsart im Holodeck. Das Holodeck benutzt das
 Prinzip der zirkulären Polarisation. Quelle: \cite{holodeck}}
 \label{fig:proj}
 \end{figure}
+
+Der Grund für den Einsatz für 2 Beamern ist es stereoskopische Bilder zu
+erzeugen. Diese können mit einer Shutterbrille betrachtet werden. An der
+Shutterbrille sind mehrere Trackingpunkte befestigt.
 
 Zum Tracking wird im Holodeck das Qualisys-Motion Capture System verwendet. Es
 kann mittels einer Kamera die Trackingpunkte orten. Die Bewegungen der Punkte
@@ -726,6 +756,7 @@ Pipeline aus der Spezifikation zu entfernen. Mit der Veröffentlichung von OpenGL
 verschwunden, siehe auch \cite{oglSpec31}. Die Befehle lassen sich aber
 weiterhin über OpenGL-Extensions nutzen.
 
+\newpage
 Die Abbildung \ref{fig:og32} zeigt die OpenGL Pipeline. Zuerst werden die Attribute
 der Vertices an den Vertex-Shader übergeben. Dieser reicht die verarbeiteten Daten
 weiter an den Geometry-Shader. Nachdem die Geometrien erzeugt bzw. verarbeitet
@@ -815,7 +846,7 @@ zu sein. Es können daher GL3-Anwendungen entwickelt werden, die aber auch auf
 Systemen lauffähig sind, die nur OpenGL 2 unterstützen.
 
 \begin{center}
-    \includegraphics[width=\linewidth]{img/joglprofile}
+    \includegraphics[width=350pt]{img/joglprofile}
     \captionof{figure}[Beschreibung]{Die verschiedenen Profile, die von JOGL
     bereitgestellt werden.\footnotemark}
 \end{center}
@@ -925,8 +956,9 @@ dementsprechend die Szene in das \emph{FBO}.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=300pt]{img/spiegel_projektion}
-\caption{}
+\includegraphics[width=350pt]{img/spiegel_projektion}
+\caption{Die virtuelle Kamera steht an der gespiegelten Position der
+Betrachterkamera. Die Kamera wird an Hand der Spiegelebene ausgerichtet.}
 \label{fig:mirror}
 \end{figure}
 
@@ -969,7 +1001,9 @@ einen Alphafarbwert eine Transparenz zugewiesen.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=325pt]{img/jvr_szene}
-\caption{}
+\caption{Eine Szene, die mit jVR erstellt wurde, zeigt die Reflexion des
+Wassers. Die Szene spiegelt sich auf der Oberfläche zusammen mit einer
+Wellenbewegung.}
 \label{fig:jvrScene}
 \end{figure}
 
@@ -1001,7 +1035,9 @@ Betrachters bewegt sich auch die virtuelle Kamera.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{img/portal_projection}
-\caption{}
+\caption{Die Betrachterkamera sieht in den Teleporter. Die virtuelle Kamera
+schaut aus Sicht des Ausgangs in die Szene. Das Bild der virtuellen Kamera wird auf
+den Eingangsteleporter projeziert.}
 \label{fig:port_proj}
 \end{figure}
 
@@ -1016,7 +1052,9 @@ Um den Abstand des Betrachters bzw. eines Objekts in Form einer
 \texttt{SceneNode} zu bestimmen, gibt es 2 Möglichkeiten. Die erste Möglichkeit
 besteht darin, den Mittelpunkt eines Objekts bzw. der Kamera zu nehmen und dann
 den Abstand zur Ebene des Teleporters auszurechnen. Dazu nimmt man die
-Hessesche Normalform, siehe Gleichung \ref{eq:popldist}.
+Hessesche Normalform, siehe Gleichung \ref{eq:popldist}. Der Vektor $P$($x_1$,
+$x_2$, $x_3$) ist dabei der Mittelpunkt des Objekts und $N$($n_1$, $n_2$, $n_3$)
+ist die Normale der Ebene.
 
 \begin{equation}
 \textbf{HNF: }
@@ -1062,7 +1100,10 @@ nicht vom Renderverfahren berücksichtigt.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=325pt]{img/culling_schema}
-\caption{}
+\caption{In diesem Beispiel befindet sich der Betrachter im Raum E. Er blickt
+durch 2 Türen in die Räume C und F. Der von C benachbarte Raum B fällt
+ebenfalls ins Blickfeld des Betrachters. Somit werden die Räume B, C, E und F
+gerendert während die restlichen Räume verworfen werden.}
 \label{fig:por_cul}
 \end{figure}
 
@@ -1204,7 +1245,7 @@ Oberklasse \texttt{Portal} abgeleitet. Sie selbst erbt von der Klasse
 \includegraphics[width=350pt]{img/uml_portal}
 \caption{\texttt{Portal} erbt von \texttt{GroupNode} und kann somit
 weitere Kindknoten enthalten. \texttt{Portal} fungiert als Oberklasse aller
-anderen Portalklassen}
+anderen Portalklassen.}
 \label{fig:port_uml}
 \end{figure}
 
@@ -1365,12 +1406,20 @@ verwendet. Jedem Objekt mit physikalischen Eigenschaften wird ein
 \texttt{RigidBody} zugeordnet. Ein \texttt{RigidBody} ist ein Körper der unter
 dem Einfluss von Physik reagiert. Die Physik, die den Körper beeinflusst ist in
 der Klasse \texttt{MyPhysics} definiert. Sie verwaltet alle Kollisionsobjekte
-und physikalischen Eigenschaften innerhalb der Szene.
+und physikalischen Eigenschaften innerhalb der Szene. Zusätzlich gibt es die
+Klasse \texttt{MyMotionState}, die die Transformation der Objekte aktualisiert,
+die physikalische Eigenschaften besitzen.
 
 \texttt{Teleporter} kann ebenfalls physikalische Objekte teleportieren. Dazu
-müssen diese in einer \texttt{GroupNode} gesammelt werden. Die
-\texttt{GroupNode} mit den Physikobjekten wird den Teleportern über die
-\texttt{update}-Methode übergeben. 
+muss das zu teleportierende Objekt geladen werden. Aus dem geladenen Objekt wird
+eine \texttt{ShapeNode} gebildet, indem die Geometrie herausgesucht wird und dem
+\texttt{ShapeNode}-Objekt übergeben wird. Dieses Objekt wird in eine
+\texttt{GroupNode} gehängt. Über die \texttt{GroupNode} lässt sich ein
+\texttt{RigidBody} erzeugen. Beim Teleportieren wird zuerst nur das Objekt
+transformiert, ohne den \texttt{RigidBody} mitzutransformieren. Um den
+\texttt{RigidBody} zu transformieren muss der \texttt{MotionState} des Objekts
+gespeichert werden und bei der Teleportation dem \texttt{RigidBody} übergeben
+werden.
 
 Die Szeneknoten in der \texttt{GroupNode} werden genau wie die Kamera
 transformiert und treten danach aus dem Portalausgang aus. Jeder einzelne
@@ -1543,14 +1592,17 @@ ist sie außerhalb \texttt{false}.
 Die verschiedenen Wände werden im Konstruktor erzeugt und entsprechend
 transformiert. Es wird zwischen \texttt{northWall}, \texttt{westWall},
 \texttt{eastWall}, \texttt{southWall}, sowie \texttt{roof} und \texttt{floor}
-unterschieden.
+unterschieden. Abbildung \ref{fig:cell} zeigt die verschiedenen Transformationen
+der einzelnen Wände.
 
-Um zu verdeutlichen wie die einzelnen Wände transformiert werden müssen, werden
-die verschiedenen Translationstransformationen noch einmal aufgeführt. Jede Wand
-wird mit einem 3dimensionalen Vektor an die entsprechende Stelle transformiert.
-Der Vektor $V$ wird über die Werte $x$, $y$ und $z$ definiert.
-
-%TODO: Bild von Zelle
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{img/cell_aufbau}
+\caption{Die Transformationen der Wände, wie sie in einer Zelle vorkommen. Die
+\texttt{southWall} besitzt eine Translation von (0, 0, length/2) und einer
+Rotation um die y-Achse von 180°.}
+\label{fig:cell}
+\end{figure}
 
 \newpage
 \subsubsection{CellList}
@@ -1613,14 +1665,15 @@ verzichtet.
 
 \chapter{Ergebnisse und Bewertung}
 
-Dieses Kapitel soll nocheinmal die gemachten Ergebnisse zusammenfassen und
-zeigen, inwiefern die gestellten Anforderungen erfüllt wurden.
+Dieses Kapitel soll nocheinmal die Ergebnisse zusammenfassen, die innerhalb der
+Arbeit gemacht worden sind. Zusätzlich soll gezeigt werden, inwiefern die
+gestellten Anforderungen der Aufgabenstellung erfüllt worden sind. 
 
 \section{Verschiedene Portaltypen}
 
 Durch die Erweiterung des jVR-Frameworks, lassen sich verschiedene Arten von
 Portalen erzeugen. Diese 3 Portalarten sind der Teleporter, der Spiegel und die
-Tür. Alle 3 unterscheiden sich voneinander und lassen sich nun innerhalb der
+Tür. Alle 3 unterscheiden sich voneinander und lassen sich innerhalb der
 jVR-Umgebung nutzen.
 
 Jedes der aufgeführten Portale lässt sich ohne Weiteres transformieren. Daher
@@ -1643,6 +1696,23 @@ kann nur im Zusammenhang mit Zellen verwendet werden. Dazu muss mindestens eine
 Zelle instanziiert werden und in der Szene platziert werden. Der Einbau einer
 Tür in eine Zelle ist ohne Schwierigkeiten möglich.
 
+\section{Anwendungen mit Portalfunktion}
+
+\begin{center}
+\centering
+\includegraphics[width=\linewidth]{img/ergebnisse}
+\captionof{figure}{Die verschiedenen Anwendungen, die im Laufe der Entwicklung
+der Portalfunktionalität für das jVR-Frameworks entstanden sind. Links oben
+sind die verschiedenen Zellen zu sehen, die über mehrere Türen miteinander
+verbunden sind. Rechts oben befindet sich das Beispiel, das ein Portal
+innerhalb einer Szene zeigt. Das linke untere Beispiel zeigt 2 Teleporter, die
+miteinander verbunden sind und somit den jeweiligen Ausgang projezieren. Sie
+befinden sich in 2 miteinander verbundenen Zellen. Das rechte untere Beispiel
+zeigt einen Spiegel, der in einer Szene platziert worden ist.}
+\label{fig:erg}
+\end{center}
+
+\newpage
 \section{Physikalisches Verhalten}
 
 Das physikalische Verhalten zwischen den Teleportern ist teilweise realisiert
@@ -1657,15 +1727,45 @@ realisiert worden.
 
 \section{Culling}
 
+Das Prinzip des Cullings ist nur im Ansatz umgesetzt worden. Es lassen sich
+Zellen erstellen und auf der Szene platzieren. Diesen Zellen lassen sich Türen
+zuordnen, die die verschiedenen Zellen verbinden. Es ist möglich zu ermitteln in
+welcher Zelle der Betrachter sich gerade befindet.
+
+Der Teil, der nicht umgesetzt wurde ist die Aufteilung des Frustums in
+verschiedene kleinere Frustums, wenn zum Beispiel durch eine Tür geschaut wird.
+Somit lassen sich auch nicht Zellen vom Renderprozess ausschließen, die nicht
+für den Betrachter sichtbar sind. 
 
 \chapter{Zusammenfassung und Ausblick}
 
-\section{Weiterentwicklung der Portale}
+Die Arbeit hat ergeben, dass das jVR-Framework eine flexible Grafik-Engine ist,
+die sich problemlos erweitern lässt. Die Befehle innerhalb der Engine weisen
+eine klare Struktur auf, wodurch sich der Entwickler einfach zurechtfindet. Die
+Entwicklung der Portale hat gezeigt, dass sich auch komplexe grafische
+Konstrukte innerhalb des jVR-Frameworks umsetzen lassen. Da die
+Portale innerhalb einer Szene nach Belieben transformiert werden können, haben
+die Entwickler neue Möglichkeiten 3D-Anwendung zu erschaffen. Spielideen, die
+dem Spiel \emph{Portal} ähneln, lassen sich nun ohne Probleme umsetzen. Man kann
+sich frei in der Szene bewegen und teleportieren lassen.
 
-\section{Fazit}
+\section{Weiterentwicklung des Teleporters}
+
+Der Teleporter kann bisher nur ein einziges physikalisches Objekt innerhalb der
+Szene transformieren. Der Vorgang der Transformation muss innerhalb des
+Teleporters gekapselt werden und so erweitert werden, dass sich mehrere Objekte
+auf einmal transformieren bzw. teleportieren lassen.
+
+\section{Weiterentwicklung des Spiegels}
+
+
+
+\section{Weiterentwicklung der Türen}
+
+Die Türen erfüllen bisher nur den Zweck Zellen zueinander zu verbinden. Die
+Weiterentwicklung der Türen 
 
 \bibliography{lit}
 \bibliographystyle{apalike}
-\addcontentsline{toc}{chapter}{Literaturverzeichnis}
 
 \end{document}
