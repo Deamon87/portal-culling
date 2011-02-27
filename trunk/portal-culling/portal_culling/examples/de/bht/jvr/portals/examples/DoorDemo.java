@@ -37,6 +37,10 @@ public class DoorDemo extends PortalTestBase{
 		// add door to the east wall
 		cell.getEastWall().addDoor(door);
 				
+		Door door2 = new Door("door2", 4, 3);
+		
+		door.getCell().getEastWall().addDoor(door2);
+		
 		// add cam
 		CameraNode cam = new CameraNode("camera", 4/3f, 60);
 		cam.setTransform(Transform.translate(0, 2, 10));
