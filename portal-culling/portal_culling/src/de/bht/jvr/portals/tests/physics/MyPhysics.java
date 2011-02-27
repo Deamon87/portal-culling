@@ -292,6 +292,8 @@ public class MyPhysics
         RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(mass, myMotionState, colShape, localInertia);
         RigidBody body = new RigidBody(rbInfo);
         //System.out.println(body.getWorldTransform(startTransform).toString());
+        
+        body.setUserPointer(node);
         return body;
     }
     
