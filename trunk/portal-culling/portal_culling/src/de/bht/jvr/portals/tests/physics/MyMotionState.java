@@ -8,6 +8,11 @@ import de.bht.jvr.core.SceneNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.math.Matrix4;
 
+/**
+ * 
+ * Source: jVR-Framework
+ *
+ */
 public class MyMotionState implements MotionState
 {
     private SceneNode node;

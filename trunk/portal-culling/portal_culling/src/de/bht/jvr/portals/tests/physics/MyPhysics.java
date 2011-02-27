@@ -37,6 +37,11 @@ import de.bht.jvr.math.Matrix4;
 import de.bht.jvr.math.Vector3;
 import de.bht.jvr.math.Vector4;
 
+/**
+ * 
+ * Source: jVR-Framework
+ *
+ */
 public class MyPhysics
 {
     private DiscreteDynamicsWorld dynamicsWorld;
