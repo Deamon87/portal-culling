@@ -26,8 +26,10 @@ public class TeleporterDemo extends PortalTestBase{
 	}
 	
 	public TeleporterDemo() throws Exception {
+		// create root node
 		GroupNode root = new GroupNode();
 		
+		// create 2 cells
 		Cell cell1 = new Cell("yellowCell", 20, 20, 5, new Color(1.0f, 1.0f, 0.0f));
 		root.addChildNode(cell1);
 		
@@ -35,13 +37,16 @@ public class TeleporterDemo extends PortalTestBase{
 		cell2.setTransform(Transform.translate(40, 0, 0));
 		root.addChildNode(cell2);
 		
+		// create a camera
 		CameraNode camera = new CameraNode("camera", 4/3f, 60);
 		camera.setTransform(Transform.translate(0, 0.5f, 10));
 		this.cams.add(camera);
 		root.addChildNode(camera);
 		
+		// create a pipeline
 		Pipeline p = new Pipeline(root);
 		
+		// create 2 teleporters
 		Teleporter teleporter1 = new Teleporter(p, "portal1");
 		teleporter1.setTransform(Transform.translate(0, 0, 0));
 		root.addChildNode(teleporter1);
@@ -49,9 +54,11 @@ public class TeleporterDemo extends PortalTestBase{
 		Teleporter teleporter2 = new Teleporter(p, "portal2");
 		teleporter2.setTransform(Transform.translate(40, 0, 0).mul(Transform.rotateYDeg(90)));
 		root.addChildNode(teleporter2);
-				
+			
+		// connect the teleporters
 		PortalConnector.connect(teleporter1, teleporter2);
 		
+		// render the scene with the pipeline
         p.switchFrameBufferObject(null);
 		p.switchCamera(camera);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
@@ -59,14 +66,21 @@ public class TeleporterDemo extends PortalTestBase{
 		p.drawGeometry("AMBIENT", null);
 		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		
+		// render all portals
 		PortalList.render();
 		
+		// create render window
 		RenderWindow win = new NewtRenderWindow(p, 800, 600);
+		win.setWindowTitle("Teleporter Demo");
+		
+		// add some listeners
 		win.addKeyListener(this);
 		win.addMouseListener(this);
 		
+		// create a viewer
 		Viewer v = new Viewer(false, win);
-				
+			
+		// main loop
 		while(v.isRunning()) {			
 			long start = System.currentTimeMillis();
 			
@@ -75,6 +89,7 @@ public class TeleporterDemo extends PortalTestBase{
 			
 			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
 			
+			// update the portals
 			PortalList.update(camera, moveSpeed);
 		}
 	}

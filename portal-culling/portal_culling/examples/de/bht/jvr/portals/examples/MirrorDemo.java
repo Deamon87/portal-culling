@@ -26,22 +26,27 @@ public class MirrorDemo extends PortalTestBase {
 	}
 	
 	public MirrorDemo() throws Exception {
+		// create root node
 		GroupNode root = new GroupNode();
 		
+		// create a cell
 		Cell cell = new Cell("blueCell", 20, 20, 5, new Color(0.0f, 0.0f, 1.0f));
 		root.addChildNode(cell);		
 		
+		// create a camera
 		CameraNode cam = new CameraNode("camera", 4/3f, 60);
 		cam.setTransform(Transform.translate(0, 2, 10));
 		this.cams.add(cam);
 		root.addChildNode(cam);
 		
+		// create a pipeline
 		Pipeline p = new Pipeline(root);
 		
+		// create a mirror
 		Mirror mirror = new Mirror(p, "portal1");
-		mirror.setTransform(Transform.translate(0, 0, 0));
 		root.addChildNode(mirror);
 
+		// render the scene with pipeline
 		p.switchFrameBufferObject(null);
 		p.switchCamera(cam);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
@@ -49,31 +54,40 @@ public class MirrorDemo extends PortalTestBase {
 		p.drawGeometry("AMBIENT", null);
 		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		
+		// render each portal, in this case only the mirror
 		PortalList.render();
 		
+		// create render window
 		RenderWindow win = new NewtRenderWindow(p, 800, 600);
+		win.setWindowTitle("Mirror Demo");
 		
+		// add listeners
 		win.addKeyListener(this);
 		win.addMouseListener(this);
 		
+		// create viewer
 		Viewer v = new Viewer(win);
 		
+		// set start value for rotation
 		float i = 0;
 		
+		// main loop
 		while(v.isRunning()) {
 			long start = System.currentTimeMillis();
 			v.display();
 			move(System.currentTimeMillis() - start, 0.005f);
-						
+				
+			// change rotation of the mirror every frame
 			Transform portalTrans = mirror.getTransform().mul(Transform.rotateYDeg(i));
 			mirror.setTransform(portalTrans);
 			
+			// increment
 			i++;
 			i = i * 0.05f;
 			
-			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
-			
-			PortalList.update(cam, moveSpeed);
+			// update portal cameras, needs no moving speed 
+			// because nothing to teleport
+			PortalList.update(cam, 0);
 		}
 	}
 }
