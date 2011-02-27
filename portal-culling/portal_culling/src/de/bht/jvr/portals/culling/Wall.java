@@ -13,14 +13,36 @@ import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.uniforms.UniformColor;
 import de.bht.jvr.portals.Door;
 
+/**
+ * the wall class
+ */
 public class Wall extends GroupNode {
 
+	/**	the height of the wall */
 	private float height;
+	
+	/** the width of the wall */
 	private float width;
+	
+	/** the color of the wall */
 	private Color color;
+	
+	/** the wall group node */
 	private GroupNode wallNode;
+	
+	/** the scene node of the wall */
 	private SceneNode wall;
 	
+	/**
+	 * Instantiate a new wall
+	 * 
+	 * @param height
+	 * 			the height of the wall
+	 * @param width
+	 * 			the width of the wall
+	 * @param color
+	 * 			the color of the wall
+	 */
 	public Wall(float height, float width, Color color) {
 		this.height = height;
 		this.width = width;
@@ -28,31 +50,67 @@ public class Wall extends GroupNode {
 		this.init();
 	}
 	
+	/**
+	 * Gets the height
+	 * 
+	 * @return the height
+	 */
 	public float getHeight() {
 		return height;
 	}
 	
+	/**
+	 * Sets the height
+	 * 
+	 * @param height
+	 * 			the height
+	 */
 	public void setHeight(float height) {
 		this.height = height;
 	}
 	
+	/**
+	 * Gets the width
+	 * 
+	 * @return the width
+	 */
 	public float getWidth() {
 		return width;
 	}
 	
+	/**
+	 * Sets the width
+	 * 
+	 * @param width
+	 * 			the width
+	 */
 	public void setWidth(float width) {
 		this.width = width;
 	}
 	
+	/**
+	 * Gets the color
+	 * 
+	 * @return the color
+	 */
 	public Color getColor() {
 		return color;
 	}
 	
+	/**
+	 * Sets the color
+	 * 
+	 * @param color
+	 * 			the color
+	 */
 	public void setColor(Color color) {
 		this.color = color;
 	}
 	
-	public void init() {
+	/**
+	 * Initialize the wall
+	 */
+	private void init() {
 		try {
 			wall = ColladaLoader.load(new File("meshes/plane.dae"));
 			wallNode = new GroupNode();
@@ -71,6 +129,12 @@ public class Wall extends GroupNode {
 		}
 	}
 	
+	/**
+	 * Adding a door into the wall
+	 * 
+	 * @param door
+	 * 			the door to add
+	 */
 	public void addDoor(Door door) {
 		Cell cell = new Cell(door.getName() + "Cell",  10, 10, this.getHeight(), new Color(0.5f, 0.5f, 0.f));
 		cell.setTransform(Transform.translate(0, 0, cell.getLength() / 2.0f));
@@ -79,7 +143,6 @@ public class Wall extends GroupNode {
 		this.removeChildNode(wallNode);
 		door.setTransform(Transform.rotateYDeg(180));
 		
-		//TODO: richtige Höhe finden
 		door.getPortal().setTransform(Transform.translate(0, -0.5f, 0));
 		this.addChildNode(door);
 		GroupNode leftPiece, rightPiece, upPiece;

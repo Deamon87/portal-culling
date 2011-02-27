@@ -61,7 +61,7 @@ public class MyCapsuleTest extends PortalTestBase {
 		portal4.setTransform(Transform.translate(0, 10, 0).mul(Transform.rotateXDeg(90)));
 		root.addChildNode(portal4);
 		
-		Portal mirror = new Mirror(p, "mirror");
+		Portal mirror = new Mirror(p, "mirror", 4, 4);
 		mirror.setTransform(Transform.translate(0, 2, -10).mul(Transform.rotateYDeg(90)));
 		root.addChildNode(mirror);
 				
@@ -84,7 +84,7 @@ public class MyCapsuleTest extends PortalTestBase {
 		p.switchCamera(camera);
 		p.clearBuffers(true, true, new Color(121, 188, 255));
 		p.setBackFaceCulling(false);
-		p.setUniform("jvr_UseClipPlane0", new UniformBool(false));
+		//p.setUniform("jvr_UseClipPlane0", new UniformBool(false));
 		p.drawGeometry("AMBIENT", null);
 		p.doLightLoop(true, true).drawGeometry("LIGHTING", null);
 		
@@ -98,7 +98,7 @@ public class MyCapsuleTest extends PortalTestBase {
 		
 		float i = 0;
 				
-		while(v.isRunning()) {
+		while(v.isRunning()) {			
 			long start = System.currentTimeMillis();
 						
 			Transform portalTrans = portal3.getTransform().mul(Transform.rotateYDeg(i));
@@ -113,6 +113,8 @@ public class MyCapsuleTest extends PortalTestBase {
 			double moveSpeed = (System.currentTimeMillis() - start) * 0.005f;
 			
 			PortalList.update(camera, moveSpeed);
+			p.setUniform("jvr_UseClipPlane0", new UniformBool(true));
+
 		}
 	}
 }
