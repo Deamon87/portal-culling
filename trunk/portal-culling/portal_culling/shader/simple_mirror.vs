@@ -1,3 +1,8 @@
+//
+//
+// Source: jVR-Framework
+//
+
 attribute vec4 jvr_Vertex;
 attribute vec2 jvr_TexCoord;
 attribute vec3 jvr_Normal;

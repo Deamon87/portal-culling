@@ -1,3 +1,8 @@
+//
+//
+// Source: jVR-Framework
+//
+
 uniform mat4 jvr_ProjectionMatrix;
 uniform sampler2D jvr_MirrorTexture;
 
