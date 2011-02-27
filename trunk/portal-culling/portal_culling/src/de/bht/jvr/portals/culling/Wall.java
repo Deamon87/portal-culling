@@ -136,7 +136,7 @@ public class Wall extends GroupNode {
 	 * 			the door to add
 	 */
 	public void addDoor(Door door) {
-		Cell cell = new Cell(door.getName() + "Cell",  10, 10, this.getHeight(), new Color(0.5f, 0.5f, 0.f));
+		Cell cell = new Cell(door.getName() + "Cell",  20, this.getWidth(), this.getHeight(), new Color(0.5f, 0.5f, 0.f));
 		cell.setTransform(Transform.translate(0, 0, cell.getLength() / 2.0f));
 		cell.removeChildNode(cell.getNorthWall());
 		door.setCell(cell);

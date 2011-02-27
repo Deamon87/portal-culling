@@ -13,6 +13,7 @@ import de.bht.jvr.core.ShaderProgram;
 import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
+import de.bht.jvr.core.uniforms.UniformBool;
 import de.bht.jvr.portals.util.PortalList;
 
 /**
@@ -87,6 +88,7 @@ public class Mirror extends Portal {
 	 * Initialize the rendering for the mirror
 	 */
 	private void init() {
+		this.getPipeline().setUniform("jvr_UseClipPlane0", new UniformBool(false));
 		this.getPipeline().createFrameBufferObject(this.getName() + "FBO", false, 1, 1, 0);
 		this.getPipeline().switchFrameBufferObject(this.getName() + "FBO");
 		this.getPipeline().switchCamera(this.getCamera());

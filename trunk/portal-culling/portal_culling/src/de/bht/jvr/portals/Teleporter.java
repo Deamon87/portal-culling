@@ -13,6 +13,7 @@ import de.bht.jvr.core.ShaderProgram;
 import de.bht.jvr.core.ShapeNode;
 import de.bht.jvr.core.Transform;
 import de.bht.jvr.core.pipeline.Pipeline;
+import de.bht.jvr.core.uniforms.UniformBool;
 import de.bht.jvr.math.Vector3;
 import de.bht.jvr.portals.util.PortalList;
 import de.bht.jvr.portals.util.TeleporterList;
@@ -124,17 +125,13 @@ public class Teleporter extends Portal {
 	 * Initialize the rendering for the teleporter
 	 */
 	private void init() {
-		//getPipeline().setUniform("jvr_UseClipPlane0", new UniformBool(false));
-		//getPipeline().setUniform("jvr_UseClipPlane1", new UniformBool(false));
-				
-		getPipeline().createFrameBufferObject(this.getName() + "FBO", false, 1, 1, 0);
-		getPipeline().switchFrameBufferObject(this.getName() + "FBO");
-		getPipeline().switchCamera(this.getCamera());
-		getPipeline().clearBuffers(true, true, new Color(121, 188, 255));
-		//getPipeline().setUniform("jvr_UseClipPlane0", new UniformBool(false));
-		//getPipeline().setUniform("jvr_UseClipPlane1", new UniformBool(true));
-		getPipeline().drawGeometry("AMBIENT", null);
-		getPipeline().doLightLoop(true, true).drawGeometry("LIGHTING", null);
+		this.getPipeline().setUniform("jvr_UseClipPlane0", new UniformBool(false));				
+		this.getPipeline().createFrameBufferObject(this.getName() + "FBO", false, 1, 1, 0);
+		this.getPipeline().switchFrameBufferObject(this.getName() + "FBO");
+		this.getPipeline().switchCamera(this.getCamera());
+		this.getPipeline().clearBuffers(true, true, new Color(121, 188, 255));
+		this.getPipeline().drawGeometry("AMBIENT", null);
+		this.getPipeline().doLightLoop(true, true).drawGeometry("LIGHTING", null);
 	}
 	
 	/**
@@ -153,7 +150,7 @@ public class Teleporter extends Portal {
 		Transform transTrans = newTrans.extractTranslation();
 		
 		newTrans = this.getPortalExit().getTransform().mul(rotTrans);
-		newTrans = newTrans.mul(Transform.translate(0, 0, -0.02f));
+		newTrans = newTrans.mul(Transform.translate(0, 0, 0.0f));
 		newTrans = newTrans.mul(Transform.rotateYDeg(180));
 		newTrans = newTrans.mul(Transform.translate(transTrans.getMatrix().translation()));		
 		
